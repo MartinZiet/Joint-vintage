@@ -1,4 +1,5 @@
 Ahoj załogo :)
+
 Oto zapiski z naszych ustaleń wczoraj. 
 
 1. Angular,  (Paweł, Michał, Marcin Z)
