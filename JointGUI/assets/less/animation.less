@@ -1,0 +1,16 @@
+[map-viewport] {
+  opacity:0;
+}
+
+[map-viewport].ready {
+  opacity:1;
+  transition:all 400ms ease-out;
+  
+  .joint-object.ready {
+    transition:all 400ms ease-out;
+    
+    .sml-heading {
+      transition:all 400ms ease-out;
+    }
+  }
+}

@@ -1,0 +1,161 @@
+[joint-object] {
+  position:absolute;
+}
+
+.joint-object {
+  
+  width: @objectWidth;
+  height: @objectHeight;
+  perspective:800px;
+  position:absolute;
+  opacity:0;
+      
+  margin-top:0 - 160px;
+  margin-left:0 - 160px;
+      
+  .sml-heading {
+    display:none;
+  }
+  
+  &.visible {
+    opacity:1;
+  }
+  
+  &.sml,&.transition {
+    
+    margin-top:0px;
+    margin-left:0px;
+    cursor:pointer;
+    
+    .content-nav,.object-contents,.panel-footer,.panel-heading {
+      display:none;
+    }
+    
+    .sml-heading {
+      display:block;      
+      padding:15px;
+      text-align:center;      
+    }    
+    
+  }
+  
+  &.sml {
+    width: @objectWidthSml;
+    height: @objectHeightSml;
+    
+    .sml-heading {      
+      width: @objectWidthSml;
+      height: @objectHeightSml - 2px;      
+    }    
+  }
+  
+  &.transition {
+    width:@objectWidth;
+    height:@objectHeight;
+    
+    margin-top:0 - 160px;
+    margin-left:0 - 160px;
+    
+    .sml-heading {      
+      width: @objectWidth;
+      height: @objectHeight - 2px;      
+    }
+    
+    .panel-heading,.panel-footer,.panel-body { opacity: 0; }
+  }
+  
+  &.fullscreen {
+    width:800px;
+    height:100vh;
+    margin-top:0px;
+    margin-left:0px;
+    left:0px !important;
+    top:40px !important;
+    z-index:1000;
+    
+    .panel-body .object-contents {
+      max-height:800px;
+      height:80vh;
+    }
+  }
+  
+  .flip-base {
+    
+    width:100%;
+    height:100%;
+    position: absolute;
+    transform-style: preserve-3d;
+    transition: transform 1s;
+    
+    figure {
+      display: block;
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      backface-visibility: hidden;
+    }
+    
+    figure.front {
+      z-index:1;
+    }
+    
+    figure.back {
+      z-index:2;
+      transform: rotateY( 180deg );
+      
+      .panel { height:100%; }
+    }
+    
+    &.flipped {
+      transform: rotateY( 180deg );
+    }
+    
+  }
+  
+  .panel {
+    background-color:white;
+  }
+      
+  .panel-heading,
+  .panel-footer,
+  .panel-body {
+    padding:0px;
+    transition:opacity 400ms ease-out;
+  }
+  
+  .panel-body {
+    .content-nav {
+      border-bottom:solid 1px @panelBorderColor;
+    }
+    
+    .object-contents {
+      height:283px;
+      max-height:283px;
+      overflow-y:auto;
+      overflow-x:hidden;
+      position:relative;
+    }
+    
+    .object-content {      
+      .object-content-body { padding:10px; }
+      .object-content-heading {
+        border-bottom:solid 1px @panelBorderColor;
+        width:100%;
+        background-color:white;
+        line-height:2.3em;
+        padding-left:10px;
+      }
+      border-bottom:solid 1px @panelBorderColor;
+      &:last-child {
+        border-bottom:none;
+      }
+      
+      .floatingHeader {
+        position: absolute;
+        visibility: hidden;
+      }
+      
+    }
+  }
+  
+}
