@@ -1,20 +1,24 @@
 'use strict'
 
 angular.module 'eRtcProjApp'
-.service 'easyRTC', ->
+.service 'easyRTC', ( $q ) ->
   # AngularJS will instantiate a singleton by calling 'new' on this function
     self = this
+    self.deferred = $q.defer()
     easyrtc.setSocketUrl ":8989"
     easyrtc.connect "joint", 
         success = (id,room) ->
-            console.log 'connected ' + id
             self.id = id
+            self.deferred.resolve()
             self.room = room
             return
         , error = () ->
             console.log 'error'
             return
-  
+    getId: (cb) ->
+        self.deferred.promise.then ->
+            cb(self.id)
+        return
     init: (vid_in, vid_out, name, cb ) ->
         console.log 'init'
         self.vid_in_obj = vid_in[0]

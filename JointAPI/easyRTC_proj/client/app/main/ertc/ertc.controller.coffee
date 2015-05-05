@@ -7,6 +7,10 @@ angular.module 'eRtcProjApp'
   $scope.button_show = false
   $scope.hello = 'hello world'
   $scope.name_calling = ''
+  
+  easyRTC.getId (id) ->
+    $scope.ertc_id = id
+    return
   $scope.defer = $q.defer
   $scope.ansver = (t) ->
     return
