@@ -1,0 +1,22 @@
+[map-view] {
+  position:relative;  
+  width:800px;
+  height:800px;
+  overflow:hidden;
+  background-color:lighten(@panelBorderColor,5%);
+}
+
+[map-viewport] {  
+  position:absolute;  
+}
+
+[map-canvas] {
+  position:absolute;
+  opacity:1;    
+}
+
+[map-viewport].transition {
+  [map-canvas] {    
+    opacity:0;
+  }
+}
