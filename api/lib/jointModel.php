@@ -53,7 +53,10 @@
 		}
 		
 		/*jako $objectId przy tej funkcji podajemy zawsze id G£ÓWNEGO obiektu danego uzytkownika, poniewaz aliasy sa globalne*/
-		public function addAlias ($objectId, $aliasName) {
+		public function addAlias ($aliasName) {
+			if (isset($_SESSION['ID'])) $objectId = $_SESSION['ID'];
+			else return Array('err'=>1, 'errMsg'=>'Unlogged');
+			
 			$record = Array ('OBJECT_ID'=>$objectId, 'ALIAS'=>$aliasName);
 			$res = parent::addRecord ('ALIASES', $record);
 			if ($res['err'] == 0) $res['id'] = parent::insertId();
@@ -100,7 +103,6 @@
 			
 			$res = parent::addRecord ('OBJECTS', $record);
 			if ($res['err'] === 0) $res['id'] = parent::insertId();
-			else $res['errMsg'] = mysql_error();
 			
 			return $res;
 		}
@@ -242,8 +244,8 @@
 			else return true;
 		}
 	
-		public function addContent ($objectId, $HTML) {
-			return $this->addObject ($objectId, '', 1, 2, '{"time":'.time().', "HTML": "'.$HTML.'"}');
+		public function addContent ($objectId, $name, $HTML) {
+			return $this->addObject ($objectId, $name, 1, 2, '{"time":'.time().', "HTML": "'.$HTML.'"}');
 		}
 		
 		public function updateContent ($objectId, $newContentJSONText) {
@@ -269,7 +271,6 @@
 					$update = Array (($objectId1==$id1 ? 'NEWS2' : 'NEWS1')=>1, 'CONTENT'=>'CONCAT(CONTENT, \'#'.$objectId1.'#'.$message.'\')');
 					return parent::updateRecords ('CHAT', $update, 'ID1='.$id1.' AND ID2='.$id2);
 				}
-				
 			}
 			
 			$res = parent::getRecords ('CHAT', 'CONTENT', 'ID1='.$id1.' AND ID2='.$id2);

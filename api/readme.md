@@ -22,70 +22,20 @@ Uwagi:
    (te listy są tylko poglądowe)
    [empty] oznacza brak konieczności przesyłania czegokolwiek czyli wszystko mamy w ścieżce
 
-POST /login ['username','password']
-  autoryzuje sesję
 
-POST /signup ['username','password','name']
-  dodaje usera i autoryzuje sesję
-
-GET /aliases [empty]
-  pobiera listę aliasów
-
-PUT /aliases ['name']
-  dodaje alias
-
-DELETE /aliases/:ID [empty]
-  usuwa alias
-
-GET /structure [empty]
-  pobiera strukturę obiektów dla usera z sesji
-
-PUT /structure/objects/:ID ['name','alias_id',...]
-  dodaje nowy obiekt jako childa
 
 POST /structure/objects/:ID ['name','alias_id'...]
   update obiektu
 
-DELETE /structure/objects/:ID [empty]
-  usuwa obiekt
-
 /structure/objects/:ID/contents [empty]
   pobiera content dla obiektu
-
-PUT /structure/objects/:ID/contents ['name','content',...]
-  dodaje content dla obiektu
 
 POST /structure/objects/:ID/contents/:ID ['name','content',...]
   update contentu
 
-DELETE /structure/objects/:ID/contents/:ID [empty]
-  usuwa content
-
-GET /structure/objects/:ID/friends [empty]
-  pobiera przyjaciol dla danego obiektu (razem z listą obiektów)
-
-GET /structure/objects/:ID/searches [empty]
-  pobiera wyniki wyszukiwania dla danego obiektu
-
 POST /structure/objects/:ID/searches/:ID/friendship
   dodaje przyjaciela na podstawie znalezionego obiektu
 
-GET /friends [empty]
-  pobiera listę wszystkich przyjaciół dla usera z sesji
-
-POST /friends/:ID/objects/:ID/friendship
-  potwierdza przyjaźń
-
-DELETE /friends/:ID/objects/:ID/friendship
-
-GET /friends/:ID/objects/:ID [empty]
-  pobiera obiekt przyjaciela
 
 GET /friends/:ID/objects/:ID/contents [empty]
   pobiera content obiektu przyjaciela
-
-GET /friends/:ID/objects/:ID/chat [empty]
-  pobiera tresc chatu dla obiektu przyjaciela
-
-PUT /friends/:ID/objects/:ID/chat ['message']
-  dodaje wiadomosc do tresci chatu dla obiektu przyjaciela
