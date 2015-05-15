@@ -1,0 +1,111 @@
+angular.module('joint.ctrl')
+
+.controller('JointObjectTagsController',[
+	'$scope',
+	'$stateParams',
+	'Restangular',
+	'$sce',
+	function($scope,$stateParams,Restangular,$sce){
+		
+		$scope.editMode = false;
+		$scope.currentTemplate = 1;
+		
+		var verbModels = {
+			offer: { specific: true },
+			want: {},
+			exchange: {},
+			tag: {}			
+		};
+		
+		$scope.templates = {
+			1: {
+				id: 1,
+				name: 'Buy/sell a car',
+				tags: {
+					1: { id: 1, name: 'Make', type:1, multiple:true, extensible:true, points:[{value:'Mazda'},{value:'Volvo'},{value:'Volkswagen'}]},
+					2: { id: 2, name: 'Model', type:1, extensible:true, points: [] },
+					3: { id: 3, name: 'Engine capacity', type:2, points: []},
+					4: { id: 4, name: 'Location', type:3, points:[]},
+					5: { id: 5, name: 'Price', type:2, reverse:true, points:[{from:0,to:200000}]}
+				},
+				verbs: [{name:'Buy',mode:'offer'},{name:'Sell',mode:'want'}]
+			},
+			2: {
+				id: 2,
+				name: 'Find partner for sport',
+				tags: {
+					1: { id: 1, name: 'Sport', type:1, multiple:true, extensible:true, points:[{value:'Tennis'},{value:'Soccer'}] },
+					2: { id: 2, name: 'Location', type:3, points:[]}
+				},
+				verbs: [{name:'Find',mode:'exchange'}]
+			},
+			3: {
+				id: 3,
+				name: 'Carpooling',
+				tags: {
+					1: { id: 1, name: 'Date', type:2, points:[]},
+					2: { id: 2, name: 'Route', type:3, multiple:true, points:[] },
+					3: { id: 3, name: 'Price', type:2, points:[] },
+					4: { id: 4, name: 'Class', type:1, multiple:true, points:[{value:'Economy'},{value:'Comfort'},{value:'Luxury'}]}
+				},
+				verbs: [{name:'Find',mode:'want'},{name:'Offer',mode:'offer'}]
+			}	
+		};
+		
+		$scope.tags = {
+			
+		};
+		
+		var modeTemplates = {
+			edit: 'app/components/object/templates/jointObjectTagsEdit.html',
+			editTemplate: 'app/components/object/templates/jointObjectTagsEditTemplate.html'
+		}
+		
+		$scope.$watch('currentTemplate',function(n,o){
+			var tags = angular.copy($scope.templates[n].tags);
+			for(var i in tags) {
+				tags[i].points = [{}];
+			}
+			$scope.tags = tags;
+			$scope.tags.verb = $scope.templates[n].verbs[0];
+		});
+		
+		$scope.$watch('tags.verb',function(n,o){
+			console.log(n);
+			if(n) {				
+				$scope.currentVerbMode = verbModels[n.mode];				
+				console.log(verbModels[n.mode]);
+			}
+		});
+		
+		$scope.$watch('editMode',function(n,o){
+			switch(n) {
+				case true: $scope.modeTemplate = modeTemplates.editTemplate; break;
+				case false: $scope.modeTemplate = modeTemplates.edit; break;
+			}			
+		});
+		
+		$scope.append = function(tag,value) {
+			tag.points.push(value);
+		}
+		
+		$scope.remove = function(tag,val) {
+			tag.points = _.without(tag.points,val);
+		}
+		
+		$scope.show = function() {
+			console.log($scope.editMode);
+			console.log($scope.templates);
+			console.log($scope.currentTemplate);
+			console.log($scope.tags);
+		}
+		
+		$scope.add = function() {
+			$scope.templates[$scope.currentTemplate].tags.push({});
+		}
+		
+		$scope.tag = function(tag) {
+			console.log(tag);
+		}
+	
+}]);

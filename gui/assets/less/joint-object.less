@@ -2,6 +2,25 @@
   position:absolute;
 }
 
+[joint-object].fullscreen {  
+  .joint-object {
+    .panel-body {
+      .object-contents {
+        height:auto;
+        max-height:80vh;
+      }
+    }
+  }
+  top:160px !important;
+  left:160px !important;
+}
+
+.fullscreen {
+  .joint-object { pointer-events: none; }
+  .joint-object.sml .sml-heading { pointer-events:none; }
+  .joint-object.fullscreen { pointer-events: auto; }
+}
+
 .joint-object {
   
   width: @objectWidth;
@@ -9,6 +28,7 @@
   perspective:800px;
   position:absolute;
   opacity:0;
+  pointer-events:none;
       
   margin-top:0 - 160px;
   margin-left:0 - 160px;
@@ -19,6 +39,7 @@
   
   &.visible {
     opacity:1;
+    pointer-events:auto;
   }
   
   &.sml,&.transition {
@@ -71,7 +92,7 @@
     margin-left:0px;
     left:0px !important;
     top:40px !important;
-    z-index:1000;
+    z-index:1000;    
     
     .panel-body .object-contents {
       max-height:800px;
@@ -103,7 +124,15 @@
       z-index:2;
       transform: rotateY( 180deg );
       
-      .panel { height:100%; }
+      .panel { 
+          height:100%;
+          
+          .panel-body {
+            max-height:100%;
+            overflow-y:auto;
+            overflow-x:hidden;
+          }
+      }
     }
     
     &.flipped {
@@ -131,12 +160,15 @@
     .object-contents {
       height:283px;
       max-height:283px;
-      overflow-y:auto;
+      overflow-y:scroll;
       overflow-x:hidden;
       position:relative;
     }
     
     .object-content {      
+      background-color:white;
+      border:solid 1px;      
+      position:relative; 
       .object-content-body { padding:10px; }
       .object-content-heading {
         border-bottom:solid 1px @panelBorderColor;
@@ -145,10 +177,10 @@
         line-height:2.3em;
         padding-left:10px;
       }
-      border-bottom:solid 1px @panelBorderColor;
+      /*border-bottom:solid 1px @panelBorderColor;
       &:last-child {
         border-bottom:none;
-      }
+      }*/
       
       .floatingHeader {
         position: absolute;

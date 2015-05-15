@@ -19,7 +19,7 @@ angular.module('joint.directives')
 				return pos;
 			}
 							
-			scope.centerViewport = function() {
+			scope.centerViewport = function() {				
 				
 				var o = scope.objectsMap[scope.objectId];				
 				var pos = {x:o.x,y:o.y};

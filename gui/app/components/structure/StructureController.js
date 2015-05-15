@@ -1,8 +1,13 @@
 angular.module('joint.ctrl')
 
-.controller('StructureController',['$rootScope','$scope', '$state', 'Restangular', function($rootScope, $scope, $state, Restangular){
+.controller('StructureController',['$rootScope','$scope', '$state', 'Restangular','$timeout', function($rootScope, $scope, $state, Restangular, $timeout){
 	
 	var _this = this;	
+	
+	if(!$rootScope.loginState || !$rootScope.loginState.status) {
+		//$state.go('login');
+		//return;
+	}
 	
 	$scope.friendId = $state.params.friendId;
 	$scope.newId = 999;
@@ -29,9 +34,11 @@ angular.module('joint.ctrl')
 		var insertId = $scope.newId;
 		$scope.structure.push({id:$scope.newId,parent_id:$scope.objectId,name:'ADD OBJECT'});
 		$scope.newId++;
-		$scope.$on('objectsRendered',function(){
+		//$scope.$on('objectsRendered',function(){
+		$timeout(function() {
 			$state.go('me.object.edit',{objectId:insertId});
-		});		
+		},300);
+			
 	}		
 	
 	this.find = function(id) {
@@ -52,6 +59,7 @@ angular.module('joint.ctrl')
 			}
 			if(!is_recursive) {
 				$state.go('me.object',{objectId:obj.parent_id});
+				
 			}
 		}
 		if(obj.remove && !is_recursive) {
@@ -60,12 +68,6 @@ angular.module('joint.ctrl')
 			postRemove.call();
 		}
 	}
-	
-	$rootScope.$on('$stateChangeSuccess',function(event){
-		if($state.params.addObject) {
-			_this.add();
-		}
-	});
 	
 	_this.fetchStructure();		
 	

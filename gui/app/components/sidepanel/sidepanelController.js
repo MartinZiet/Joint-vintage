@@ -5,13 +5,13 @@ angular.module('joint.ctrl')
 		$scope.tabs = [
 			{
 				id:'friends',
-				heading:'Przyjaciele',
+				heading:'Friends',
 				active: true,
 				templateUrl: 'app/components/sidepanel/templates/tab-friends.html'
 			},
 			{
 				id:'searches',
-				heading:'Szukacze',
+				heading:'Searches',
 				templateUrl: 'app/components/sidepanel/templates/tab-searches.html'
 			}
 		];
@@ -23,10 +23,13 @@ angular.module('joint.ctrl')
 		$scope.load = function(id) {
 			switch(id) {
 				case 'friends':
-					$scope.list = {
-						template: 'app/components/sidepanel/templates/list-friend.html',
-						friends: Restangular.all('friends').getList().$object
-					}
+					Restangular.all('friends').getList().then(function(friends){
+						console.log(friends);
+						$scope.list = {
+							template: 'app/components/sidepanel/templates/list-friend.html',
+							friends: friends
+						}
+					});
 				break;
 				case 'searches': 
 					$scope.searches = Restangular.all('friends').getList().$object;

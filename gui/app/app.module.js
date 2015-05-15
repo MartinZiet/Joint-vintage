@@ -6,10 +6,14 @@ angular.module('joint.directives',[]);
 angular.module('joint', [
   'ui.router',    
   'ui.bootstrap',
+  'ui.select',
   'restangular',
+  'ngBootbox',
   'joint.ctrl',
   'joint.services',
   'joint.directives',
+  'ngContentEditable',
+  'angular-packery'
 ])
 
 .config(function(RestangularProvider){
@@ -24,9 +28,13 @@ angular.module('joint', [
   //
   // Now set up the states
   $stateProvider
+  	.state('login', {
+  		url: "/login",
+  		templateUrl: "app/views/login.html"
+  	})
     .state('me', {
       url: "/me",
-      templateUrl: "app/views/map.html",      
+      templateUrl: "app/views/map.html"    
     })
     .state('me.object', {
       url: "/object/:objectId"
@@ -35,12 +43,6 @@ angular.module('joint', [
     	url: "/edit",
     	params: {
     		editObject: true
-    	}
-    })
-    .state('me.object.add', {
-    	url: "/add",
-    	params: {
-    		addObject: true
     	}
     })
     .state('friends', {

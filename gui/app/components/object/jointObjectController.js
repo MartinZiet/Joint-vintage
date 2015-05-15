@@ -9,9 +9,14 @@ angular.module('joint.ctrl')
 		
 	api.isServer('jointObj',$scope);
 		
-	$scope.$watch('objectId',function(newId,oldId){	
-		console.log('objectId: '+$scope.objectId);	
+	$scope.$watch('objectId',function(newId,oldId){		
+		
 		$scope.setup();
+		
+		Restangular.all('types').getList().then(function(types){
+			$scope.types = types;
+		});
+		
 	});
 	
 	$scope.$watch('objectsMap',function(){
@@ -30,8 +35,6 @@ angular.module('joint.ctrl')
 	
 	$scope.$watch('active',function(n,o){
 		if(!n && !$stateParams.addObject && !$scope.obj.fromServer) {
-			console.log($scope.structureCtrl);
-			//$scope.structureCtrl.add();
 			console.log('should remove object '+$scope.obj.id);
 		}
 	});
@@ -64,9 +67,13 @@ angular.module('joint.ctrl')
 		//$scope.obj.remove();
 	}
 	
-	$scope.save = function() {
-		console.log($scope.obj);
-		Restangular.one('structure',$scope.obj.parent_id).post($scope.obj);
+	$scope.save = function(dontflip) {		
+		if($scope.obj.post) {
+			$scope.obj.post();
+		} else {		
+			Restangular.one('structure',$scope.obj.parent_id).post($scope.obj);
+		}
+		if(!dontflip) { $scope.flip(); }
 	}
 			
 	$scope.focus = function() {
@@ -80,5 +87,20 @@ angular.module('joint.ctrl')
 			$scope.flipped = false;
 		}
 	}	
+	
+	$scope.toggleFlag = function(flag) {
+		if($scope.obj[flag]) {
+			$scope.obj[flag] = false;
+		} else {
+			$scope.obj[flag] = true;
+		}
+		$scope.save(true);
+	}
+	
+	$scope.toggleFullscreen = function(force) {
+		$scope.fullscreen(force);
+		setTimeout(function() { $scope.onFullscreen(); },1000);	
+	}
+	
 	
 }]);

@@ -9,7 +9,7 @@ angular.module('joint.ctrl')
 			$scope.centerViewport();						
 		});	
 		$scope.centerViewport();
-		$scope.ready = 1;
+		$scope.ready = 1;		
 	})
 		
 }]);

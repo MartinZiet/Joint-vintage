@@ -11,12 +11,13 @@
 	</head>
 	
 	<body>
+	    
+	    <div data-loading class="joint-loading"><i class="fa fa-spinner fa-spin fa-2x"></i></div>
 		
 		<div ui-view>    		
         </div>
         
-        <div sidepanel>
-        </div>
+        
 		
 	</body>
 </html>

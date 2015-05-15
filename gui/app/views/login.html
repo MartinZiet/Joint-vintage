@@ -1,0 +1,71 @@
+<div class="container">
+	<div class="row" style="margin-top:40px;">
+		<div class="col-sm-3"></div>
+		<div class="col-sm-6">
+			<div class="panel panel-default">
+				<div class="panel-heading">
+					Welcome to Joint
+				</div>
+				<div class="panel-body" ng-controller="LoginController">
+					 <accordion close-others="true">
+					    <accordion-group heading="Log in using your existing Joint account" is-open="true">
+					      <form class="form-horizontal">
+					      	<div class="form-group">
+					      		<label for="username" class="control-label col-sm-3">Username</label>
+					      		<div class="col-sm-9">
+					      			<input type="text" ng-model="data.login.username" class="form-control" placeholder="Username" />
+					      		</div>
+					      	</div>
+					      	<div class="form-group">
+					      		<label for="password" class="control-label col-sm-3">Password</label>
+					      		<div class="col-sm-9">
+					      			<input type="password" ng-model="data.login.password" class="form-control" placeholder="Password" />
+					      		</div>
+					      	</div>
+					      	<div class="form-group">
+					      		<div class="col-sm-3">
+					      			
+					      		</div>
+						      	<div class="col-sm-9">
+						      		<button class="btn btn-block btn-primary" ng-click="login()">Login</button>
+						      	</div>
+						    </div>
+					      </form>
+					    </accordion-group>
+					    <accordion-group heading="or sign up if you don't have one yet">
+					      <form class="form-horizontal">
+					      	<div class="form-group">
+					      		<label for="username" class="control-label col-sm-3">Username</label>
+					      		<div class="col-sm-9">
+					      			<input type="text" ng-model="data.signup.username" class="form-control" placeholder="Username" />
+					      		</div>
+					      	</div>
+					      	<div class="form-group">
+					      		<label for="username" class="control-label col-sm-3">Displayed name (alias)</label>
+					      		<div class="col-sm-9">
+					      			<input type="text" ng-model="data.signup.name" class="form-control" placeholder="Your alias" />
+					      		</div>
+					      	</div>
+					      	<div class="form-group">
+					      		<label for="password" class="control-label col-sm-3">Password</label>
+					      		<div class="col-sm-9">
+					      			<input type="password" ng-model="data.signup.password" class="form-control" placeholder="Password" />
+					      		</div>
+					      	</div>
+					      	<div class="form-group">
+					      		<div class="col-sm-3">
+					      			
+					      		</div>
+						      	<div class="col-sm-9">
+						      		<button class="btn btn-block btn-primary" ng-click="signup()">Signup</button>
+						      	</div>
+						    </div>
+					      </form>
+				    	</accordion-group>
+				   </accordion>
+				</div>
+			</div>
+		</div>
+		<div class="col-sm-3"></div>
+	</div>
+</div>

@@ -5,7 +5,8 @@ angular.module('joint.directives')
 			obj: '=',
 			objectId: '=',
 			objectsMap: '=',
-			structureCtrl: '='
+			structureCtrl: '=',
+			onFullscreen: '='
 		},
 		controller: 'JointObjectController',
 		templateUrl: 'app/components/object/templates/jointObject.html',
@@ -18,6 +19,24 @@ angular.module('joint.directives')
 			
 			scope.getPosition = function() {
 				return element.offset();
+			}
+			
+			scope.fillViewport = function() {
+			}
+			
+			scope.fullscreen = function(force) {
+				var view = jQuery('[map-view]');
+				var e = element.find('.joint-object');
+				if(!element.hasClass('fullscreen') || force) {
+					e.css('width',view.width()+'px');
+					e.css('height',view.height()+'px');
+					element.addClass('fullscreen');
+					view.addClass('fullscreen')
+				} else {
+					e.css('width','').css('height','');
+					element.removeClass('fullscreen');
+					view.removeClass('fullscreen');
+				}
 			}
 			
 		}

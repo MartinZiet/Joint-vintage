@@ -1,0 +1,70 @@
+<div class="btn-group m-b">
+	<button class="btn btn-primary">Sell</button>
+	<button class="btn btn-primary">Buy</button>
+	<button class="btn btn-primary">Trade</button>
+	<button class="btn btn-primary">Rent</button>
+	<button class="btn btn-primary m-r">Rent out</button>
+
+	<button class="btn btn-primary">Meet</button>
+	<button class="btn btn-primary">Work</button>
+	<button class="btn btn-primary">Hire</button>
+	<button class="btn btn-primary">Learn</button>
+	<button class="btn btn-primary">Teach</button>
+	<button class="btn btn-primary">Help out</button>
+	<button class="btn btn-primary">Get help</button>
+	<button class="btn btn-primary">Relax</button>
+	<button class="btn btn-primary">Travel</button>
+</div>
+
+
+<div class="form-horizontal">
+	
+  <ui-select ng-model="personAsync.selected" theme="bootstrap" ng-disabled="disabled" style="min-width: 300px;" title="Single property binding with async data">
+    <ui-select-match placeholder="Category...">{{$select.selected.name || $select.selected}}</ui-select-match>
+    <ui-select-choices repeat="c.name as c in categories | propsFilter: {name: $select.search}">
+      {{ c.name }}
+    </ui-select-choices>
+  </ui-select>
+
+<div class="form-group">
+	<label class="col-sm-3 control-label">Category</label>
+	<div class="col-sm-9">
+		<select class="form-control" 
+			ng-model="cat[0]"
+			ng-options="category.name for category in gumtree"
+			ng-change="update(0)"></select>
+	
+		<select class="form-control" 
+			ng-model="cat[1]"
+			ng-show="cat[0]"
+			ng-options="category.name for category in cat[0].childrenItems"
+			ng-change="update(1)"></select>
+			
+		<select class="form-control" 
+			ng-show="cat[1]"
+			ng-model="cat[2]"
+			ng-options="category.name for category in cat[1].childrenItems"
+			ng-change="update(2)"></select>
+		
+		<select class="form-control" 
+			ng-show="cat[2]"
+			ng-model="cat[3]"
+			ng-options="category.name for category in cat[2].childrenItems"
+			ng-change="update(3)"></select>
+			
+		<select class="form-control" 
+			ng-show="cat[3]"
+			ng-model="cat[4]"
+			ng-options="category.name for category in cat[3].childrenItems"
+			ng-change="update(4)"></select>
+	</div>
+</div>
+	
+<div ng-repeat="field in objTpl.fields" class="form-group">
+	<label class="col-sm-3 control-label">{{ field.name }}</label>
+	<div class="col-sm-9">
+		<ng-include src="field.field_tpl" />
+	</div>
+</div>
+
+</div>

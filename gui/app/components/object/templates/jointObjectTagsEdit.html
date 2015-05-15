@@ -1,0 +1,65 @@
+<div class="m-b m-t clearfix">    
+    <select ng-model="current.template" class="form-control">
+        <option ng-repeat="template in templates" value="{{ template.id }}">{{ template.name }}</option>
+    </select>    
+</div>
+
+<div class="btn-group m-b">
+    <label class="btn btn-primary" ng-repeat="verb in current.verbs" ng-model="current.tags.verb" btn-radio="verb">
+        {{ verb.name }}
+    </label>
+</div>
+
+<div ng-repeat="(id,tag) in current.tags" class="form-group">
+        
+    <label>{{ tag.name }}</label>        
+    
+    <div ng-repeat="(i,point) in tag.points">
+    <span ng-switch on="tag.type">
+        <span ng-switch-when="1">
+            <ui-select multiple ng-model="point.value" theme="bootstrap">
+                <ui-select-match placeholder="{{ tag.name }}...">{{$select.selected.value || $select.selected}}</ui-select-match>
+                <ui-select-choices repeat="val.value as val in tag._values">
+                    {{ val.value }}                
+                </ui-select-choices>
+            </ui-select>
+        </span>
+        <span ng-switch-when="2">
+            <div class="form-inline row" ng-show="currentVerbMode.specific">
+                <div class="col-sm-6">
+                <span class="input-group">
+                    <span class="input-group-addon" id="basic-addon1">From</span>
+                    <input type="text" ng-model="point.from" class="form-control" placeholder="{{ templates[currentTemplate].tags[tag.id].points[0].from }}"/>
+                </span>
+                </div>
+                <div class="col-sm-6">
+                <span class="input-group">
+                    <span class="input-group-addon" id="basic-addon1">To</span>
+                    <input type="text" ng-model="point.to" class="form-control" placeholder="{{ templates[currentTemplate].tags[tag.id].points[0].to }}"/>
+                </span>            
+                </div>
+            </div>
+            <div class="" ng-hide="currentVerbMode.specific">
+                <input type="text" ng-model="point.from" class="form-control"/>
+            </div>
+        </span>
+        <span ng-switch-when="3">
+            <field-geo />
+            LatLng <input type="text" ng-model="point.LatLng" />
+            Radius <input type="text" ng-model="point.R" />
+        </span>
+    </span> 
+    <div ng-show="templates[currentTemplate].tags[tag.id].multiple">
+        <div ng-show="i > 0">
+            <button class="btn btn-transparent btn-block" ng-click="remove(tag,point)">
+                <i class="fa fa-times text-danger"></i> Remove
+            </button>
+        </div> 
+    </div>
+    
+    </div>  
+    
+    <button ng-show="templates[currentTemplate].tags[tag.id].multiple" class="btn btn-transparent btn-block" ng-click="append(tag,{})"><i class="fa fa-plus"></i> Add another</button>
+    
+    
+</div>

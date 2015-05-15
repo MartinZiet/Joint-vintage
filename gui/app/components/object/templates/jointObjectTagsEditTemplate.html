@@ -1,0 +1,51 @@
+<div ng-repeat="(id,tag) in current.tags">
+    
+    <input type="text" class="form-control" ng-model="tag.name" />
+    
+    <div class="btn-group">
+      <label class="btn btn-primary" ng-model="tag.type" btn-radio="1"><i class="fa fa-terminal"></i></label>
+      <label class="btn btn-primary" ng-model="tag.type" btn-radio="2"><i class="fa fa-arrows-h"></i></label>
+      <label class="btn btn-primary" ng-model="tag.type" btn-radio="3"><i class="fa fa-globe"></i></label>
+    </div>  
+    
+    <div class="btn-group">     
+        <label class="btn btn-primary" ng-model="tag.all" btn-checkbox><i class="fa fa-asterisk"></i></label>           
+        <label class="btn btn-primary" ng-model="tag.block" btn-checkbox><i class="fa fa-link"></i></label>
+        <label class="btn btn-primary" ng-model="tag.order" btn-checkbox><i class="fa fa-sort-amount-desc"></i></label>
+    </div>
+    
+    <div class="btn-group">        
+        <label class="btn btn-primary" ng-model="tag.multiple" btn-checkbox><i class="fa fa-navicon"></i></label>           
+        <label class="btn btn-primary" ng-model="tag.extensible" btn-checkbox><i class="fa fa-user-plus"></i></label>
+        <label class="btn btn-primary" ng-model="tag.reverse" btn-checkbox><i class="fa fa-exchange"></i></label>        
+    </div>
+
+    <button class="btn btn-primary" ng-click="append(tag,{})"><i class="fa fa-plus"></i></button>    
+    
+    <div ng-repeat="val in tag.points">
+        <span ng-switch on="tag.type">
+            <span ng-switch-when="1">
+               Wartość <input type="text" ng-model="val.value" />        
+            </span>
+            <span ng-switch-when="2">
+                Od <input type="text" ng-model="val.from" />
+                Do <input type="text" ng-model="val.to" />
+            </span>
+            <span ng-switch-when="3">
+                LatLng <input type="text" ng-model="val.LatLng" />
+                Radius <input type="text" ng-model="val.R" />
+            </span>
+            <span ng-switch-default>
+                {{tag.type}}
+            </span>
+        </span>
+       
+        <i class="fa fa-times text-danger" ng-click="remove(tag,val)"></i>
+    </div>
+    
+    
+</div>
+
+<p class="text-center">
+    <button class="btn btn-success" ng-click="add()"><i class="fa fa-plus"></i> Dodaj tag</button>
+</p>

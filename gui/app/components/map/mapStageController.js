@@ -1,6 +1,8 @@
 angular.module('joint.ctrl')
-.controller('MapStageController',['$scope','$element','DirectivePublicApi','MapGeometry',function($scope,$element,api,geometry){
+.controller('MapStageController',['$rootScope','$scope','$element','DirectivePublicApi','MapGeometry',function($rootScope,$scope,$element,api,geometry){
 		
+	var self = this;
+	self.packeryObjects = [];
 	api.isClient('obj','jointObj',$scope);
 			
 	$scope.serializeStructure = function() {
@@ -38,9 +40,13 @@ angular.module('joint.ctrl')
 		$scope.objectsMap = $scope.serializeStructure();
 		geometry.apply($scope.objectsMap);
 		$scope.applyPositions($scope.objectsMap);
+		$scope.rendered();
+	});	
+	
+	$scope.rendered = function() {
 		setTimeout(function(){
-			$scope.$broadcast('objectsRendered');	
-		},100);		
-	});
+			$scope.$broadcast('objectsRendered');			
+		},100);
+	}
 	
 }]);

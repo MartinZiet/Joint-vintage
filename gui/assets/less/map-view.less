@@ -7,7 +7,7 @@
 }
 
 [map-viewport] {  
-  position:absolute;  
+  position:absolute;
 }
 
 [map-canvas] {
@@ -18,5 +18,22 @@
 [map-viewport].transition {
   [map-canvas] {    
     opacity:0;
+  }
+}
+
+[map-view].fullscreen {
+  [map-viewport] {
+    left:0px !important;
+    top:0px !important;
+  }
+  [map-canvas] {
+    opacity:0;
+  }
+  [joint-object] {
+    opacity:0;
+  }
+  [joint-object].fullscreen {
+    opacity:1;
+    z-index:100;
   }
 }

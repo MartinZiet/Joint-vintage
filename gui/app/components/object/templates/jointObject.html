@@ -3,85 +3,71 @@
     <figure class="front">
             <div class="panel panel-default">
                 <div class="sml-heading" ui-sref="me.object({objectId:obj.id})">
-                    {{obj.name}}
+                    <span joint-object-type obj="obj"></span> {{obj.name}}
                 </div>
                 <div class="panel-heading">
                     <div class="row">
-                        <div class="col-sm-8">
-                            <div class="pull-left">
-                            <button class="btn btn-transparent"><i class="fa fa-globe fa-2x"></i></button>
-                            </div>
-                            <div class="pull-left" style="padding:5px;padding-bottom:8px;">
-                                <div style="font-size:1.8em;">{{obj.name}}</div>
+                        <div class="col-sm-8">                            
+                            <div class="pull-left" style="padding:8px 15px;">
+                                <div style="font-size:1.8em;">
+                                	<span joint-object-type obj="obj"></span>
+                                	{{obj.name}}
+                               	</div>
                             </div>                        
                         </div>
                         <div class="col-sm-4 text-right">
                             <div class="btn-group">                                                               
-                                <button class="btn btn-transparent" ng-click="fullscreen(obj.id)"><i class="fa fa-arrows-alt"></i></button>                                
+                                <button class="btn btn-transparent" ng-click="toggleFullscreen()"><i class="fa fa-arrows-alt"></i></button>                                
                             </div>
                         </div>
                     </div>                
                 </div>
                 <div class="panel-body" joint-object-contents contents="contents">
-                    <div class="content-nav">
+                	<!-- <button class="editable-control btn btn-primary" data-command="bold">B</button> -->
+                    <div class="content-nav" ng-hide="obj.edit_locked">
                         <div class="btn-group">
                             <button class="btn btn-transparent" data-toggle="tooltip" title="Pokazuj treści ze świata"><i class="fa fa-globe"></i></button>
                             <button class="btn btn-transparent" data-toggle="tooltip" title="Filtruj treść"><i class="fa fa-filter"></i></button>
                         </div>
-                        <button class="btn btn-transparent pull-right" ng-click="add()">
-                            <i class="fa fa-plus"></i> Dodaj treść
-                        </button>
+                       <button class="btn btn-transparent pull-right" ng-click="add()">
+                            <i class="fa fa-plus"></i> Add content
+                       </button>
                     </div>
                     <div class="object-contents">
                         
                         <div class="object-content" ng-repeat="cnt in contents">
                         	
-                        	<div class="object-content-heading clearfix">
-                                <span style="font-size:1.2em;">{{ cnt.name }}</span>
-                                <div class="btn-group pull-right">
-                                    <button class="btn btn-transparent"><i class="fa fa-trash"></i></button>
+                        	<div class="card-header object-content-heading clearfix">
+                                <!--<span style="font-size:1.2em;">{{ cnt.name }}</span>-->
+                                <div class="btn-group pull-right" ng-hide="obj.edit_locked">
+                                    <button class="btn btn-transparent" ng-click="remove(cnt)"><i class="fa fa-trash"></i></button>
                                     <button class="btn btn-transparent"><i class="fa fa-edit"></i></button>
                                 </div>
                             </div>
                             <div class="object-content-body">
-                            	<div ng-include="cnt.tpl"></div>
-                            	{{ cnt.content }}
+                            	<div>
+                            		<div ng-include="cnt.tpl"></div>
+                            		<div class="editable" ng-model="cnt.html" ng-bind-html="safe(cnt.content)"></div>
+                            	</div>
+                            	<!--<form>
+                            	<textarea class="js-st-instance">
+                            	</textarea>
+                            	</form>-->
                             </div>
                         	
-                        </div>
-                        <!--<div class="object-content">
-                            <div class="object-content-heading clearfix">
-                                <span style="font-size:1.2em;">Tytuł wpisu 1</span>
-                                <div class="btn-group pull-right">
-                                    <button class="btn btn-transparent"><i class="fa fa-trash"></i></button>
-                                    <button class="btn btn-transparent"><i class="fa fa-edit"></i></button>
-                                </div>
-                            </div>
-                            <div class="object-content-body">
-                            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam scelerisque eu ligula id dictum. Curabitur ut sem tortor. Duis nec dolor sed metus tincidunt faucibus. Aenean in sagittis diam, eget vulputate velit. Nunc finibus, lacus et tempor facilisis, sem quam lobortis nibh, mattis posuere nunc dolor posuere dui. Nulla nibh lectus, tincidunt fermentum augue at, luctus feugiat nunc. Mauris ultricies posuere lectus at maximus. Vestibulum interdum elit est, a maximus lacus commodo vel. Quisque hendrerit eu ex a porta.
-                            </div>
-                        </div>
-                        
-                        <div class="object-content">
-                            <div class="object-content-heading clearfix">
-                                <span style="font-size:1.2em;">Tytuł wpisu 2</span>
-                                <div class="btn-group pull-right">
-                                    <button class="btn btn-transparent"><i class="fa fa-trash"></i></button>
-                                    <button class="btn btn-transparent"><i class="fa fa-edit"></i></button>
-                                </div>
-                            </div>
-                            <div class="object-content-body">
-                            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Etiam scelerisque eu ligula id dictum. Curabitur ut sem tortor. Duis nec dolor sed metus tincidunt faucibus. Aenean in sagittis diam, eget vulputate velit. Nunc finibus, lacus et tempor facilisis, sem quam lobortis nibh, mattis posuere nunc dolor posuere dui. Nulla nibh lectus, tincidunt fermentum augue at, luctus feugiat nunc. Mauris ultricies posuere lectus at maximus. Vestibulum interdum elit est, a maximus lacus commodo vel. Quisque hendrerit eu ex a porta.
-                            </div>
-                        </div>-->
-                        
+                        </div>                        
+
                     </div>
                 </div>
-                <div class="panel-footer">
+                <div class="panel-footer" ng-hide="obj.edit_locked">
                     <div class="btn-group">
+                        <button class="btn btn-transparent" ng-click="toggleFlag('is_public')">
+                            <i class="fa fa-lock" ng-hide="obj.is_public"></i>
+                            <i class="fa fa-globe" ng-show="obj.is_public"></i>
+                        </button>
                         <button class="btn btn-transparent" data-toggle="tooltip" title="Ustawienia" ng-click="flip(obj.id)"><i class="fa fa-cog"></i></button>                        
                     </div>
-                    <button class="pull-right btn btn-transparent" ui-sref="me.object.add({objectId:obj.id})">
+                    <button class="pull-right btn btn-transparent" ng-click="structureCtrl.add()">
                         <i class="fa fa-plus"></i>
                     </button>
                 </div>
@@ -92,10 +78,25 @@
                 <div class="panel panel-default">
                     <div class="panel-heading"></div>
                     <div class="panel-body" style="padding:15px;">                        
-                        <input class="form-control" value="{{obj.name}}" />
-                        <button class="btn btn-danger" ng-click="remove()"><i class="fa fa-trash"></i> Usuń</button>
-                        <button class="btn btn-danger" ng-click="flip()">Anuluj</button>
-                        <button class="btn btn-success" ng-click="save()">Zapisz</button>
+                        <input class="form-control input-lg" ng-model="obj.name" style="margin-bottom:15px;"/>
+                        
+                        <div class="btn-group">
+                            <label ng-repeat="type in types" class="btn btn-primary" ng-model="obj.type" btn-radio="type.id">{{ type.name }}</label>                            
+                        </div>
+                        
+                        <div joint-object-match obj="obj"></div>
+                        
+                        <div class="">
+                        	<div class="col-sm-2 n-p">
+                        		<button class="btn btn-danger btn-block" ng-bootbox-confirm="Are you sure?" ng-bootbox-confirm-action="structureCtrl.remove(obj.id)"><i class="fa fa-trash"></i></button>
+                        	</div>
+                        	<div class="col-sm-5 n-p">
+                        		<button class="btn btn-primary btn-block" ng-click="flip()">Cancel</button>
+                        	</div>
+                        	<div class="col-sm-5 n-p">
+                        		<button class="btn btn-success btn-block" ng-click="save()">Save</button>
+                        	</div>
+                        </div>
                     </div>
                 </div>
             </figure>
