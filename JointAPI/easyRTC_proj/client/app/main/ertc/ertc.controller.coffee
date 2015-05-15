@@ -47,6 +47,8 @@ angular.module 'eRtcProjApp'
         if flag
             scope.init_media().then -> 
                 accept flag
+        else 
+            accept flag
         scope.button_show = false
         return
     scope.$apply()
