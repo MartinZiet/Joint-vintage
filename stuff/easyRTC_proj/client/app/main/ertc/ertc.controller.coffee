@@ -53,5 +53,6 @@ angular.module 'eRtcProjApp'
         return
     scope.$apply()
     return
+  return
    
   
