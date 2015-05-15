@@ -5,8 +5,8 @@ angular.module 'eRtcProjApp'
   
 #  easyRTC.init angular.element( '#self'), angular.element( '#caller'), 'ZenekWymiataczka'
   $scope.button_show = false
-  $scope.hello = 'hello world'
   $scope.name_calling = ''
+  $scope.user_name = 'ZenekWymiataczka'
   
   easyRTC.getId (id) ->
     $scope.ertc_id = id
@@ -16,7 +16,7 @@ angular.module 'eRtcProjApp'
     return
     
   $scope.call = (id) ->
-    console.log 'call ' + id
+    console.log 'call to ' + id
     $scope.init_media().then ->
         console.log 'calling to ' +id
         easyRTC.performCall id
@@ -24,7 +24,7 @@ angular.module 'eRtcProjApp'
 
   $scope.cancel = (id) ->
     console.log id
-    easyRTC.cancel id
+    easyRTC.cancel()
     return
   $scope.switch = ->
     $scope.button_show = true
@@ -34,8 +34,8 @@ angular.module 'eRtcProjApp'
     console.log 'init'
     deferred = $scope.defer()
     
-    easyRTC.init angular.element( '#self'), angular.element( '#caller'), 'ZenekWymiataczka', ->
-        console.log 'callback and resolve'
+    easyRTC.init angular.element( '#self'), angular.element( '#caller'), $scope.user_name, ->
+        console.log 'Media ready to go!'
         deferred.resolve()
     deferred.promise
     
@@ -51,9 +51,5 @@ angular.module 'eRtcProjApp'
         return
     scope.$apply()
     return
-
-  $scope.refresh = ->
-    console.log 'refresh'
-    easyRTC.getApplicationFields
    
   

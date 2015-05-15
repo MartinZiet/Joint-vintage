@@ -5,7 +5,7 @@ angular.module 'eRtcProjApp'
   # AngularJS will instantiate a singleton by calling 'new' on this function
     self = this
     self.deferred = $q.defer()
-    easyrtc.setSocketUrl ":8989"
+    easyrtc.setSocketUrl "37.59.119.110:8989"
     easyrtc.connect "joint", 
         success = (id,room) ->
             self.id = id
@@ -28,6 +28,7 @@ angular.module 'eRtcProjApp'
         
         easyrtc.setStreamAcceptor (easyrtcid, stream) ->
             
+            #self.vid_out_obj.src = window.URL.createObjectURL(stream);
             easyrtc.setVideoObjectSrc self.vid_out_obj , stream 
             return
             
@@ -52,7 +53,7 @@ angular.module 'eRtcProjApp'
     acceptConnection: (scope, cb) ->    
         easyrtc.setAcceptChecker (easyrtcid, acceptor) ->
             self.othereasyrtcid = easyrtcid
-            cb easyrtc.idToName( easyrtcid), acceptor, scope    
+            cb easyrtc.idToName( easyrtcid ), acceptor, scope    
             return
         
             
@@ -62,6 +63,9 @@ angular.module 'eRtcProjApp'
             self.othereasyrtcid = undefined
         else 
             console.log 'you are not connected'
+            easyrtc.clearMediaStream self.vid_out_obj
+            easyrtc.clearMediaStream self.vid_in_obj
+            easyrtc.getLocalStream().stop()
         return
             
     performCall: (easyrtcid) ->
