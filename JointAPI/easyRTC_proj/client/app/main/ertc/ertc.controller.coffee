@@ -1,7 +1,7 @@
 'use strict'
 
 angular.module 'eRtcProjApp'
-.controller 'ertc', ($scope, $http, easyRTC, $q) ->
+.controller 'ertc', ($scope, easyRTC, $q) ->
   
 #  easyRTC.init angular.element( '#self'), angular.element( '#caller'), 'ZenekWymiataczka'
   $scope.button_show = false
