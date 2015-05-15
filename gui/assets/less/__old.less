@@ -1,0 +1,89 @@
+
+.viewport {
+  height:100vh;
+  width:75%;  
+  overflow:hidden;
+  float:left;
+  position:relative;
+  background-color:lighten(@panelBorderColor,5%);
+  
+  .viewport-in {
+    position:absolute;
+    top:0px;
+    left:0px;
+    transition:all 400ms ease-out;
+    
+    &.fullscreen {
+      top:0px !important;
+      left:0px !important;
+      
+      #can { opacity:0; }
+      .joint-object.sml { opacity:0; }
+    }
+  }
+}
+
+.joint-loading {
+  width: 100%;
+  height: 100%;
+  text-align: center;
+  font-size: 40px;
+  background-color: fade(@panelBorderColor,80%);
+  color:white;
+  padding-top: 200px;
+  position: absolute;
+  top: 0px;
+  left: 0px;
+  z-index: 10000;
+}
+
+.joint-nav {
+  height:40px;
+  position:absolute;
+  width:100%;
+  background-color:white;
+  border-bottom:solid 1px @panelBorderColor;
+  z-index:1100;
+}
+
+.sidepanel {
+  width:25%;
+  float:right;
+  height:100vh;
+  border-left:solid 1px @panelBorderColor;
+  background-color:white;
+    
+  .friend {    
+    
+    .media {
+      padding:10px;
+      border-bottom:solid 1px @panelBorderColor;
+    }
+    
+    .friend-object {
+      padding:10px;
+      border-bottom:solid 1px @panelBorderColor;
+    }
+  }
+}
+
+.joint-universe {
+  /*padding:100px;*/
+}
+
+.btn-transparent {
+  background:transparent;
+  border:none;
+  background-color:transparent;
+}
+
+.obj-outer {
+  float:left;
+}
+
+
+
+.list-container {  
+  height:100vh;  
+  border-left:solid 1px @panelBorderColor;
+}

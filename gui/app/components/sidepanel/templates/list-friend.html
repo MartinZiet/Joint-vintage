@@ -1,0 +1,23 @@
+<div class="media" data-toggle="collapse" href="#friend-objects-{{friend.id}}">
+    <div class="pull-left">
+        <img class="media-object img-circle" src="http://placehold.it/48x48" />
+    </div>
+    <div class="media-body">
+        <h4 class="media-heading">
+            {{friend.name}}
+        </h4>
+    </div>
+</div>
+
+<div class="collapse in" id="friend-objects-{{friend.id}}">
+<div ng-repeat="obj in friend.objects" class="friend-object">
+    <div class="clearfix">    
+        <i class="fa fa-circle"></i> 
+        <a ui-sref="friends({friendId:friend.id,objectId:obj.id})">{{obj.name}}</a>
+        <span class="pull-right">
+            <i class="fa fa-trash"></i>
+            <i class="fa fa-comment"></i>
+        </span>    
+    </div>
+</div>
+</div>
