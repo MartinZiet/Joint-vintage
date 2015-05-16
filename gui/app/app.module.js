@@ -12,12 +12,11 @@ angular.module('joint', [
   'joint.ctrl',
   'joint.services',
   'joint.directives',
-  'ngContentEditable',
-  'angular-packery'
+  'ContentEditable'
 ])
 
 .config(function(RestangularProvider){
-	RestangularProvider.setBaseUrl('/sandbox/angular/api.php');
+	RestangularProvider.setBaseUrl('../stuff/api-mockup.php');
 	RestangularProvider.setMethodOverriders(['DELETE','PUT']);
 })
 

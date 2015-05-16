@@ -1,21 +1,20 @@
 angular.module('joint.ctrl')
 .controller('JointObjectController',[
+	'$rootScope',
 	'$scope',
 	'$element',
 	'DirectivePublicApi',
 	'$stateParams',
 	'Restangular',
-	function($scope,$element,api,$stateParams,Restangular){
+	function($rootScope,$scope,$element,api,$stateParams,Restangular){
+		
+	$scope.types = $rootScope.types;
 		
 	api.isServer('jointObj',$scope);
 		
 	$scope.$watch('objectId',function(newId,oldId){		
 		
 		$scope.setup();
-		
-		Restangular.all('types').getList().then(function(types){
-			$scope.types = types;
-		});
 		
 	});
 	

@@ -1,11 +1,14 @@
 angular.module('joint.ctrl')
 
 .controller('JointObjectTagsController',[
+	'$rootScope',
 	'$scope',
 	'$stateParams',
 	'Restangular',
 	'$sce',
-	function($scope,$stateParams,Restangular,$sce){
+	function($rootScope,$scope,$stateParams,Restangular,$sce){
+		
+		$scope.templates = $rootScope.templates;
 		
 		$scope.tagValue = function(id,val) {
 			var t = _.findWhere($scope.obj.tags,{name:id});
@@ -64,11 +67,6 @@ angular.module('joint.ctrl')
 		}
 		
 		$scope.reset();
-		
-		//fetch templates list
-		Restangular.all('templates').getList().then(function(templates) {
-			$scope.templates = templates;
-		});
 		
 		//configure templates for object types
 		var objectTypeTemplates = {

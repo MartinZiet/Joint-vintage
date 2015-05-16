@@ -4,6 +4,25 @@ angular.module('joint.ctrl')
 	
 	var _this = this;	
 	
+	$scope.resourcesCount = 2;
+	$scope.resourcesLoaded = 0;
+	
+	Restangular.all('templates').getList().then(function(templates) {
+		$rootScope.templates = templates;
+		$scope.resourcesLoaded++;
+	});
+	
+	Restangular.all('types').getList().then(function(types){
+		$rootScope.types = types;
+		$scope.resourcesLoaded++;
+	});
+	
+	$scope.$watch('resourcesLoaded',function(n,o){
+		if(n >= $scope.resourcesCount) {
+			_this.fetchStructure();
+		}
+	});
+	
 	if(!$rootScope.loginState || !$rootScope.loginState.status) {
 		//$state.go('login');
 		//return;
@@ -69,6 +88,6 @@ angular.module('joint.ctrl')
 		}
 	}
 	
-	_this.fetchStructure();		
+	//_this.fetchStructure();		
 	
 }]);
