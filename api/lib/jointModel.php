@@ -27,23 +27,23 @@
 			
 			//tworzymy obiekt
 			$record = Array ('NAME'=>$name, 'PUBLIC'=>0, 'TYPE'=>0, 'TAGS'=>'{}', 'PARENT_ID'=>1, 'ALIAS_ID'=>1);
-			$res['err'] = parent::addRecord('OBJECTS', $record)['err'];
+			$res['err'] = (parent::addRecord('OBJECTS', $record))['err'];
 			if ($res['err'] > 0) return $res;
 			$res['objectId'] = parent::insertId();
 			
 			//tworzymy alias
 			$record = Array ('OBJECT_ID'=>$res['objectId'], 'ALIAS'=>$name);
-			$res['err'] = parent::addRecord('ALIASES', $record)['err'];
+			$res['err'] = (parent::addRecord('ALIASES', $record))['err'];
 			if ($res['err'] > 0) return $res;
 			$res['aliasId'] = parent::insertId();
 			
 			//aktualizujemy
 			$update = Array ('PARENT_ID'=>'ID', 'ALIAS_ID'=>$res['aliasId']);
-			$res['err'] = parent::updateRecords('OBJECTS', $update, 'ID='.$res['objectId'])['err'];
+			$res['err'] = (parent::updateRecords('OBJECTS', $update, 'ID='.$res['objectId']))['err'];
 			if ($res['err'] > 0) return $res;
 			
 			$update = Array ('OBJECT_ID'=>$res['objectId']);
-			$res['err'] = parent::updateRecords('USERS', $update, 'LOGIN=\''.$login.'\'')['err'];
+			$res['err'] = (parent::updateRecords('USERS', $update, 'LOGIN=\''.$login.'\''))['err'];
 			if ($res['err'] > 0) return $res;
 			
 			//jeœli wszystko sie udalo, autoryzujemy sesji
@@ -68,7 +68,7 @@
 			$res =  parent::updateRecords('OBJECTS', $update, 'ALIAS_ID='.$aliasId);
 			if ($res['err']>0) return $res;
 			
-			$res['err'] = parent::removeRecords ('ALIASES', 'ID='.$aliasId)['err'];
+			$res['err'] = (parent::removeRecords ('ALIASES', 'ID='.$aliasId))['err'];
 			return $res;
 		}
 		
