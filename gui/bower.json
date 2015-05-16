@@ -1,0 +1,32 @@
+{
+  "name": "joint-gui",
+  "version": "0.0.0",
+  "homepage": "https://github.com/neura-sx/Joint",
+  "authors": [
+    "neura.sx"
+  ],
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "fontawesome": "*",
+    "bootstrap": "*",
+    "angular": "~1.3.15",
+    "angular-ui-router": "~0.2.14",
+    "restangular": "~1.5.1",
+    "lodash": "~3.8.0",
+    "ui-bootstrap": "~0.13.0",
+    "angular-ui-bootstrap-bower": "~0.13.0",
+    "bootbox": "~4.4.0",
+    "ngBootbox": "~0.0.5",
+    "jquery-locationpicker-plugin": "~0.1.12",
+    "angular-google-maps": "~2.1.1",
+    "ng-contenteditable": "*",
+    "angular-ui-select": "~0.11.2"
+  }
+}
