@@ -94,9 +94,15 @@
 		public function match ($o1, $o2) {	
 			//znajdujemy rodziców
 			$p1 = $o1;
-			while ($p1['PARENT_ID']!=$p1['ID']) $p1 = database :: getRecords ('OBJECTS', '*', 'ID='.$p1['PARENT_ID'])[0];
+			while ($p1['PARENT_ID']!=$p1['ID']) {
+				$p1 = database :: getRecords ('OBJECTS', '*', 'ID='.$p1['PARENT_ID']);
+				$p1 = $p1[0];
+			}
 			$p2 = $o2;
-			while ($p2['PARENT_ID']!=$p2['ID']) $p2 = database :: getRecords ('OBJECTS', '*', 'ID='.$p2['PARENT_ID'])[0];
+			while ($p2['PARENT_ID']!=$p2['ID']) {
+				$p2 = database :: getRecords ('OBJECTS', '*', 'ID='.$p2['PARENT_ID']);
+				$p2 = $p2[0];
+			}
 		
 			if ($p1['ID']==$p2['ID']) return false;
 			
