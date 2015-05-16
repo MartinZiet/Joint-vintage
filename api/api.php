@@ -1,5 +1,8 @@
-
 <?php
+
+	ini_set('display_errors','on');
+	error_reporting(E_ERROR);
+
 	session_start ();
 
 	require_once ('lib/database.php');
