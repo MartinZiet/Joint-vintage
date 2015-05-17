@@ -3,6 +3,19 @@
 ini_set('display_errors','on');
 error_reporting(E_ERROR | E_PARSE);
 
+/* no-Apache servers */
+	if (!function_exists('getallheaders')) { 
+		function getallheaders() { 
+			$headers = ''; 
+			foreach ($_SERVER as $name => $value) { 
+				if (substr($name, 0, 5) == 'HTTP_') { 
+					   $headers[str_replace(' ', '-', ucwords(strtolower(str_replace('_', ' ', substr($name, 5)))))] = $value; 
+				} 
+			} 
+			return $headers; 
+		} 
+	} 
+
 $path = $_SERVER['PATH_INFO'];
 $path = explode('/',$path);
 array_shift($path);
