@@ -1,5 +1,8 @@
 <?php
 
+ini_set('display_errors','on');
+error_reporting(E_ERROR | E_PARSE);
+
 $path = $_SERVER['PATH_INFO'];
 $path = explode('/',$path);
 array_shift($path);
