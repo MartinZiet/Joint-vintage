@@ -24,7 +24,7 @@ angular.module('joint.ctrl')
 			switch(id) {
 				case 'friends':
 					Restangular.all('friends').getList().then(function(friends){
-						console.log(friends);
+						//console.log(friends);
 						$scope.list = {
 							template: 'app/components/sidepanel/templates/list-friend.html',
 							friends: friends

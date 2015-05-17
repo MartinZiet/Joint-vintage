@@ -96,7 +96,7 @@ angular.module('joint.ctrl')
 		});
 		
 		$scope.$watch('tags.verb',function(n,o){
-			console.log(n);
+			//console.log(n);
 			if(n) {				
 				$scope.currentVerbMode = verbModels[n.mode];				
 				console.log(verbModels[n.mode]);

@@ -1,6 +1,10 @@
 angular.module('joint.ctrl')
 
-.controller('StructureController',['$rootScope','$scope', '$state', 'Restangular','$timeout', function($rootScope, $scope, $state, Restangular, $timeout){
+.controller('StructureController',['$rootScope','$scope', '$state', 'Restangular','$timeout','JointGlobalService', 
+			function($rootScope, $scope, $state, Restangular, $timeout, $global){
+	
+	var loggedIn = $global.checkLogin();
+	if(!loggedIn) { return false; }
 	
 	var _this = this;	
 	

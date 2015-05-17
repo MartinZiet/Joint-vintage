@@ -1,22 +1,30 @@
 angular.module('joint.ctrl')
 
-.controller('LoginController',['$rootScope','$scope', '$state', 'Restangular','$timeout', function($rootScope, $scope, $state, Restangular, $timeout){
-	
-	$rootScope.loginState = {
-		status:false
-	};
+.controller('LoginController',['$rootScope','$scope', '$state', 'Restangular','$timeout','JointGlobalService', 
+function($rootScope, $scope, $state, Restangular, $timeout, $global){
 	
 	$scope.data = {
 		login: {},
 		signup: {}
 	}
 	
+	$scope.$watch('api',function(n,o){
+		Restangular.setBaseUrl(n.url);
+		console.log('set base url to '+n.url);
+	});
+	
+	$scope.apis = [
+		{name:'local mysql php',url:'../api/api.php'},
+		{name:'mockup php',url:'../stuff/api-mockup.php'}	
+	];
+	
+	$scope.api = $scope.apis[0];
+	
 	$scope.login = function() {
 		Restangular.all('login').doPOST($scope.data.login).then(function(){
-			$rootScope.loginState.status = true;
+			$global.loginState.status = true;
 			$state.go('me');
 		})
-		console.log($scope.data.login);	
 	}
 	
 	$scope.signup = function() {

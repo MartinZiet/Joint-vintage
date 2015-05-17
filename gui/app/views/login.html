@@ -7,6 +7,16 @@
 					Welcome to Joint
 				</div>
 				<div class="panel-body" ng-controller="LoginController">
+					
+					<div class="form-horizontal">
+					<div class="form-group">
+						<label class="control-label col-sm-3">Choose API</label>
+						<div class="col-sm-9">
+							<select class="form-control" ng-model="api" ng-options="a.name for a in apis"></select>
+						</div>
+					</div>
+					</div>
+					
 					 <accordion close-others="true">
 					    <accordion-group heading="Log in using your existing Joint account" is-open="true">
 					      <form class="form-horizontal">
