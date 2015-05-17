@@ -190,6 +190,7 @@ class jointRouter {
             $result = call_user_func_array(Array($model,$method),$params);            
         }
         
+		$result = json_decode(json_encode($result),true);
 		$result = $this->arrayKeysCaseRecursive($result,CASE_LOWER,true);
 		
 		if(!$result['err']) {
