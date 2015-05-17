@@ -164,24 +164,41 @@ class jointRouter {
         return $paramsInOrder;
         
     }
+	
+	protected function arrayKeysCaseRecursive(&$array,$case=CASE_LOWER,$flag_rec=false) {
+		
+		$array = array_change_key_case($array, $case);
+		  if ( $flag_rec ) {
+		    foreach ($array as $key => $value) {
+		        if ( is_array($value) ) {
+		            $this->arrayKeysCaseRecursive($array[$key], $case, true);
+		        }
+		    }
+		  }
+		
+	}
     
     public function processRequest(&$model) {
         
         $route = $this->matchAllRoutes();
-        
-        if(!$route) {
-            die('No route matched');
-        }
+		$result = Array();
         
         $method = $route['fn'];
-        if(method_exists($model,$method)) {            
+        if($method && method_exists($model,$method)) {            
             $params = $this->getParamsInOrder($route);
             if(!$params) { $params = Array(); }         
             $result = call_user_func_array(Array($model,$method),$params);            
-        } else {
-            die("Method {$method} not implemented");
         }
         
+		$result = $this->arrayKeysCaseRecursive($result,CASE_LOWER,true);
+		
+		if(!$result['err']) {
+			$result = $result['records'];
+		} else {
+			$result = Array();
+		}
+		
+		header('Content-type: application/json');
         echo json_encode($result);
         
     }
