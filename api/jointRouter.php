@@ -191,7 +191,7 @@ class jointRouter {
         }
         
 		$result = json_decode(json_encode($result),true);
-		$this->arrayKeysCaseRecursive($result,CASE_LOWER,true);
+		$this->arrayKeyCaseRecursive($result,CASE_LOWER,true);
 		
 		if(!$result['err']) {
 			$result = $result['records'];
