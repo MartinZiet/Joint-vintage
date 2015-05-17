@@ -165,13 +165,13 @@ class jointRouter {
         
     }
 	
-	protected function arrayKeysCaseRecursive(&$array,$case=CASE_LOWER,$flag_rec=false) {
+	public function arrayKeyCaseRecursive(&$array,$case=CASE_LOWER,$flag_rec=false) {
 		
 		$array = array_change_key_case($array, $case);
 		  if ( $flag_rec ) {
 		    foreach ($array as $key => $value) {
 		        if ( is_array($value) ) {
-		            $this->arrayKeysCaseRecursive($array[$key], $case, true);
+		            $this->arrayKeyCaseRecursive($array[$key], $case, true);
 		        }
 		    }
 		  }
@@ -191,7 +191,7 @@ class jointRouter {
         }
         
 		$result = json_decode(json_encode($result),true);
-		$result = $this->arrayKeysCaseRecursive($result,CASE_LOWER,true);
+		$this->arrayKeysCaseRecursive($result,CASE_LOWER,true);
 		
 		if(!$result['err']) {
 			$result = $result['records'];
