@@ -283,6 +283,40 @@
 			return $res;
 		}
 	
+		public function call ($objectId1, $objectId2) {
+			$update = Array('EASYRTC_OBJECT_ID'=>$objectId1, 'EASYRTC_CALLED_OBJECT_ID'=>$objectId2);
+			$res = parent::updateRecords('USERS', $update, 'OBJECT_ID='.$_SESSION['ID']);
+			if ($res['err']>0) return $res;
+			
+			
+			$o2 = Array('ID'=>-1, 'PARENT_ID'=>$objectId2);
+			while ($o2['ID'] != $o2['PARENT_ID']) {
+				$o2['ID'] = $o2['PARENT_ID'];
+				
+				$tmp = parent::getRecords('OBJECTS', 'ID, PARENT_ID', 'ID='.$o2['ID']);
+				if ($tmp['err']>0) return $tmp;
+				
+				$o2['PARENT_ID'] = $tmp['records'][0]['PARENT_ID'];
+			}
+			
+			$tmp = parent::getRecords('USERS', 'EASYRTC_ID', 'OBJECT_ID='.$o2['ID']);
+			if ($tmp['err']>0) return $tmp;
+			return Array('easyRTCId'=>$tmp['records'][0]['EASYRTC_ID']);
+			
+		}
+	
+		public function callInfo ($easyRTCId) {
+			$tmp = parent::getRecords('(USERS AS U JOIN OBJECTS AS O ON U.EASYRTC_OBJECT_ID = O.ID) JOIN ALIASES AS A ON O.ALIAS_ID=A.ID', 'O.ID as id, O.NAME as name, A.ALIAS as alias, U.EASYRTC_CALLED_OBJECT_ID as callTo', 'U.EASYRTC_ID=\''.$easyRTCId.'\'');
+			if ($tmp['err'] > 0) return $tmp;
+			return $tmp['records'][0];
+		}
+	
+		public function callCheckIn ($easyRTCId) {
+			$update = Array('EASYRTC_ID'=>'\''.$easyRTCId.'\'');
+			return parent::updateRecords('USERS', $update, 'OBJECT_ID='.$_SESSION['ID']);
+		}
+	
+	
 		public function transfer ($fromId, $toId, $amount) {
 			$res = parent::getRecords ('OBJECTS', 'ACCOUNT', 'ID='.$fromId);
 			if ($res['err']>0) return $res;

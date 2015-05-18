@@ -94,7 +94,10 @@
 				else echo 'OK<br />';
 			}
 			
-			return Array ('err'=> mysql_errno());
+			if (mysql_errno() > 0)
+				return Array ('err'=> mysql_errno(), 'errMsg'=>mysql_error());
+			else 
+				return Array ('err'=> mysql_errno());
 		}
 		
 		public function insertId () {

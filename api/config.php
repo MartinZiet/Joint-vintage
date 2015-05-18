@@ -12,12 +12,15 @@ $config = Array(
 	Array('POST','/login','login', Array('username', 'password')),
 	Array('POST', '/signup', 'signup', Array('username','name','password') ),
 	Array('POST', '/friends/:frID/objects/:oID/friendship', 'addFriendship', Array ('oID', 'frID')), //potwierdza lub zaczyna przyjaźń
+	Array('POST', '/call/checkin', 'callCheckIn', Array('easyRTCID')), 
 	
 	Array('GET', '/aliases', 'getAliases'),
 	Array('GET', '/structure', 'structure'),
 	Array('GET', '/structure/objects/:ID/friends', 'friendList', Array('ID')), //pobiera przyjaciol dla danego obiektu
 	Array('GET', '/friends/objects/:ID', 'structure', Array('ID')), /*pobiera obiekt przyjaciela*/
 	Array('GET', '/friends/:frID/objects/:oID/chat',  'chat', Array('oID', 'frID')), //pobiera tresc chatu dla obiektu przyjaciela
+	Array('GET', '/friends/:frID/objects/:oID/call', 'call', Array ('oID', 'frID')), //makes EasyRTC connection
+	Array('GET', '/friends/call/:easyRTCID', 'callInfo', Array ('easyRTCID')), 
 	
 	
 	Array('DELETE', '/friends/:frID/objects/:oID/friendship', 'removeFriendship', Array('frID', 'oID')), 
