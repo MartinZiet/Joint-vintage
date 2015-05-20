@@ -29,6 +29,11 @@ function($httpProvider) {
 .config(function(RestangularProvider){
 	RestangularProvider.setBaseUrl('../stuff/api-mockup.php');
 	RestangularProvider.setMethodOverriders(['DELETE','PUT']);
+	RestangularProvider.addResponseInterceptor(function(data) {
+		if(data.status) {
+			return data.data;
+		}
+	});
 })
 
 .config(function($stateProvider, $urlRouterProvider) {
