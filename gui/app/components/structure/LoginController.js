@@ -10,6 +10,11 @@ function($rootScope, $scope, $state, Restangular, $timeout, $global){
 	
 	$scope.$watch('api',function(n,o){
 		Restangular.setBaseUrl(n.url);
+		Restangular.setResponseInterceptor(function(data) {
+			if(data.status) {
+				return data.data;
+			}
+		});
 		console.log('set base url to '+n.url);
 	});
 	
@@ -21,10 +26,10 @@ function($rootScope, $scope, $state, Restangular, $timeout, $global){
 	$scope.api = $scope.apis[0];
 	
 	$scope.login = function() {
-		Restangular.all('login').doPOST($scope.data.login).then(function(){
+		Restangular.all('login').doPOST($scope.data.login).then(function(obj){
 			$global.loginState.status = true;
-			$state.go('me');
-		})
+			$state.go('me.objects',{objectId:obj.objectId});
+		});
 	}
 	
 	$scope.signup = function() {

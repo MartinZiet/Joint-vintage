@@ -15,6 +15,7 @@ angular.module('joint.ctrl')
 		
 		for(var i=0; i < len; i++) {
 			var o = $scope.structure[i];
+			if(o.parent_id==o.id) { o.parent_id=0; $scope.structure[i].parent_id=0; }
 			if(!byParent[o.parent_id]) { byParent[o.parent_id] = []; }
 			byParent[o.parent_id].push(o.id);
 		}

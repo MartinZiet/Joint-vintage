@@ -125,6 +125,8 @@ if($n=='objects' && $sub=='contents') {
 	$result = $contents;
 }
 
+$result = Array('status'=>true,'data'=>$result);
+
 header('Content-Type: application/json');
 if($n!='gumtreee') {
 	echo json_encode($result);
