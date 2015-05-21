@@ -42,7 +42,9 @@ module.exports = function(grunt) {
 				'./bower_components/bootbox/bootbox.js',
 				'./bower_components/ngBootbox/ngBootbox.js',
 				'./bower_components/jquery-locationpicker-plugin/dist/locationpicker.jquery.min.js',
-				'./bower_components/ng-contenteditable/dist/ng-contenteditable.min.js'
+				'./bower_components/ng-contenteditable/dist/ng-contenteditable.min.js',
+                './assets/js/socket.io/socket.io.min.js',
+                './assets/js/easyrtc/api/easyrtc.js'
 			],
 			dest: './public/js/3rdparty.js'
 		},

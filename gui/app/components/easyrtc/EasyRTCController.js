@@ -1,14 +1,14 @@
-angular.module('joint.ctrl').controller('ertc', function($scope, easyRTC, $q) {
+angular.module('joint.ctrl').controller('EasyRTCController', function($scope, easyRTC, $q, $attrs) {
+    
     $scope.button_show = false;
-    $scope.name_calling = '';
-    $scope.user_name = '<username>';
+    $scope.userId = $attrs.userId;
+    $scope.user_name = "user1";
     easyRTC.getId(function(id) {
       $scope.ertc_id = id;
     });
     $scope.defer = $q.defer;
     $scope.ansver = function(t) {};
     $scope.call = function(id) {
-      console.log('call to ' + id);
       $scope.init_media().then(function() {
         console.log('calling to ' + id);
         return easyRTC.performCall(id);
@@ -25,7 +25,7 @@ angular.module('joint.ctrl').controller('ertc', function($scope, easyRTC, $q) {
       var deferred;
       console.log('init');
       deferred = $scope.defer();
-      easyRTC.init(angular.element('#self'), angular.element('#caller'), $scope.user_name, function() {
+      easyRTC.init(angular.element('#self_ertc_vid'), angular.element('#self_ertc_vid'), $scope.user_name, function() {
         console.log('Media ready to go!');
         return deferred.resolve();
       });

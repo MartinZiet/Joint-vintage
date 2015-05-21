@@ -48,5 +48,9 @@ angular.module('joint.ctrl')
 				break;
 			}
 		}
+        
+        $scope.call = function(id){
+            console.log("calling to " + id);
+            }
 		
 	}]);
