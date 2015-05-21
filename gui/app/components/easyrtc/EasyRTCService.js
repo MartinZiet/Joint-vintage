@@ -4,7 +4,8 @@ angular.module('joint.services')
     var error, self, success;
     self = this;
     self.deferred = $q.defer();
-    easyrtc.setSocketUrl("37.59.119.110:8989");
+    easyrtc.setSocketUrl(":8080");
+    // connect to socket server
     easyrtc.connect("joint", success = function(id, room) {
       self.id = id;
       self.deferred.resolve();
@@ -43,6 +44,7 @@ angular.module('joint.services')
       acceptConnection: function(scope, cb) {
         return easyrtc.setAcceptChecker(function(easyrtcid, acceptor) {
           self.othereasyrtcid = easyrtcid;
+          console.log('********* ' + easyrtc.idToName(easyrtcid));
           cb(easyrtc.idToName(easyrtcid), acceptor, scope);
         });
       },

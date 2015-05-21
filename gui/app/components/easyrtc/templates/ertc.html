@@ -1,11 +1,6 @@
-<div class="container">
-  <div class="row">
-    <div class="col-lg-12">
-      <h1 class="page-header">Features:{{ertc_id}}</h1>
-      <video  style="float:left;border: solid 1px;" id="self" width="300" height="200" muted="muted"></video>
-       <div style="position:relative;float:left;width:300px">
-           <video style="border: solid 1px;" id="caller" width="300" height="200"></video>
-       </div>
+<div>
+      Features:{{ertc_id}}
+      <video  style="float:left;border: solid 1px;" id="self_ertc_vid" width="300" height="200" muted="muted"></video>
 
       <input type="text" ng-model="call_id">
       <button ng-click="call(call_id)">call</button>
@@ -16,7 +11,4 @@
           <button  ng-click="ansver(true)">Ansver</button>
           <button  ng-click="ansver(false)">Cancel</button>    
       </div>
-      
-    </div>
-  </div>
 </div>
