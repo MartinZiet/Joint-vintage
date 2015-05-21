@@ -58,7 +58,8 @@ module.exports = function(grunt) {
 		css_3rdparty: {
 			src: [
 				'./assets/styles/bootstrap.min.css',
-				'./bower_components/fontawesome/css/font-awesome.min.css'
+				'./bower_components/fontawesome/css/font-awesome.min.css',
+				'./bower_components/angular-ui-select/dist/select.min.css'
 			],
 			dest: './public/css/3rdparty.css'
 		}

@@ -32,7 +32,7 @@ $method = $headers['X-Http-Method-Override'];
 header('x-request-method: '.$method);
 
 $structure = Array(
-	Array('id'=>1,'parent_id'=>1,'name'=>'Joint Origin','alias'=>'Some alias','is_public'=>true,'type'=>0),
+	Array('id'=>1,'parent_id'=>0,'name'=>'Joint Origin','alias'=>'Some alias','is_public'=>true,'type'=>0),
 	Array('id'=>2,'parent_id'=>1,'name'=>'Another object1','alias'=>'Another alias','is_public'=>true,'type'=>15),
     Array('id'=>3,'parent_id'=>1,'name'=>'Another object2','alias'=>'Another alias','is_public'=>true,'type'=>15),
     Array('id'=>4,'parent_id'=>1,'name'=>'Another object3','alias'=>'Another alias','is_public'=>true,'type'=>15),
