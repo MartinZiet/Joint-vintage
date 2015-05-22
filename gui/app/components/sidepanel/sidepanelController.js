@@ -1,6 +1,16 @@
 angular.module('joint.ctrl')
 
-	.controller('SidepanelController',['$scope','Restangular',function($scope, Restangular){
+	.controller('SidepanelController',['$rootScope','$scope','Restangular','$stateParams',
+	function($rootScope, $scope, Restangular, $stateParams){
+		
+		$rootScope.$on('$stateChangeSuccess',function() {
+			$scope.objectId = $stateParams.objectId;
+		});
+		
+		$scope.$watch('objectId',function(n,o){
+			console.log('objectId:' + n);
+			$scope.load('friends');
+		});
 		
 		$scope.tabs = [
 			{
@@ -21,10 +31,12 @@ angular.module('joint.ctrl')
 		}
 		
 		$scope.load = function(id) {
+			
+			if(!$scope.objectId) { return false; }
+			
 			switch(id) {
 				case 'friends':
-					Restangular.all('friends').getList().then(function(friends){
-						//console.log(friends);
+					Restangular.one('structure').one('objects',$scope.objectId).all('friends').getList().then(function(friends){
 						$scope.list = {
 							template: 'app/components/sidepanel/templates/list-friend.html',
 							friends: friends

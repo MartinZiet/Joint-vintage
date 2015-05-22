@@ -18,7 +18,9 @@
     <span ng-switch on="tag.type">
         <span ng-switch-when="1">
             <ui-select multiple ng-model="point.value" theme="bootstrap">
-                <ui-select-match placeholder="{{ tag.name }}...">{{$select.selected.value || $select.selected}}</ui-select-match>
+                <ui-select-match placeholder="{{ tag.name }}...">
+                	{{ $item.value }}
+                </ui-select-match>
                 <ui-select-choices repeat="val.value as val in tag._values">
                     {{ val.value }}                
                 </ui-select-choices>

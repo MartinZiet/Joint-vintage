@@ -15,9 +15,25 @@ angular.module('joint', [
   'ContentEditable'
 ])
 
+.config(['$httpProvider',
+function($httpProvider) {
+  // Use x-www-form-urlencoded Content-Type
+  $httpProvider.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded;charset=utf-8';
+
+  // Override $http service's default transformRequest
+  $httpProvider.defaults.transformRequest = [function(data) {
+    return angular.isObject(data) && String(data) !== '[object File]' ? $.param(data) : data;
+  }];
+}])
+
 .config(function(RestangularProvider){
 	RestangularProvider.setBaseUrl('../stuff/api-mockup.php');
 	RestangularProvider.setMethodOverriders(['DELETE','PUT']);
+	RestangularProvider.addResponseInterceptor(function(data) {
+		if(data.status) {
+			return data.data;
+		}
+	});
 })
 
 .config(function($stateProvider, $urlRouterProvider) {
@@ -35,17 +51,17 @@ angular.module('joint', [
       url: "/me",
       templateUrl: "app/views/map.html"    
     })
-    .state('me.object', {
-      url: "/object/:objectId"
+    .state('me.objects', {
+      url: "/objects/:objectId"
     })
-    .state('me.object.edit', {
+    .state('me.objects.edit', {
     	url: "/edit",
     	params: {
     		editObject: true
     	}
     })
     .state('friends', {
-      url: "/friends/:friendId/object/:objectId",
+      url: "/friends/:friendId/objects/:objectId",
       templateUrl: "app/views/map.html"
     });
 });

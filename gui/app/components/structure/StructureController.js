@@ -46,7 +46,8 @@ angular.module('joint.ctrl')
 		Restangular.all(path).getList().then(function(structure){
   			$scope.structure = structure;
   			if(!$scope.objectId) {
-  				$scope.objectId = structure[0].id;
+  				//$scope.objectId = structure[0].id;
+  				$state.go('me.objects',{objectId:structure[0].id});
   			}
   			//$scope.$broadcast('structureUpdated');	  			
   		});
@@ -55,13 +56,10 @@ angular.module('joint.ctrl')
 	
 	this.add = function() {
 		var insertId = $scope.newId;
-		$scope.structure.push({id:$scope.newId,parent_id:$scope.objectId,name:'ADD OBJECT'});
-		$scope.newId++;
-		//$scope.$on('objectsRendered',function(){
-		$timeout(function() {
-			$state.go('me.object.edit',{objectId:insertId});
-		},300);
-			
+		Restangular.all('structure').one('objects',$scope.objectId).put({parent_id:$scope.objectId,name:'ADD OBJECT'}).then(function(obj) {
+			$scope.structure.push(obj);
+			$state.go('me.objects.edit',{objectId:obj.id});
+		});
 	}		
 	
 	this.find = function(id) {
@@ -75,13 +73,13 @@ angular.module('joint.ctrl')
 		var postRemove = function() {
 			$scope.structure = _.without($scope.structure,obj);
 			var children = _.filter($scope.structure,function(o){
-				return o.parent_id===id;
+				return o.parent_id===id && (o.parent_id!=o.id);
 			});
 			for(var i = 0; i < children.length; i++) {
 				_this.remove(children[i].id,true);
 			}
 			if(!is_recursive) {
-				$state.go('me.object',{objectId:obj.parent_id});
+				$state.go('me.objects',{objectId:obj.parent_id});
 				
 			}
 		}

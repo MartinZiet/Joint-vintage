@@ -67,11 +67,7 @@ angular.module('joint.ctrl')
 	}
 	
 	$scope.save = function(dontflip) {		
-		if($scope.obj.post) {
-			$scope.obj.post();
-		} else {		
-			Restangular.one('structure',$scope.obj.parent_id).post($scope.obj);
-		}
+		$scope.obj.save();
 		if(!dontflip) { $scope.flip(); }
 	}
 			
@@ -89,9 +85,9 @@ angular.module('joint.ctrl')
 	
 	$scope.toggleFlag = function(flag) {
 		if($scope.obj[flag]) {
-			$scope.obj[flag] = false;
+			$scope.obj[flag] = 0;
 		} else {
-			$scope.obj[flag] = true;
+			$scope.obj[flag] = 1;
 		}
 		$scope.save(true);
 	}

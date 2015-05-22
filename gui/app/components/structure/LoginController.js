@@ -21,10 +21,10 @@ function($rootScope, $scope, $state, Restangular, $timeout, $global){
 	$scope.api = $scope.apis[0];
 	
 	$scope.login = function() {
-		Restangular.all('login').doPOST($scope.data.login).then(function(){
+		Restangular.all('login').doPOST($scope.data.login).then(function(obj){
 			$global.loginState.status = true;
-			$state.go('me');
-		})
+			$state.go('me.objects',{objectId:obj.object_id});
+		});
 	}
 	
 	$scope.signup = function() {

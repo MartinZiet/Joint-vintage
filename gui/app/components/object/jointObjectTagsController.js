@@ -11,6 +11,7 @@ angular.module('joint.ctrl')
 		$scope.templates = $rootScope.templates;
 		
 		$scope.tagValue = function(id,val) {
+			if(!$scope.obj.tags) { $scope.obj.tags = []; }
 			var t = _.findWhere($scope.obj.tags,{name:id});
 			if(!t && !val) { return false; }
 			if(val && t) { t.points[0].value = val; }
@@ -95,7 +96,7 @@ angular.module('joint.ctrl')
 			$scope.fetchTags();			
 		});
 		
-		$scope.$watch('tags.verb',function(n,o){
+		$scope.$watch('current.tags.verb',function(n,o){
 			//console.log(n);
 			if(n) {				
 				$scope.currentVerbMode = verbModels[n.mode];				
@@ -112,8 +113,8 @@ angular.module('joint.ctrl')
 		}
 		
 		$scope.show = function() {
-			console.log($scope.obj.tags);
-			console.log($scope.current);
+			//console.log($scope.obj.tags);
+			//console.log($scope.current);
 			console.log(jQuery.extend($scope.obj.tags,$scope.current.tags));			
 		}
 		
