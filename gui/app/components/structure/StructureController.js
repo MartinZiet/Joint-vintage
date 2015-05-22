@@ -40,7 +40,7 @@ angular.module('joint.ctrl')
 		if($scope.friendId) {
 			var path = 'friends/'+$scope.friendId+'/objects';
 		} else {
-			var path = 'structure';
+			var path = 'objects';
 		}
 		
 		Restangular.all(path).getList().then(function(structure){
@@ -56,7 +56,7 @@ angular.module('joint.ctrl')
 	
 	this.add = function() {
 		var insertId = $scope.newId;
-		Restangular.all('structure').one('objects',$scope.objectId).put({parent_id:$scope.objectId,name:'ADD OBJECT'}).then(function(obj) {
+		Restangular.one('objects',$scope.objectId).post(false,{parent_id:$scope.objectId,name:'Noname'}).then(function(obj) {
 			$scope.structure.push(obj);
 			$state.go('me.objects.edit',{objectId:obj.id});
 		});

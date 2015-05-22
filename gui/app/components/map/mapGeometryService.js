@@ -17,7 +17,7 @@ angular.module('joint.services')
 			if(children) {
 				var chLength = children.length;
 			}					
-			var isRoot = !map[id].parent_id; //(id==1);
+			var isRoot = !parseInt(map[id].parent_id) || (parseInt(map[id].parent_id)==0); //(id==1);
 			var angle = baseAngle;
 			
 			//if(!isRoot) { ref.addClass('sml'); }

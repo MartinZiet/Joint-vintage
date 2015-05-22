@@ -44,7 +44,7 @@ angular.module('joint.ctrl')
 	$scope.setup = function() {
 		if(!$scope.objectsMap) { return false; }
 		var m = $scope.objectsMap[$scope.obj.id];		
-		var isParent = m && m.children && (m.children.indexOf($scope.objectId*1) > -1);
+		var isParent = m && m.children && (m.children.indexOf($scope.objectId) > -1);
 		$scope.active = (($scope.obj.id==$scope.objectId) && !$stateParams.addObject);
 		$scope.sml = !$scope.active;
 		$scope.visible = ($scope.obj.parent_id==$scope.objectId) 

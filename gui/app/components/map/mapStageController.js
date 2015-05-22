@@ -9,13 +9,12 @@ angular.module('joint.ctrl')
 		
 		var byParent = {};
 		var objMap = {};
-		var len = $scope.structure.length;
-		//var parentId = o.parent_id;
-		//if(!parentId) { parentId = 0; }
+		var len = $scope.structure.length;	
+		
+		console.log($scope.structure);	
 		
 		for(var i=0; i < len; i++) {
-			var o = $scope.structure[i];
-			if(o.parent_id==o.id) { o.parent_id=0; $scope.structure[i].parent_id=0; }
+			var o = $scope.structure[i];			
 			if(!byParent[o.parent_id]) { byParent[o.parent_id] = []; }
 			byParent[o.parent_id].push(o.id);
 		}
@@ -24,6 +23,9 @@ angular.module('joint.ctrl')
 			var o = $scope.structure[i];
 			objMap[o.id] = {id:o.id,parent_id:o.parent_id,children:byParent[o.id]};
 		}
+		
+		console.log(byParent);
+		console.log(objMap);
 		
 		return objMap;
 		

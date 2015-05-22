@@ -8,6 +8,15 @@ angular.module('joint.ctrl')
 	'$sce',
 	function($rootScope,$scope,$stateParams,Restangular,$sce){
 		
+		var _templateTypeId = 9;
+		var _searchTypeId = 8;
+		
+		//configure templates for object types
+		var objectTypeTemplates = {
+			8: 'app/components/object/templates/jointObjectTagsEdit.html',
+			9: 'app/components/object/templates/jointObjectTagsEditTemplate.html'
+		}
+		
 		$scope.templates = $rootScope.templates;
 		
 		$scope.tagValue = function(id,val) {
@@ -21,7 +30,9 @@ angular.module('joint.ctrl')
 		
 		$scope.reset = function() {
 			//reset current view
-			$scope.current = {};
+			$scope.current = {
+				tags: []
+			};
 			var tplId = $scope.tagValue(('_template_id'));
 			if(tplId) {
 				$scope.current.template = tplId;
@@ -32,7 +43,7 @@ angular.module('joint.ctrl')
 			
 			var tags = angular.copy(origin.tags);
 			
-			if($scope.obj.type!=18) {	
+			if($scope.obj.type!=_templateTypeId) {	
 				for(var i in tags) {
 					tags[i]._values = tags[i].points;
 					tags[i].points = [{}];
@@ -48,12 +59,12 @@ angular.module('joint.ctrl')
 		$scope.fetchTags = function() {
 			switch($scope.obj.type) {
 				//use objects own tags to edit template
-				case 18:
+				case _templateTypeId:
 					$scope.setTags($scope.obj);
 					return;
 				break;
 				//fetch template object tags
-				case 17:
+				case _searchTypeId:
 					var tplId = $scope.current.template;
 					if(!tplId) {
 						$scope.reset();
@@ -67,13 +78,8 @@ angular.module('joint.ctrl')
 			return;
 		}
 		
-		$scope.reset();
+		$scope.reset();		
 		
-		//configure templates for object types
-		var objectTypeTemplates = {
-			17: 'app/components/object/templates/jointObjectTagsEdit.html',
-			18: 'app/components/object/templates/jointObjectTagsEditTemplate.html'
-		}
 		
 		$scope.$watch('obj.type',function(n,o){						
 			$scope.objectTypeTemplate = objectTypeTemplates[n];
@@ -115,7 +121,8 @@ angular.module('joint.ctrl')
 		$scope.show = function() {
 			//console.log($scope.obj.tags);
 			//console.log($scope.current);
-			console.log(jQuery.extend($scope.obj.tags,$scope.current.tags));			
+			console.log(jQuery.extend($scope.obj.tags,$scope.current.tags));	
+			$scope.obj.tags = $scope.current.tags;		
 		}
 		
 		$scope.add = function() {
