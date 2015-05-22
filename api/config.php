@@ -9,14 +9,18 @@
 
 
 $config = Array(
+
 	Array('POST','/login','login', Array('username', 'password')),
 	Array('POST', '/signup', 'signup', Array('username','name','password') ),
 	Array('POST', '/friends/:frID/objects/:oID/friendship', 'addFriendship', Array ('oID', 'frID')), //potwierdza lub zaczyna przyjaźń
-	Array('POST', '/call/checkin', 'callCheckIn', Array('easyRTCID')), 
+	Array('POST', '/call/checkin', 'callCheckIn', Array('easyRTCID')),
+	
+    Array('GET', '/types', 'getObjectsByType', Array(5)),
+    Array('GET', '/templates', 'getObjectsByType', Array(9)),     
 	
 	Array('GET', '/aliases', 'getAliases'),
-	Array('GET', '/structure', 'structure'),
-	Array('GET', '/structure/objects/:ID/friends', 'friendList', Array('ID')), //pobiera przyjaciol dla danego obiektu
+	Array('GET', '/objects', 'structure'),
+	Array('GET', '/objects/:ID/friends', 'friendList', Array('ID')), //pobiera przyjaciol dla danego obiektu
 	Array('GET', '/friends/objects/:ID', 'structure', Array('ID')), /*pobiera obiekt przyjaciela*/
 	Array('GET', '/friends/:frID/objects/:oID/chat',  'chat', Array('oID', 'frID')), //pobiera tresc chatu dla obiektu przyjaciela
 	Array('GET', '/friends/:frID/objects/:oID/call', 'call', Array ('oID', 'frID')), //makes EasyRTC connection
@@ -24,16 +28,17 @@ $config = Array(
 	
 	
 	Array('DELETE', '/friends/:frID/objects/:oID/friendship', 'removeFriendship', Array('frID', 'oID')), 
-	Array('DELETE', '/structure/objects/:ID', 'removeObject', Array('ID')), //usuwa obiekt
+	Array('DELETE', '/objects/:ID', 'removeObject', Array('ID')), //usuwa obiekt
 	Array('DELETE', '/aliases/:ID/:altID', 'removeAlias', Array('ID', 'altID') ), //usuwa alias
 	Array('DELETE', '/structure/objects/:oID/contents/:cID', 'removeObject', Array('cID')), //usuwa content
 	
 	
-	Array('PUT',  '/aliases', 'addAlias', Array('name')), //dodaje alias
-	Array('PUT', '/structure/objects/:ID', 'addObject', Array('ID', 'name', 'public', 'type', 'tags')), //dodaje nowy obiekt jako childa
-	Array('PUT', '/structure/objects/:ID/contents', 'addContent', Array('ID', 'name', 'HTML')), //dodaje content dla obiektu
-	Array('PUT', '/friends/:frID/objects/:oID/chat', 'chat', Array('oID', 'frID', 'message')), //dodaje wiadomosc do tresci chatu dla obiektu przyjaciela
+	Array('POST',  '/aliases', 'addAlias', Array('name')), //dodaje alias
+	Array('POST', '/objects/:ID', 'addObject', Array('ID', '$POST')), //dodaje nowy obiekt jako childa
+	Array('POST', '/objects/:ID/contents', 'addContent', Array('ID', 'name', 'HTML')), //dodaje content dla obiektu
+	Array('POST', '/friends/:frID/objects/:oID/chat', 'chat', Array('oID', 'frID', 'message')), //dodaje wiadomosc do tresci chatu dla obiektu przyjaciela
 	
+	Array('PUT', '/objects/:ID', 'updateObject', Array('ID','$POST')),
 	
 	
 	/*Array('GET','/example','foo'),

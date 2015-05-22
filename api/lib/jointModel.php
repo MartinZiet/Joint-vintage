@@ -35,6 +35,19 @@
 			$row['TAGS'] = json_decode($row['TAGS']);
 			return $row;
 		}
+        
+        function serializeObject(&$row) {
+            
+            $jsonableFields = Array('TAGS','REPUTATION');
+            
+            foreach($jsonableFields as $f) {
+                if(isset($row[$f])) {
+                    $row[$f] = json_encode($row[$f]);
+                }
+            }
+            return;
+            
+        }
 		
 		function login ($username, $password) {
 			$res = parent::getRecords('USERS', 'OBJECT_ID', 'LOGIN=\''.$username.'\' AND PASSWORD=\''.$password.'\'');
@@ -69,13 +82,13 @@
 			$update = Array ('OBJECT_ID'=>$res['objectId']);
 			$tmp = (parent::updateRecords('USERS', $update, 'LOGIN=\''.$login.'\''));
 			
-			//jeœli wszystko sie udalo, autoryzujemy sesje
+			//jeï¿½li wszystko sie udalo, autoryzujemy sesje
 			$_SESSION['ID'] = $res['objectId'];
 			return $this->success($res);
 									
 		}
 		
-		/*jako $objectId przy tej funkcji podajemy zawsze id G£ÓWNEGO obiektu danego uzytkownika, poniewaz aliasy sa globalne*/
+		/*jako $objectId przy tej funkcji podajemy zawsze id Gï¿½ï¿½WNEGO obiektu danego uzytkownika, poniewaz aliasy sa globalne*/
 		public function addAlias ($aliasName) {
 			if (isset($_SESSION['ID'])) $objectId = $_SESSION['ID'];
 			else return $this->authError();
@@ -120,12 +133,36 @@
 			return $this->success($res);
 		}
 				
-		public function addObject ($parentId, $name, $public, $type, $tags, $aliasId=0) {
-			$record = Array ('PARENT_ID'=>$parentId, 'NAME'=>$name, 'PUBLIC'=>$public, 'TYPE'=>$type, 'TAGS'=>$tags, 'ALIAS_ID'=>$aliasId);
+		public function addObject ($parentId, $record) {
+		    
+            $filter = Array('NAME','PUBLIC','TYPE','TAGS','ALIAS_ID');
+            
+            foreach($record as $k=>$v) {
+                if(!in_array($filter,$k)) { unset($record[$k]); }
+            }
+			
+			$record['PARENT_ID'] = $parentId;
 			parent::addRecord ('OBJECTS', $record);
 			$res = parent::getRecords('OBJECTS', '*', 'PARENT_ID='.$parentId, 'ORDER BY ID DESC LIMIT 1');
-			return $this->success($this->getObject(res[0]));
+			return $this->success($this->getObject($res[0]));
+            
 		}
+        
+        public function updateObject($objectId, $record) {
+            
+            $this->serializeObject($record);         
+                        
+            $filter = Array('NAME','PUBLIC','TYPE','TAGS','ALIAS_ID');
+            
+            foreach($record as $k=>$v) {
+                if(!in_array($k,$filter)) { unset($record[$k]); }
+            }            
+            
+            parent::updateRecords ('OBJECTS', $record, 'ID='.$objectId);
+            $res = parent::getRecords('OBJECTS', '*', 'ID='.$objectId, 'ORDER BY ID DESC LIMIT 1');
+            return $this->success($this->getObject($res[0]));
+            
+        }
 		
 		public function removeObject ($objectId) {
 			//usuwamy dzieci
@@ -166,6 +203,13 @@
 			}
 			return $this->success($res);
 		}
+        
+        public function getObjectsByType($type) {
+            
+            $res = parent::getRecords('OBJECTS', '*', 'PARENT_ID='.$type.' AND PUBLIC=1');
+            return $this->success($res);
+            
+        }
 	
 		public function removeFriendship ($objectId1, $objectId2) {
 			parent::removeRecords ('FRIENDS', 'ABS(ID1)='.min($objectId1, $objectId2).' AND ABS(ID2)='.max($objectId1, $objectId2));
@@ -173,15 +217,15 @@
 		}
 		
 		public function addFriendship ($objectId1, $objectId2) {
-			/* wywo³anie tej funkcji oznacza, ¿e obiekt1 jest zainteresowany przyjaŸni¹ z obiektem2. 
-			Jeœli obiekt 2 wczeœniej by³ zsainteresowany przyjaŸni¹, to nastêpuje wy³¹cznie modyfikacja rekordu w bazie danych
+			/* wywoï¿½anie tej funkcji oznacza, ï¿½e obiekt1 jest zainteresowany przyjaï¿½niï¿½ z obiektem2. 
+			Jeï¿½li obiekt 2 wczeï¿½niej byï¿½ zsainteresowany przyjaï¿½niï¿½, to nastï¿½puje wyï¿½ï¿½cznie modyfikacja rekordu w bazie danych
 			w przeciwnym razie - treba doda rekord.
-			Parametry przekazane do funkcji powinny byæ dodatnie, choæ w bazie danych liczby mog¹ by ujemne			*/
+			Parametry przekazane do funkcji powinny byï¿½ dodatnie, choï¿½ w bazie danych liczby mogï¿½ by ujemne			*/
 			
 			$record = parent::getRecords('FRIENDS', 'ID1, ID2', 'ABS (ID1)='.min($objectId1, $objectId2).' AND ABS(ID2)='.max($objectId1, $objectId2));
 			$record = $record[0];
 			
-			//jeœli cos ju¿ by³o
+			//jeï¿½li cos juï¿½ byï¿½o
 			if (isset($record['ID1'])) {
 				if (($record['ID1'] == -$objectId1) || ($record['ID2'] == -$objectId1) ) {
 					$update = Array ('ID1'=>'ABS(ID1)','ID2'=>'ABS(ID2)');
@@ -272,9 +316,9 @@
 		public function chat ($objectId1, $objectId2, $message = '') {
 			$id1 = min($objectId1, $objectId2);
 			$id2 = max($objectId1, $objectId2);
-			//przysz³a nowa treœæ
+			//przyszï¿½a nowa treï¿½ï¿½
 			if ($message != '') {
-				//rozpoczynamy rozmowê
+				//rozpoczynamy rozmowï¿½
 				$count = parent::getRecords('CHAT', 'COUNT(*) AS NUM', 'ID1='.$id1.' AND ID2='.$id2);
 				$count = $count[0]['NUM'];
 				
@@ -349,7 +393,7 @@
 			if ($vote < -1 || $vote > 1) return $res;
 			
 			$t = 0.95*atan(pow($res['reputation']['votes'], 0.7))*2/pi();//0.0 - 0.95 - waga starych komentarzy
-			$w = 1 - $t; //pocz¹tkowa, pe³na waga nowego komentarza
+			$w = 1 - $t; //poczï¿½tkowa, peï¿½na waga nowego komentarza
 			
 			$temp = parent::getRecords('OBJECTS', 'REPUTATION', 'ID='.$fromId);
 			

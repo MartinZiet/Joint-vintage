@@ -19,10 +19,10 @@
 				return $tmp;
 		}
 		
-		/* poni¿sza funkcja przyjmuje:
+		/* poniï¿½sza funkcja przyjmuje:
 			$table - nazwa tabeli
-			$record - rekord do dodania, ktory ma byæ tablic¹ asocjacyjn¹ postaci ("kolumna1"=>wartosc1, "kolumna2"=>wartosc2...)
-			$debug - jeœli ustawione na true, wypisze siê treœæ ka¿dego zapytania i jego status
+			$record - rekord do dodania, ktory ma byï¿½ tablicï¿½ asocjacyjnï¿½ postaci ("kolumna1"=>wartosc1, "kolumna2"=>wartosc2...)
+			$debug - jeï¿½li ustawione na true, wypisze siï¿½ treï¿½ï¿½ kaï¿½dego zapytania i jego status
 		*/
 		
 		public function addRecord ($table, $record, $debug=false) {
@@ -40,12 +40,12 @@
 			return true;
 		}
 		 
-		/* poni¿sza funkcja pobiera rekordy z bazy. 
+		/* poniï¿½sza funkcja pobiera rekordy z bazy. 
 			$where - warunek
 			$additive - wszelkie dopiski do zapytania, np ORDER
-			$debug = true wypisze treœæ zapytania i jego status. 
+			$debug = true wypisze treï¿½ï¿½ zapytania i jego status. 
 			
-			Funkcja zwraca tablicê pobranych rekordów. Ka¿dy rekord jest tablic¹ asocjacyjn¹.
+			Funkcja zwraca tablicï¿½ pobranych rekordï¿½w. Kaï¿½dy rekord jest tablicï¿½ asocjacyjnï¿½.
 		*/
 		
 		public function getRecords ($table, $cols='*', $where='', $additive='', $debug=false) {
@@ -70,7 +70,7 @@
 		
 		public function updateRecords ($table, $set, $where='', $debug=false) {
 			$query = 'UPDATE `'.$table.'` SET ';
-			foreach ($set as $col=>$val) $query .= '`'.$col.'`='.$val.',';
+			foreach ($set as $col=>$val) $query .= '`'.$col.'`=\''.$val.'\',';
 			$query = substr ($query, 0, -1);//usuwamy ostatni przecinek
 			if ($where!='') $query .= ' WHERE '.$where;
 			

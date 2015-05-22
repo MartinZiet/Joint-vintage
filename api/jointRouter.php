@@ -145,21 +145,27 @@ class jointRouter {
         
         foreach($route['paramsSequence'] as $p) {
             
+            $dataParamSet = $request['data'][$p];
+            $routeParamSet = $route['params'][$p];
+            
             $dataParam = $request['data'][$p];
             $routeParam = $route['params'][$p];
             
-            $param = false;
+            $param = false;            
             
 			if ($p == '$POST') {
 				$param = $_POST;
 				$this->arrayKeyCaseRecursive($param,CASE_UPPER,true);
 			}
-            else if($routeParam && $dataParam) {
+            else if($routeParamSet && $dataParamSet) {
                 $param = $routeParam;
             } 
 			else {
-                if($routeParam) { $param = $routeParam; }
-                if($dataParam) { $param = $dataParam; }
+                if($routeParamSet) { $param = $routeParam; }
+                if($dataParamSet) { $param = $dataParam; }
+                if(!$routeParamSet && !$dataParamSet) {
+                    $param = $p;
+                }
             }
             
             $paramsInOrder[$p] = $param;
@@ -190,17 +196,17 @@ class jointRouter {
         
         $method = $route['fn'];
         if($method && method_exists($model,$method)) {            
-            $params = $this->getParamsInOrder($route);
+            $params = $this->getParamsInOrder($route);            
             if(!$params) { $params = Array(); }         
             
 			try {
 				$result = call_user_func_array(Array($model,$method),$params);
 			}
 			catch (databaseException $e) {
-				$result = Array ('status'=> false, 'error'=> $e);
+				$result = Array ('status'=> false, 'error'=> $e->getMessage());
 			}
 			catch (Exception $e) {
-				$result = Array ('status'=> false, 'error'=> $e);
+				$result = Array ('status'=> false, 'error'=> $e->getMessage());
 			}
         }
         
