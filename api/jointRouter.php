@@ -150,9 +150,14 @@ class jointRouter {
             
             $param = false;
             
-            if($routeParam && $dataParam) {
+			if ($p == '$POST') {
+				$param = $_POST;
+				$this->arrayKeyCaseRecursive($param,CASE_UPPER,true);
+			}
+            else if($routeParam && $dataParam) {
                 $param = $routeParam;
-            } else {
+            } 
+			else {
                 if($routeParam) { $param = $routeParam; }
                 if($dataParam) { $param = $dataParam; }
             }
@@ -187,7 +192,16 @@ class jointRouter {
         if($method && method_exists($model,$method)) {            
             $params = $this->getParamsInOrder($route);
             if(!$params) { $params = Array(); }         
-            $result = call_user_func_array(Array($model,$method),$params);            
+            
+			try {
+				$result = call_user_func_array(Array($model,$method),$params);
+			}
+			catch (databaseException $e) {
+				$result = Array ('status'=> false, 'error'=> $e);
+			}
+			catch (Exception $e) {
+				$result = Array ('status'=> false, 'error'=> $e);
+			}
         }
         
 		$result = json_decode(json_encode($result),true);

@@ -1,11 +1,22 @@
 <?php
+	class databaseException extends Exception {
+		public function __construct($message = "", $code = 0, Exception $previous = null) {
+			parent::__construct($message, $code, $previous);
+		}
+	}
+
 	class database {
 		public function init () {
 			require_once ('dbConfig.php');
 		}
 		
 		public function query ($tresc) {
-			return mysql_query($tresc);
+			$tmp = mysql_query($tresc);
+			if (mysql_errno() > 0) {
+				throw new databaseException(mysql_error().' while doing: '.$tresc, mysql_errno());
+			}
+			else
+				return $tmp;
 		}
 		
 		/* poni¿sza funkcja przyjmuje:
@@ -26,17 +37,7 @@
 			
 			$query = 'INSERT INTO `'.$table.'` '.$cols.' VALUES '.$values;
 			database :: query ($query);
-			
-			
-			if ($debug === true) {
-				echo $query.' ... ';
-				if (mysql_errno() > 0) echo mysql_error().'<br />';
-				else echo 'OK<br />';
-			}
-			
-			$res['err'] = mysql_errno();
-			$res['errMsg'] = mysql_error();
-			return $res;
+			return true;
 		}
 		 
 		/* poni¿sza funkcja pobiera rekordy z bazy. 
@@ -53,23 +54,10 @@
 			if ($additive != '') $query .= ' '.$additive;
 			
 			$x = database :: query($query);
-			if ($debug === true) {
-				echo $query.' ... ';
-				if (mysql_errno() > 0) echo mysql_error().'<br />';
-				else echo 'OK<br />';
-			}
-			
-			$res['err'] = mysql_errno();
-			if ($res['err'] > 0) {
-				$res['errMsg'] = mysql_error();
-				return $res;
-			}
-			
-			
-			$res['records'] = Array ();
+			$res = Array ();
 			$n = 0;
 			for ($i=mysql_num_rows($x);$i>0;--$i) {
-				$res['records'][$n] = mysql_fetch_assoc($x);
+				$res[$n] = mysql_fetch_assoc($x);
 				++$n;
 			}
 			return $res;
@@ -77,7 +65,7 @@
 		
 		public function removeRecords ($table, $where, $debug=false) {
 			database::query('DELETE FROM `'.$table.'` WHERE '.$where);
-			return Array('err'=> mysql_errno());
+			return true;
 		}
 		
 		public function updateRecords ($table, $set, $where='', $debug=false) {
@@ -88,24 +76,11 @@
 			
 			database::query($query);
 			
-			if ($debug === true) {
-				echo $query.' ... ';
-				if (mysql_errno() > 0) echo mysql_error().'<br />';
-				else echo 'OK<br />';
-			}
-			
-			if (mysql_errno() > 0)
-				return Array ('err'=> mysql_errno(), 'errMsg'=>mysql_error());
-			else 
-				return Array ('err'=> 0);
+			return true;
 		}
 		
 		public function insertId () {
 			return mysql_insert_id();
-		}
-		
-		public function errMes () {
-			return mysql_error();
-		}			
+		}		
 	}
 ?>
