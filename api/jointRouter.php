@@ -97,6 +97,7 @@ class jointRouter {
         
         $headers = getallheaders();
         $method = $headers['X-Http-Method-Override'];
+		if(!$method) { $method = $headers['X-HTTP-Method-Override']; }
         if(!$method) { $method = $_SERVER['REQUEST_METHOD']; }
         
         return $method;
@@ -155,7 +156,7 @@ class jointRouter {
             
 			if ($p == '$POST') {
 				$param = $_POST;
-				$this->arrayKeyCaseRecursive($param,CASE_UPPER,true);
+				$this->arrayKeyCaseRecursive($param,CASE_UPPER,false);
 			}
             else if($routeParamSet && $dataParamSet) {
                 $param = $routeParam;
@@ -195,6 +196,7 @@ class jointRouter {
 		$result = Array();
         
         $method = $route['fn'];
+		
         if($method && method_exists($model,$method)) {            
             $params = $this->getParamsInOrder($route);            
             if(!$params) { $params = Array(); }         
@@ -208,6 +210,11 @@ class jointRouter {
 			catch (Exception $e) {
 				$result = Array ('status'=> false, 'error'=> $e->getMessage());
 			}
+        } else {
+        
+			$result = Array('status'=>false);	
+        	$result['error']['msg'] = $this->getRequestPath() . ' not found';
+			
         }
         
 		$result = json_decode(json_encode($result),true);

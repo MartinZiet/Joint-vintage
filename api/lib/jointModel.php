@@ -87,6 +87,10 @@
 			return $this->success($res);
 									
 		}
+
+		public function checkSession() {
+			return $this->success(Array('object_id'=>$_SESSION['ID']));
+		}
 		
 		/*jako $objectId przy tej funkcji podajemy zawsze id G��WNEGO obiektu danego uzytkownika, poniewaz aliasy sa globalne*/
 		public function addAlias ($aliasName) {
@@ -204,7 +208,27 @@
 			return $this->success($res);
 		}
         
-        public function getObjectsByType($type) {
+        public function getObjectsByField($field,$value,$public=1) {
+            
+			$field = mb_convert_case($field,MB_CASE_UPPER);
+			
+			$wh = Array();
+			$wh[] = $field.'='.$value;
+			if($public) { $wh[] = 'PUBLIC=1'; }
+			
+            $res = parent::getRecords('OBJECTS', '*', $field.'='.$value.' AND PUBLIC='.$public);
+			
+			foreach($res as $k=>$r) {
+				$res[$k] = $this->getObject($r);
+			}
+			
+			if($field=='ID') { $res = $res[0]; }
+			
+            return $this->success($res);
+            
+        }
+		
+		public function getObjectsByParent($type) {
             
             $res = parent::getRecords('OBJECTS', '*', 'PARENT_ID='.$type.' AND PUBLIC=1');
             return $this->success($res);

@@ -1,0 +1,70 @@
+0 info it worked if it ends with ok
+1 verbose cli [ '/usr/bin/node', '/usr/bin/npm', 'install', 'express' ]
+2 info using npm@1.4.28
+3 info using node@v0.10.38
+4 verbose node symlink /usr/bin/node
+5 verbose readDependencies using package.json deps
+6 verbose cache add [ 'express@*', null ]
+7 verbose cache add name=undefined spec="express@*" args=["express@*",null]
+8 verbose parsed url { protocol: null,
+8 verbose parsed url   slashes: null,
+8 verbose parsed url   auth: null,
+8 verbose parsed url   host: null,
+8 verbose parsed url   port: null,
+8 verbose parsed url   hostname: null,
+8 verbose parsed url   hash: null,
+8 verbose parsed url   search: null,
+8 verbose parsed url   query: null,
+8 verbose parsed url   pathname: 'express@*',
+8 verbose parsed url   path: 'express@*',
+8 verbose parsed url   href: 'express@*' }
+9 verbose cache add name="express" spec="*" args=["express","*"]
+10 verbose parsed url { protocol: null,
+10 verbose parsed url   slashes: null,
+10 verbose parsed url   auth: null,
+10 verbose parsed url   host: null,
+10 verbose parsed url   port: null,
+10 verbose parsed url   hostname: null,
+10 verbose parsed url   hash: null,
+10 verbose parsed url   search: null,
+10 verbose parsed url   query: null,
+10 verbose parsed url   pathname: '*',
+10 verbose parsed url   path: '*',
+10 verbose parsed url   href: '*' }
+11 verbose addNamed [ 'express', '*' ]
+12 verbose addNamed [ null, '*' ]
+13 silly lockFile 8ad1ad64-express express@*
+14 verbose lock express@* /home/vagrant/.npm/8ad1ad64-express.lock
+15 silly addNameRange { name: 'express', range: '*', hasData: false }
+16 verbose request where is /express
+17 verbose request registry http://registry.npmjs.org/
+18 verbose request id cffe2d7f9e847793
+19 verbose url raw /express
+20 verbose url resolving [ 'http://registry.npmjs.org/', './express' ]
+21 verbose url resolved http://registry.npmjs.org/express
+22 verbose request where is http://registry.npmjs.org/express
+23 info trying registry request attempt 1 at 22:23:18
+24 http GET http://registry.npmjs.org/express
+25 info retry will retry, error on last attempt: Error: getaddrinfo ESRCH
+26 info trying registry request attempt 2 at 22:24:08
+27 http GET http://registry.npmjs.org/express
+28 info retry will retry, error on last attempt: Error: getaddrinfo ESRCH
+29 info trying registry request attempt 3 at 22:25:48
+30 http GET http://registry.npmjs.org/express
+31 silly lockFile 8ad1ad64-express express@*
+32 silly lockFile 8ad1ad64-express express@*
+33 error Error: getaddrinfo ESRCH
+33 error     at errnoException (dns.js:37:11)
+33 error     at Object.onanswer [as oncomplete] (dns.js:124:16)
+34 error If you need help, you may report this *entire* log,
+34 error including the npm and node versions, at:
+34 error     <http://github.com/npm/npm/issues>
+35 error System Linux 3.2.0-23-generic-pae
+36 error command "/usr/bin/node" "/usr/bin/npm" "install" "express"
+37 error cwd /var/www/html/Joint/stuff/easyRTC_proj/p2p_centrala
+38 error node -v v0.10.38
+39 error npm -v 1.4.28
+40 error syscall getaddrinfo
+41 error code ESRCH
+42 error errno ESRCH
+43 verbose exit [ 1, true ]

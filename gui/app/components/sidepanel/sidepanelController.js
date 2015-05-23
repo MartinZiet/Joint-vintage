@@ -8,7 +8,6 @@ angular.module('joint.ctrl')
 		});
 		
 		$scope.$watch('objectId',function(n,o){
-			console.log('objectId:' + n);
 			$scope.load('friends');
 		});
 		
@@ -36,7 +35,7 @@ angular.module('joint.ctrl')
 			
 			switch(id) {
 				case 'friends':
-					Restangular.one('structure').one('objects',$scope.objectId).all('friends').getList().then(function(friends){
+					Restangular.one('objects',$scope.objectId).all('friends').getList().then(function(friends){
 						$scope.list = {
 							template: 'app/components/sidepanel/templates/list-friend.html',
 							friends: friends

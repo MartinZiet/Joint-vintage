@@ -11,8 +11,6 @@ angular.module('joint.ctrl')
 		var objMap = {};
 		var len = $scope.structure.length;	
 		
-		console.log($scope.structure);	
-		
 		for(var i=0; i < len; i++) {
 			var o = $scope.structure[i];			
 			if(!byParent[o.parent_id]) { byParent[o.parent_id] = []; }
@@ -23,9 +21,6 @@ angular.module('joint.ctrl')
 			var o = $scope.structure[i];
 			objMap[o.id] = {id:o.id,parent_id:o.parent_id,children:byParent[o.id]};
 		}
-		
-		console.log(byParent);
-		console.log(objMap);
 		
 		return objMap;
 		

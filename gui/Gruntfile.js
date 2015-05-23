@@ -43,6 +43,8 @@ module.exports = function(grunt) {
 				'./bower_components/ngBootbox/ngBootbox.js',
 				'./bower_components/jquery-locationpicker-plugin/dist/locationpicker.jquery.min.js',
 				'./bower_components/ng-contenteditable/dist/ng-contenteditable.min.js',
+				'./bower_components/toastr/toastr.min.js',
+				'./bower_components/angular-local-storage/dist/angular-local-storage.min.js',
                 './assets/js/socket.io/socket.io.min.js',
                 './assets/js/easyrtc/api/easyrtc.js'
 			],
@@ -61,7 +63,8 @@ module.exports = function(grunt) {
 			src: [
 				'./assets/styles/bootstrap.min.css',
 				'./bower_components/fontawesome/css/font-awesome.min.css',
-				'./bower_components/angular-ui-select/dist/select.min.css'
+				'./bower_components/angular-ui-select/dist/select.min.css',
+				'./bower_components/toastr/toastr.min.css'
 			],
 			dest: './public/css/3rdparty.css'
 		}

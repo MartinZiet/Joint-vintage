@@ -15,11 +15,13 @@ $config = Array(
 	Array('POST', '/friends/:frID/objects/:oID/friendship', 'addFriendship', Array ('oID', 'frID')), //potwierdza lub zaczyna przyjaźń
 	Array('POST', '/call/checkin', 'callCheckIn', Array('easyRTCID')),
 	
-    Array('GET', '/types', 'getObjectsByType', Array(5)),
-    Array('GET', '/templates', 'getObjectsByType', Array(9)),     
+	Array('GET', '/session', 'checkSession'),
+    Array('GET', '/types', 'getObjectsByField', Array('PARENT_ID',5)),
+    Array('GET', '/templates', 'getObjectsByField', Array('PARENT_ID',9)),     
 	
 	Array('GET', '/aliases', 'getAliases'),
 	Array('GET', '/objects', 'structure'),
+	Array('GET', '/objects/:objectId', 'getObjectsByField', Array('ID','objectId')),
 	Array('GET', '/objects/:ID/friends', 'friendList', Array('ID')), //pobiera przyjaciol dla danego obiektu
 	Array('GET', '/friends/objects/:ID', 'structure', Array('ID')), /*pobiera obiekt przyjaciela*/
 	Array('GET', '/friends/:frID/objects/:oID/chat',  'chat', Array('oID', 'frID')), //pobiera tresc chatu dla obiektu przyjaciela
@@ -30,7 +32,7 @@ $config = Array(
 	Array('DELETE', '/friends/:frID/objects/:oID/friendship', 'removeFriendship', Array('frID', 'oID')), 
 	Array('DELETE', '/objects/:ID', 'removeObject', Array('ID')), //usuwa obiekt
 	Array('DELETE', '/aliases/:ID/:altID', 'removeAlias', Array('ID', 'altID') ), //usuwa alias
-	Array('DELETE', '/structure/objects/:oID/contents/:cID', 'removeObject', Array('cID')), //usuwa content
+	Array('DELETE', '/objects/:oID/contents/:cID', 'removeObject', Array('cID')), //usuwa content
 	
 	
 	Array('POST',  '/aliases', 'addAlias', Array('name')), //dodaje alias

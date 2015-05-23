@@ -11,7 +11,7 @@ angular.module('joint.services')
       self.deferred.resolve();
       self.room = room;
     }, error = function() {
-      console.log('error');
+      toastr.warning('Could not connect','EasyRTC');
     });
     return {
       getId: function(cb) {

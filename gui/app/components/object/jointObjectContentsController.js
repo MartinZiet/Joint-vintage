@@ -10,7 +10,7 @@ angular.module('joint.ctrl')
 		
 		$scope.$watch('active',function(n,o){
 			if(!n) { return false; }
-			Restangular.all('structure').one('objects',$stateParams.objectId).all('contents').getList().then(function(contents){
+			Restangular.one('objects',$stateParams.objectId).all('contents').getList().then(function(contents){
 				$scope.contents = contents;
 			});
 		});		

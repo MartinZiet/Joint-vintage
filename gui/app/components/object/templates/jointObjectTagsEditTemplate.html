@@ -22,7 +22,7 @@
 
     <button class="btn btn-primary" ng-click="append(tag,{})"><i class="fa fa-plus"></i></button>    
     
-    <div ng-repeat="val in tag.points">
+    <div ng-repeat="val in tag._values">
         <span ng-switch on="tag.type">
             <span ng-switch-when="1">
                Wartość <input type="text" ng-model="val.value" />        
@@ -46,6 +46,6 @@
     
 </div>
 
-<p class="text-center">
-    <button class="btn btn-success" ng-click="add()"><i class="fa fa-plus"></i> Dodaj tag</button>
+<p class="text-center m-t">
+    <button class="btn btn-success btn-block" ng-click="add()"><i class="fa fa-plus"></i> Dodaj tag</button>
 </p>

@@ -9,8 +9,9 @@ function($rootScope, $scope, $state, Restangular, $timeout, $global){
 	}
 	
 	$scope.$watch('api',function(n,o){
+		$global.api(n);
 		Restangular.setBaseUrl(n.url);
-		console.log('set base url to '+n.url);
+		toastr.info(n.url,'Setting API url');
 	});
 	
 	$scope.apis = [
@@ -22,14 +23,18 @@ function($rootScope, $scope, $state, Restangular, $timeout, $global){
 	
 	$scope.login = function() {
 		Restangular.all('login').doPOST($scope.data.login).then(function(obj){
-			$global.loginState.status = true;
-			$state.go('me.objects',{objectId:obj.object_id});
+			if(obj && obj.object_id) {
+				$global.login(obj);
+				toastr.success('Successful login','Welcome!');
+				$state.go('me.objects',{objectId:obj.object_id});
+			}
 		});
 	}
 	
 	$scope.signup = function() {
-		Restangular.all('signup').doPOST($scope.data.signup);
-		console.log($scope.data.signup);
+		Restangular.all('signup').doPOST($scope.data.signup).then(function(obj){
+			
+		});
 	}
 	
 }]);

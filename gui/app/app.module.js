@@ -12,7 +12,8 @@ angular.module('joint', [
   'joint.ctrl',
   'joint.services',
   'joint.directives',
-  'ContentEditable'
+  'ContentEditable',
+  'LocalStorageModule'
 ])
 
 .config(['$httpProvider',
@@ -32,8 +33,19 @@ function($httpProvider) {
 	RestangularProvider.addResponseInterceptor(function(data) {
 		if(data.status) {
 			return data.data;
+		} else {
+			console.log('API error: '+data.error.msg);
+			toastr.error(data.error.msg,'API error');
 		}
 	});
+	RestangularProvider.addRequestInterceptor(function(data) {
+		return angular.fromJson(angular.toJson(data));
+	});
+})
+
+.config(function (localStorageServiceProvider) {
+  localStorageServiceProvider
+    .setNotify(true, true);
 })
 
 .config(function($stateProvider, $urlRouterProvider) {
