@@ -1,8 +1,17 @@
 <div class="m-b clearfix">
-    <select ng-model="current.template" class="form-control"
+    <select ng-model="current._meta._template_id.points[0].value" class="form-control"
     ng-options="template.id as template.name for template in templates">
     </select>    
 </div>
+
+<div ng-repeat="(id,tag) in current.tags">
+	{{ tag.name }} {{ tag.type }}
+	<div ng-repeat="val in tag.points">
+		<div ng-include="dataTypes[tag.type].templateUrl"></div>
+	</div>
+</div>
+
+<!--
 
 <div class="btn-group m-b">
     <label class="btn btn-primary" ng-repeat="verb in current.verbs" ng-model="current.tags._verb" btn-radio="verb">
@@ -66,6 +75,7 @@
     </div>  
     
     <button ng-show="templates[currentTemplate].tags[tag.id].multiple" class="btn btn-transparent btn-block" ng-click="append(tag,{})"><i class="fa fa-plus"></i> Add another</button>
-    
-    
+     
 </div>
+
+-->

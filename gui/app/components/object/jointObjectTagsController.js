@@ -20,139 +20,88 @@ angular.module('joint.ctrl')
 		
 		$scope.templates = $rootScope.templates;
 		
-		$scope.createValue = function(t) {
-			return {value:t};
-		}
+		$scope.addTag = addTag;
+		$scope.removeTag = deleteTag;
 		
-		$scope.tagValue = function(id,val,type) {
-			if(!$scope.current.tags) { $scope.current.tags = []; }
-			var t = _.findWhere($scope.current.tags,{name:id});
-			if(!t && !val) { return false; }
-			if(val && t) { t.points[0].value = val; }
-			if(val && !t) {
-				var newTag = {name:id,points:[{value:val}]};
-				if(type) { newTag.type = type; }
-				$scope.current.tags.push(newTag); return val;
-			}
-			return t.points[0].value;
-		}
+		$scope.addPoint = addPoint;
+		$scope.deletePoint = deletePoint;
 		
-		$scope.reset = function() {
-			//reset current view
-			$scope.current = {
-				tags: JointTags.unserialize(angular.copy($scope.obj.tags))
-			};
-			var tplId = $scope.tagValue(('_template_id'));
-			if(tplId) {
-				$scope.current.template = tplId;
-			}
-		}
+		$scope.save = save;
 		
-		$scope.setTags = function(origin) {
+		activate();
+		
+		function activate() {
 			
-			var objTags = JointTags.unserialize(
-				angular.copy($scope.obj.tags)
-			);
-				
-			var cTags = $scope.current.tags;
+			$scope.dataTypes = JointTags.dataTypes();
+			$scope.domains = JointTags.domains();
 			
-			var tags = JointTags.unserialize(
-				angular.copy(origin.tags)
-			);
-			
-			console.log('setTags');
-			console.log(objTags);
-			console.log(cTags);
-			console.log(tags);
-			
-			//var cTags = JointTags.merge(cTags,objTags);
-			var tags = JointTags.merge(cTags,tags);
-			
-			if(parseInt($scope.obj.type)!=_templateTypeId) {
-			}			
-			
-			$scope.current.verbs = origin.verbs;			
-			$scope.current.tags = tags;
+			$scope.$watch('obj.type',watchType);
+			$scope.$watch('current._meta._template_id.points[0].value',watchTemplate);
+			$scope.$watch('current._meta._verb.points[0].value',watchVerb);
 			
 		}
 		
-		$scope.fetchTags = function() {
-			switch(parseInt($scope.obj.type)) {
-				//use objects own tags to edit template
-				case _templateTypeId:
-					$scope.setTags($scope.obj);
-					return;
-				break;
-				//fetch template object tags
-				case _searchTypeId:
-					var tplId = $scope.current.template;
-					if(!tplId) {
-						$scope.reset();
-						return;
-					}
-					Restangular.one('objects',tplId).get().then(function(ob) {
-						$scope.setTags(ob);						
-					});
-				break;
-			}			
-			return;
-		}
-		
-		$scope.$watch('obj.type',function(n,o){						
+		function watchType(n,o) {
+			
+			var n = parseInt(n);
+			
 			$scope.objectTypeTemplate = objectTypeTemplates[n];
-			$scope.reset();
-			setTimeout(function(){
-				$scope.fetchTags();
-			},100);			
-		});
-		
-		//verb models config (to be fetched from api??)
-		var verbModels = {
-			offer: { specific: true },
-			want: { specific: false },
-			exchange: {},
-			tag: {}			
-		};
-		
-		$scope.$watch('current.template',function(n,o){
-			$scope.tagValue('_template_id',n,99);
-			$scope.fetchTags();			
-		});
-		
-		$scope.$watch('current.tags._verb',function(n,o){
-			//console.log(n);
-			if(n) {				
-				$scope.currentVerbMode = verbModels[n.mode];				
-				console.log(verbModels[n.mode]);
+			
+			switch(n) {
+				case _templateTypeId: $scope.current = JointTags.factory('template'); break;
+				case _searchTypeId: $scope.current = JointTags.factory('search'); break;
 			}
-		});		
-		
-		$scope.append = function(tag,value) {
-			if(!tag._values) { tag._values = []; }
-			tag._values.push(value);
+			
+			//console.log('unserialize type:'+n);
+			var objTags = JointTags.unserialize($scope.obj.tags);
+			$scope.current = _.merge(objTags,$scope.current);
+			console.log($scope.current);
+			
 		}
 		
-		$scope.remove = function(tag,val) {
-			tag._values = _.without(tag._values,val);
+		function watchTemplate(n,o) {
+			console.log('newTemplate');
+			Restangular.one('objects',n).get().then(function(obj){
+				var merged = JointTags.fromTemplate(obj.tags,$scope.current);
+				$scope.current = merged;
+				console.log(merged);
+			});
 		}
 		
-		$scope.show = function() {
-			var tags = JointTags.serialize($scope.current.tags);
-			console.log(tags);	
-			$scope.obj.tags = tags;		
+		function watchVerb(n,o) {
+			console.log('new verb:' + n);
+			var v = _.findWhere($scope.current.tags._verb._values,{value:n});
+			$scope.verb_mode = v.verb_mode;
 		}
 		
-		$scope.add = function() {
-			$scope.current.tags.push({});
+		function watchVerbMode(n,o) {
+			
 		}
 		
-		$scope.tag = function(tag) {
-			console.log(tag);
+		function addTag() {
+			$scope.current.tags.push(JointTags.factory('tag'));
 		}
 		
-		$scope.reset();		
-		$scope.fetchTags();
+		function deleteTag(tag) {
+			
+		}
 		
-		console.log($scope.current);
+		function addPoint(tag) {
+			tag._values.push(JointTags.factory('point'));
+		}
+		
+		function deletePoint(tag,point) {
+			tag._values = _.without(tag._values,point);
+		}
+		
+		function save() {
+			if(parseInt($scope.obj.type) == _searchTypeId) {
+				var tags = JointTags.serializeAsIntention($scope);
+			} else {
+				var tags = JointTags.serialize($scope.current);	
+			}
+			$scope.obj.tags = tags;
+			console.log(tags);
+		}
 	
 }]);
