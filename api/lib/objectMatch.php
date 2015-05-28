@@ -1,41 +1,41 @@
 <?php
 
-	abstract class objectMatch {
-		/* ta klasa s³u¿y do sprawdzania, czy dwa obiekty szukaj¹ce do siebie pasuj¹
-		z tej klasy na zewn¹trz wystarczy u¿ywac metody match, która zwraca odpowiednio true/false
-		zmienne $o1 i $o2 powinny byæ przekazane jako tablice socjacyjne zawieraj¹ce pola "ID", "PARENT_ID" oraz "TAGS".
-		"TAGS" powinien byæ JSON-owym STRINGIEM odpowiadaj¹cym temu, co dany obiekt chce i oferuje
+	class objectMatch {
+		/* ta klasa sï¿½uï¿½y do sprawdzania, czy dwa obiekty szukajï¿½ce do siebie pasujï¿½
+		z tej klasy na zewnï¿½trz wystarczy uï¿½ywac metody match, ktï¿½ra zwraca odpowiednio true/false
+		zmienne $o1 i $o2 powinny byï¿½ przekazane jako tablice socjacyjne zawierajï¿½ce pola "ID", "PARENT_ID" oraz "TAGS".
+		"TAGS" powinien byï¿½ JSON-owym STRINGIEM odpowiadajï¿½cym temu, co dany obiekt chce i oferuje
 		*/
 		
-		private function point_match ($chce, $oferuje) {
+		private function point_match ($chce, $oferuje) {		    		    
 			//geograficzne
-			if (isset($chce -> LatLng)) {
-				if (distance(explode(',', $chce -> LatLng), explode(',',$oferuje -> LatLng)) <= floatval($chce -> R)+floatval($oferuje -> R)) return true;
+			if (isset($chce -> lat)) {
+				if (distance(Array($chce->lat,$chce->lng), Array($oferuje->lat,$oferuje->lng)) <= floatval($chce ->radius)+floatval($oferuje ->radius)) return true;
 				else return false;
 			}
-			//przedzia³y
-			if (isset($chce -> od)) {
+			//przedziaï¿½y			
+			if (isset($chce -> from)) {			    			    
 				if (floatval($chce -> from) > floatval($oferuje -> to) || floatval($chce -> to) < floatval($oferuje -> from) ) return false;
 			}
 			
-			//zawartoœæ
+			//zawartoï¿½ï¿½
 			return ($chce -> value === $oferuje -> value);
 		}
 		
 		private function main_match ($chce, $oferuje) {
-			return true;
+			//return true;			
 			if ($chce -> all === true) {
 				if ($chce -> block === true) {
 					$n = count ($chce -> points);
 					$i = 0;
 					
 					foreach ($oferuje->points as $pkt2) {
-						if (objectMatch::point_match ($chce -> points[$i], $pkt2) == true ) {
+						if ($this->point_match ($chce -> points[$i], $pkt2) == true ) {
 							++$i;
 							if ($i >= $n) return true;
 						}
 						else {
-							if (objectMatch::point_match ($chce -> points[0], $pkt2) == true ) $i = 1;
+							if ($this->point_match ($chce -> points[0], $pkt2) == true ) $i = 1;
 							else $i = 0;					
 						}
 					}
@@ -47,7 +47,7 @@
 						$i = 0;
 						
 						foreach ($oferuje -> points as $pkt2) {
-							if (point_match ($chce -> points[$i], $pkt2) === true ) {
+							if ($this->point_match ($chce -> points[$i], $pkt2) === true ) {
 								++$i;
 								if ($i >= $n) return true;
 							}
@@ -58,7 +58,7 @@
 						foreach ($chce -> points as $pkt) {
 							$pom = false;
 							foreach ($oferuje -> points as $pkt2) {
-								if (point_match ($pkt, $pkt2) == true) {
+								if ($this->point_match ($pkt, $pkt2) == true) {
 									$pom = true;
 									break;
 								}
@@ -69,10 +69,10 @@
 					}
 				}
 			}
-			else {
+			else {			    			    
 				foreach ($chce -> points as $pkt) {
-					foreach ($oferuje -> points as $pkt2) {
-						if (point_match ($pkt, $pkt2) === true) return true;
+					foreach ($oferuje -> points as $pkt2) {					    					    
+						if ($this->point_match ($pkt, $pkt2) === true) return true;
 					}
 				}
 				return false;
@@ -91,15 +91,15 @@
 			return true;
 		}
 			
-		public function match ($o1, $o2) {	
-			//znajdujemy rodziców
+		public function match ($o1, $o2) {
+			//znajdujemy rodzicï¿½w
 			$p1 = $o1;
-			while ($p1['PARENT_ID']!=$p1['ID']) {
+			while ($p1['PARENT_ID']>0) {
 				$p1 = database :: getRecords ('OBJECTS', '*', 'ID='.$p1['PARENT_ID']);
 				$p1 = $p1[0];
 			}
 			$p2 = $o2;
-			while ($p2['PARENT_ID']!=$p2['ID']) {
+			while ($p2['PARENT_ID']>0) {
 				$p2 = database :: getRecords ('OBJECTS', '*', 'ID='.$p2['PARENT_ID']);
 				$p2 = $p2[0];
 			}
@@ -107,12 +107,13 @@
 			if ($p1['ID']==$p2['ID']) return false;
 			
 			$o1 = json_decode ($o1['TAGS']);
-			$o2 = json_decode ($o2['TAGS']);
+			$o2 = json_decode ($o2['TAGS']);            
 			
 			if (($o1 === false) || ($o2 === false)) {
 				return false;
 			}
-			return (objectMatch :: chce_oferuje ($o1->wants, $o2->offers) && objectMatch :: chce_oferuje ($o2->wants, $o1->offers));
+			
+			return ($this->chce_oferuje ($o1->wants, $o2->offers) && $this->chce_oferuje ($o2->wants, $o1->offers));
 		}
 	}
 

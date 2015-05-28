@@ -1,7 +1,14 @@
 <?php
+	require_once('objectMatch.php');
+
 	class jointModel extends database {
 		function __construct () {
 			parent::init ();
+			
+			$this->_searchTypeId = 8;
+            $this->_contentTypeId = 7;
+            
+			$this->_match = new objectMatch;
 		}
 		
 		function authError () {
@@ -50,7 +57,12 @@
         }
 		
 		function login ($username, $password) {
-			$res = parent::getRecords('USERS', 'OBJECT_ID', 'LOGIN=\''.$username.'\' AND PASSWORD=\''.$password.'\'');
+		    
+            if(!$username || !$password) {
+                return $this->authError();
+            }
+            
+			$res = parent::getRecords('USERS', 'LOGIN,OBJECT_ID', 'LOGIN=\''.$username.'\' AND PASSWORD=\''.$password.'\'');
 			
 			//bledna autoryzacja
 			if (isset($res[0]) == false ) {
@@ -63,10 +75,23 @@
 		}
 		//PARENT_ID
 		public function signup ($login, $name, $password) {
+		    //sprawdzamy czy login jest unikalny
+		    $check = $this->getRecords('USERS','OBJECT_ID','LOGIN=\''.$login.'\'');
+            
+            if(!$login || !$name || !$password) {
+                return Array('status'=>false,'error'=>'Please provide login, alias name and password');
+            }
+            
+            if($check[0]['OBJECT_ID']) {
+                return Array('status'=>false,'error'=>'The username '.$login.' is already taken');
+            }
+            
+            
 			//tworzymy obiekt
 			$record = Array ('NAME'=>$name, 'PUBLIC'=>0, 'TYPE'=>0, 'TAGS'=>'{}', 'PARENT_ID'=>0, 'ALIAS_ID'=>1);
 			$tmp = (parent::addRecord('OBJECTS', $record));
-			$res['objectId'] = parent::insertId();
+			$res['object_id'] = parent::insertId();
+			$res['objectId'] = $res['object_id'];
 			
 			//tworzymy usera
 			$record = Array ('LOGIN'=>$login, 'NAME'=>$name, 'PASSWORD'=>$password, 'OBJECT_ID'=>$res['objectId']);
@@ -81,6 +106,8 @@
 			
 			$update = Array ('OBJECT_ID'=>$res['objectId']);
 			$tmp = (parent::updateRecords('USERS', $update, 'LOGIN=\''.$login.'\''));
+			
+			$res['login'] = $login;
 			
 			//je�li wszystko sie udalo, autoryzujemy sesje
 			$_SESSION['ID'] = $res['objectId'];
@@ -142,7 +169,7 @@
             $filter = Array('NAME','PUBLIC','TYPE','TAGS','ALIAS_ID');
             
             foreach($record as $k=>$v) {
-                if(!in_array($filter,$k)) { unset($record[$k]); }
+                if(!in_array($k,$filter)) { unset($record[$k]); }
             }
 			
 			$record['PARENT_ID'] = $parentId;
@@ -197,7 +224,7 @@
 			$n = 1;			
 			for ($i=0;$i<$n;++$i) {
 				//pobieramy dzieciaki dla naszego rekordu
-				$res2 = parent::getRecords('OBJECTS', '*', 'PARENT_ID='.$res[$i]['ID'].($owner===true ? '' : ' AND PUBLIC=1 AND TYPE=0'), 'ORDER BY ID');
+				$res2 = parent::getRecords('OBJECTS', '*', 'PARENT_ID='.$res[$i]['ID'].($owner===true ? '' : ' AND PUBLIC=1 AND TYPE=0').' AND TYPE!='.$this->_contentTypeId, 'ORDER BY ID');
 				
 				foreach ($res2 as $j=>$row) {
 					$res[$n] = $row;
@@ -270,13 +297,14 @@
 		}
 	
 		public function friendList ($objectId) {
+			
 			$object=parent::getRecords('OBJECTS', '*', 'ID='.$objectId);
 			$object = $object[0];
 			
 			$id = $object['ID'];
 			$type = $object['TYPE'];
 			
-			if ($type == 1) {
+			if ($type == $this->_searchTypeId) {
 				$parentId = $object['PARENT_ID'];
 				
 				$parentFriendList = parent::getRecords('FRIENDS', 'ID1+ID2-'.$parentId.' AS ID', 'ID1>0 AND ID2>0 AND (ID1='.$parentId.' OR ID2='.$parentId.')');
@@ -289,13 +317,13 @@
 				
 				$temp = parent::getRecords ('`OBJECTS` LEFT JOIN `ALIASES` ON OBJECTS.ALIAS_ID=ALIASES.ID',
 				'OBJECTS.ID AS ID, OBJECTS.PARENT_ID AS PARENT_ID, OBJECTS.NAME AS NAME, OBJECTS.TAGS AS TAGS, OBJECTS.ALIAS_ID AS ALIAS_ID, ALIASES.ALIAS AS ALIAS_NAME',
-				'OBJECTS.ID !='.$id.' AND OBJECTS.TYPE=1 AND NOT (OBJECTS.PARENT_ID IN '.$parentFriendString.')', 
+				'OBJECTS.ID !='.$id.' AND OBJECTS.TYPE='.$this->_searchTypeId.' AND NOT (OBJECTS.PARENT_ID IN '.$parentFriendString.')', 
 				'ORDER BY OBJECTS.ID');
 				
 				$res = Array (); $n = 0;
 				foreach ($temp as $row) {
-					if (objectMatch::match($row, $object)) { 
-						$res[$n] = $row;
+					if ($this->_match->match($row, $object)) { 
+						$res[$n] = $this->getObject($row);
 						++$n;
 					}
 				}
@@ -433,6 +461,16 @@
 			
 			return $this->success($res['reputation']);
 		}
+        
+        public function void() {
+            
+            /* Dummy method which can serve router requests
+             * returning empty array as a result to avoid api errors 
+            */
+            
+            return $this->success(Array());
+            
+        }
 	}
 	
 ?>

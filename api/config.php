@@ -16,14 +16,17 @@ $config = Array(
 	Array('POST', '/call/checkin', 'callCheckIn', Array('easyRTCID')),
 	
 	Array('GET', '/session', 'checkSession'),
-    Array('GET', '/types', 'getObjectsByField', Array('PARENT_ID',5)),
-    Array('GET', '/templates', 'getObjectsByField', Array('PARENT_ID',9)),     
+    Array('GET', '/types', 'getObjectsByField', Array('!PARENT_ID','!5')),
+    Array('GET', '/templates', 'getObjectsByField', Array('!TYPE','!9')),     
 	
 	Array('GET', '/aliases', 'getAliases'),
+	
 	Array('GET', '/objects', 'structure'),
-	Array('GET', '/objects/:objectId', 'getObjectsByField', Array('ID','objectId')),
+	Array('GET', '/objects/:objectId', 'getObjectsByField', Array('!ID','objectId')),
 	Array('GET', '/objects/:ID/friends', 'friendList', Array('ID')), //pobiera przyjaciol dla danego obiektu
-	Array('GET', '/friends/objects/:ID', 'structure', Array('ID')), /*pobiera obiekt przyjaciela*/
+	Array('GET', '/objects/:ID/contents', 'getObjectsByField', Array('!PARENT_ID','ID')),
+	
+	Array('GET', '/friends/:frID/objects/:ID', 'structure', Array('ID')), /*pobiera obiekt przyjaciela*/
 	Array('GET', '/friends/:frID/objects/:oID/chat',  'chat', Array('oID', 'frID')), //pobiera tresc chatu dla obiektu przyjaciela
 	Array('GET', '/friends/:frID/objects/:oID/call', 'call', Array ('oID', 'frID')), //makes EasyRTC connection
 	Array('GET', '/friends/call/:easyRTCID', 'callInfo', Array ('easyRTCID')), 

@@ -165,7 +165,10 @@ class jointRouter {
                 if($routeParamSet) { $param = $routeParam; }
                 if($dataParamSet) { $param = $dataParam; }
                 if(!$routeParamSet && !$dataParamSet) {
-                    $param = $p;
+                    if(strpos($p,'!')===0) {
+                        $p = str_replace('!','',$p);
+                        $param = $p;
+                    }
                 }
             }
             
