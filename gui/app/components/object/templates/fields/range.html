@@ -1,8 +1,18 @@
-<div ng-show="verb_mode==1">
-	Od <input type="text" ng-model="val.from" />
-	Do <input type="text" ng-model="val.to" />
+<div ng-show="verb_mode==1" class="row">
+	<div class="col-sm-6">
+    <span class="input-group">        
+        <span class="input-group-addon" id="basic-addon1">From</span>
+        <input type="text" ng-model="val.from" class="form-control" placeholder="{{ tag._values[0].from }}"/>
+    </span>
+    </div>
+    <div class="col-sm-6">
+    <span class="input-group">
+        <span class="input-group-addon" id="basic-addon1">To</span>
+        <input type="text" ng-model="val.to" class="form-control" placeholder="{{ tag._values[0].to }}"/>
+    </span>            
+    </div>
 </div>
 
 <div ng-show="verb_mode==2">
-	<input type="text" ng-model="val.from" />
+	<input type="text" ng-model="val.from" class="form-control" placeholder="{{ tag._values[0].from }} - {{ tag._values[0].to }}" />
 </div>

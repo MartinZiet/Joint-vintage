@@ -2,10 +2,7 @@ angular.module('joint.directives')
 .directive('fieldGeo',function($compile){
 	return {
 		scope: {
-			lat: '&',
-			lng: '&',
-			radius: '&',
-			address: '&'
+			ngModel: '='
 		},
 		templateUrl: 'app/components/object/templates/fields/geo.directive.html',
 		link: function(scope,element,attrs) {
@@ -13,16 +10,28 @@ angular.module('joint.directives')
 			scope.locationPopup = function() {
 				bootbox.dialog({
 					title: 'Wybierz lokalizację',
-					message: '<div id="location-picker-map"></div>'
+					message: '<input type="text" class="form-control" id="location-picker-address" /><div id="location-picker-map"></div>',
+					callback: function() {
+						scope.ngModel.address = jQuery('#location-picker-address').val();
+					}
 				});
 				setTimeout(function() { 
 					jQuery('#location-picker-map').locationpicker({
-						locationName: 'Warsaw, Poland',
+						location: {
+							latitude: scope.ngModel.lat,
+							longitude: scope.ngModel.lng
+						},
+						radius: scope.ngModel.radius,
+						zoom: 10,
 						inputBinding: {
-							latitudeInput: element.find('[ng-model="lat"]'),
-							longitudeInput: element.find('[ng-model="lng"]'),
-							radiusInput: element.find('[ng-model="radius"]'),
-							locationNameInput: element.find('[ng-model="address"]')
+							latitudeInput: element.find('[ng-model="ngModel.lat"]'),
+							longitudeInput: element.find('[ng-model="ngModel.lng"]'),
+							radiusInput: element.find('[ng-model="ngModel.radius"]'),
+							locationNameInput: jQuery('#location-picker-address')
+							//locationNameInput: element.find('[ng-model="ngModel.address"]')
+						},
+						enableAutocomplete: true,
+						onchanged: function(location,radius,markerDropped) {
 						}
 					});
 				},200);

@@ -12,9 +12,15 @@ angular.module('joint.services')
 	}
 	
 	this.login = function(obj) {
+		var prevApi = $this.loginState.api;
+		$this.loginState = obj;
 		$this.loginState.status = true;
-		$this.loginState.object_id = obj.object_id;
+		$this.loginState.api = prevApi;
 		local.set('loginState',$this.loginState);
+	}
+	
+	this.getLoginState = function() {
+		return local.get('loginState');
 	}
 	
 	this.checkLogin = function() {

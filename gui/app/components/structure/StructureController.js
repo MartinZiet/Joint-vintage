@@ -3,8 +3,15 @@ angular.module('joint.ctrl')
 .controller('StructureController',['$rootScope','$scope', '$state', 'Restangular','$timeout','JointGlobalService', 
 			function($rootScope, $scope, $state, Restangular, $timeout, $global){
 	
-	var loggedIn = $global.checkLogin();
+	var _defaultTypeId = 6;
+	
+	var loggedIn = $global.checkLogin();	
+	
 	if(!loggedIn) { return false; }
+	
+	if($state.is('me.settings')) {
+		return false;
+	}
 	
 	var _this = this;	
 	
@@ -38,16 +45,18 @@ angular.module('joint.ctrl')
 	this.fetchStructure = function() {
 		
 		if($scope.friendId) {
-			var path = 'friends/'+$scope.friendId+'/objects';
+			var path = 'friends/'+$scope.friendId+'/objects/'+$scope.objectId;
 		} else {
 			var path = 'objects';
 		}
 		
 		Restangular.all(path).getList().then(function(structure){
   			$scope.structure = structure;
-  			if(!$scope.objectId) {
+  			if(!$scope.objectId && structure && structure[0] && structure[0].id) {
   				//$scope.objectId = structure[0].id;
   				$state.go('me.objects',{objectId:structure[0].id});
+  			} else {
+  				//$state.go('login');
   			}
   			//$scope.$broadcast('structureUpdated');	  			
   		});
@@ -56,7 +65,8 @@ angular.module('joint.ctrl')
 	
 	this.add = function() {
 		var insertId = $scope.newId;
-		Restangular.one('objects',$scope.objectId).post(false,{parent_id:$scope.objectId,name:'Noname'}).then(function(obj) {
+		var newObj = {parent_id:$scope.objectId,name:'Object name',type:_defaultTypeId};
+		Restangular.one('objects',$scope.objectId).post(false,newObj).then(function(obj) {
 			$scope.structure.push(obj);
 			$state.go('me.objects.edit',{objectId:obj.id});
 		});

@@ -1,7 +1,7 @@
 <div class="joint-object" ng-class="{visible: visible, sml: sml, ready:ready, transition:transition}">
     <div class="flip-base" ng-class="{flipped: flipped}">
     <figure class="front">
-            <div class="panel panel-default">
+            <div class="panel panel-default panel-object">
                 <div class="sml-heading" ui-sref="me.objects({objectId:obj.id})">
                     <span joint-object-type obj="obj"></span> {{obj.name}}
                 </div>
@@ -24,7 +24,7 @@
                 </div>
                 <div class="panel-body" joint-object-contents contents="contents">
                 	<!-- <button class="editable-control btn btn-primary" data-command="bold">B</button> -->
-                    <div class="content-nav" ng-hide="obj.edit_locked">
+                    <div class="content-nav" ng-hide="readonly">
                         <div class="btn-group">
                             <button class="btn btn-transparent" data-toggle="tooltip" title="Pokazuj treści ze świata"><i class="fa fa-globe"></i></button>
                             <button class="btn btn-transparent" data-toggle="tooltip" title="Filtruj treść"><i class="fa fa-filter"></i></button>
@@ -38,8 +38,8 @@
                         <div class="object-content" ng-repeat="cnt in contents">
                         	
                         	<div class="card-header object-content-heading clearfix">
-                                <!--<span style="font-size:1.2em;">{{ cnt.name }}</span>-->
-                                <div class="btn-group pull-right" ng-hide="obj.edit_locked">
+                                <span style="font-size:1.2em;">{{ cnt.name }}</span>
+                                <div class="btn-group pull-right" ng-hide="readonly">
                                     <button class="btn btn-transparent" ng-click="remove(cnt)"><i class="fa fa-trash"></i></button>
                                     <button class="btn btn-transparent"><i class="fa fa-edit"></i></button>
                                 </div>
@@ -47,7 +47,7 @@
                             <div class="object-content-body">
                             	<div>
                             		<div ng-include="cnt.tpl"></div>
-                            		<div class="editable" ng-model="cnt.html" ng-bind-html="safe(cnt.content)"></div>
+                            		<div contenteditable="true" ng-model="cnt.html" ng-bind-html="safe(cnt.content)"></div>
                             	</div>
                             	<!--<form>
                             	<textarea class="js-st-instance">
@@ -59,7 +59,7 @@
 
                     </div>
                 </div>
-                <div class="panel-footer" ng-hide="obj.edit_locked">
+                <div class="panel-footer" ng-hide="readonly">
                     <div class="btn-group">
                         <button class="btn btn-transparent" ng-click="toggleFlag('public')">
                             <i class="fa fa-lock" ng-hide="obj.public==1"></i>
@@ -67,7 +67,7 @@
                         </button>
                         <button class="btn btn-transparent" data-toggle="tooltip" title="Ustawienia" ng-click="flip(obj.id)"><i class="fa fa-cog"></i></button>                        
                     </div>
-                    <button class="pull-right btn btn-transparent" ng-click="structureCtrl.add()">
+                    <button class="pull-right btn btn-transparent" ng-click="structureCtrl.add()" ng-hide="notExtensible">
                         <i class="fa fa-plus"></i>
                     </button>
                 </div>
@@ -75,19 +75,19 @@
             </figure>
             
             <figure class="back">
-                <div class="panel panel-default">
+                <div class="panel panel-default panel-object">
                     <div class="panel-heading"></div>
                     <div class="panel-body" style="padding:15px;">                        
-                        <input class="form-control input-lg" ng-model="obj.name" style="margin-bottom:15px;"/>
+                        <input class="form-control input-lg" ng-model="obj.name" style="margin-bottom:15px;"/>                        
                         
-                        <div class="btn-group m-b">
+                        <div class="btn-group m-b" ng-hide="isRoot">
                             <label ng-repeat="type in types" class="btn btn-primary" ng-model="obj.type" btn-radio="type.id">{{ type.name }}</label>                            
                         </div>
                         
-                        <div joint-object-match obj="obj"></div>
+                        <joint-object-tags></joint-object-tags>
                         
                         <div class="">
-                        	<div class="col-sm-2 n-p">
+                        	<div class="col-sm-2 n-p" ng-hide="isRoot">
                         		<button class="btn btn-danger btn-block" ng-bootbox-confirm="Are you sure?" ng-bootbox-confirm-action="structureCtrl.remove(obj.id)"><i class="fa fa-trash"></i></button>
                         	</div>
                         	<div class="col-sm-5 n-p">

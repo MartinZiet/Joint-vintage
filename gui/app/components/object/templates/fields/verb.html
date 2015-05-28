@@ -1,2 +1,5 @@
 <input type="text" ng-model="val.value" class="form-control"/>
-<input type="text" ng-model="val.verb_mode" class="form-control"/>
+<div class="btn-group m-b">
+    <label ng-repeat="(vid,v) in verbModes" class="btn btn-primary" 
+    ng-model="val.verb_mode" btn-radio="vid">{{ v.name }}</label>                            
+</div>

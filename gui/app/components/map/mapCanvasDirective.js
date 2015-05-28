@@ -10,6 +10,8 @@ angular.module('joint.directives')
 				
 				scope.draw = function() {
 					
+					jQuery(element).css('opacity',0);
+					
 					var id = scope.objectId;
 					var map = scope.objectsMap;
 					
@@ -44,10 +46,13 @@ angular.module('joint.directives')
 					y=parseInt(parent.y)+50;
 					scope.line(c,cx,cy,x,y,6,'brown');
 					
+					
+					jQuery(element).animate({opacity:1},1000);					
+					
 				}	
 				
 				scope.clear = function(canvas) {
-					canvas.clearRect(0, 0, 2300, 1650);
+					canvas.clearRect(0, 0, 5000, 5000);
 				}
 				
 				scope.line = function(canvas,start_x,start_y,end_x,end_y,width,style) {
@@ -65,8 +70,12 @@ angular.module('joint.directives')
 					scope.draw();					
 				});
 								
-				scope.$watch('objectId',function(){					
-					scope.draw();					
+				scope.$watch('objectId',function(n,o){
+					if(!n) {
+						jQuery(element).css('opacity',0);
+					} else {
+						scope.draw();
+					}					
 				});
 				
 				setTimeout(function(){

@@ -1,5 +1,7 @@
-<input type="hidden" class="form-control" ng-model="address" />
-<input type="hidden" ng-model="lat" class="form-control"/>
-<input type="hidden" ng-model="lng" class="form-control"/>
-<input type="hidden" ng-model="radius" class="form-control"/>
+<div style="display:none;">
+	<input type="text" class="form-control" ng-model="ngModel.address" />
+	<input type="text" ng-model="ngModel.lat" class="form-control"/>
+	<input type="text" ng-model="ngModel.lng" class="form-control"/>
+	<input type="text" ng-model="ngModel.radius" class="form-control"/>
+</div>
 <button class="btn btn-primary" ng-click="locationPopup()"><i class="fa fa-globe"></i></button>

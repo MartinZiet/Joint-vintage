@@ -124,10 +124,10 @@
       z-index:2;
       transform: rotateY( 180deg );
       
-      .panel { 
+      & > .panel.panel-object { 
           height:100%;
           
-          .panel-body {
+          & > .panel-body {
             max-height:100%;
             overflow-y:auto;
             overflow-x:hidden;
@@ -166,8 +166,7 @@
     }
     
     .object-content {      
-      background-color:white;
-      border:solid 1px;      
+      background-color:white;           
       position:relative; 
       .object-content-body { padding:10px; }
       .object-content-heading {

@@ -25,13 +25,14 @@ $id = $path[1];
 $sub = $path[2];
 
 if(!$n) { $n = 'structure'; }
+if($n=='structure') { $n = 'objects'; }
 
 $headers = getallheaders(); 
 $method = $headers['X-Http-Method-Override'];
 
 header('x-request-method: '.$method);
 
-$structure = Array(
+$objects = Array(
 	Array('id'=>1,'parent_id'=>0,'name'=>'Joint Origin','alias'=>'Some alias','is_public'=>true,'type'=>0),
 	Array('id'=>2,'parent_id'=>1,'name'=>'Another object1','alias'=>'Another alias','is_public'=>true,'type'=>15),
     Array('id'=>3,'parent_id'=>1,'name'=>'Another object2','alias'=>'Another alias','is_public'=>true,'type'=>15),
@@ -55,7 +56,7 @@ $structure = Array(
     Array('id'=>18,'parent_id'=>13,'name'=>'Template','is_public'=>true,'type'=>13)
 );
 
-$structure[] = Array(
+$objects[] = Array(
     'id'=>19,'parent_id'=>18,'name'=>'Buy/sell a car','verbs'=>Array(),
     'tags'=>Array(
         Array('id'=> 1, 'name'=> 'Make', 'type'=>1, 'multiple'=>true, 'extensible'=>true, 
@@ -70,11 +71,11 @@ $structure[] = Array(
     'type'=>18
 );
 
-$structure[] = Array('id'=>20,'parent_id'=>18,'name'=>'Partner for sport',
+$objects[] = Array('id'=>20,'parent_id'=>18,'name'=>'Partner for sport',
     'type'=>18,'verbs'=>Array(Array('name'=>'Find','mode'=>'exchange')),
     'tags'=>Array()
 );
-$structure[] = Array('id'=>21,'parent_id'=>18,'name'=>'Carpooling',
+$objects[] = Array('id'=>21,'parent_id'=>18,'name'=>'Carpooling',
     'type'=>18,'verbs'=>Array(Array('name'=>'Find','mode'=>'exchange')),
     'tags'=>Array()
 );
@@ -95,7 +96,7 @@ $result = $$n;
 
 if($n=='objects' && $id) {
     $result = Array();
-    foreach($structure as $s) {
+    foreach($objects as $s) {
         if($s['id']==$id) { $result = $s; }
     }
 }
@@ -118,8 +119,8 @@ function byKey($structure,$key,$id) {
     return $result;
 }
 
-if($n=='templates') { $result = byKey($structure,'type',18); }
-if($n=='types') { $result = byKey($structure,'parent_id',13); }
+if($n=='templates') { $result = byKey($objects,'type',18); }
+if($n=='types') { $result = byKey($objects,'parent_id',13); }
 
 if($n=='objects' && $sub=='contents') {
 	$result = $contents;

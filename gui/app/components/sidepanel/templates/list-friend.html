@@ -16,7 +16,7 @@
         <a ui-sref="friends({friendId:friend.id,objectId:obj.id})">{{obj.name}}</a>
         <span class="pull-right">
             <i class="fa fa-trash"></i>
-            <i class="fa fa-comment"></i>
+            <i class="fa fa-comment" ng-click="chat(obj)"></i>
             <i class="fa fa-phone"></i>
         </span>
     </div>

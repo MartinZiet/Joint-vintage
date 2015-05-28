@@ -1,3 +1,8 @@
-<select ng-model="obj.tags.wants[field.name]" class="form-control" ng-required>
-	<option ng-repeat="v in field.values">{{ v }}</option>
-</select>
+<ui-select multiple ng-model="val.value" theme="bootstrap">
+    <ui-select-match placeholder="{{ tag.name }}...">
+        {{ $item.value }}
+    </ui-select-match>
+    <ui-select-choices repeat="sval.value as sval in tag._values">
+    {{ sval.value }}
+    </ui-select-choices>
+</ui-select>

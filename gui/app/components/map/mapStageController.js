@@ -5,14 +5,15 @@ angular.module('joint.ctrl')
 	self.packeryObjects = [];
 	api.isClient('obj','jointObj',$scope);
 			
-	$scope.serializeStructure = function() {
+	$scope.serializeStructure = function() {		
 		
 		var byParent = {};
 		var objMap = {};
 		var len = $scope.structure.length;	
 		
 		for(var i=0; i < len; i++) {
-			var o = $scope.structure[i];			
+			var o = $scope.structure[i];
+			if($scope.friendId && i==0) { o.parent_id = 0; }			
 			if(!byParent[o.parent_id]) { byParent[o.parent_id] = []; }
 			byParent[o.parent_id].push(o.id);
 		}

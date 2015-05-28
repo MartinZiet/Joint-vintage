@@ -1,0 +1,14 @@
+<div class="heading">
+    {{ c.alias }} ({{ c.name}}) <i class="fa fa-times" ng-click="vm.close(c)"></i>
+</div>
+<div ng-controller="Shell as vm">
+    <irontec-simple-chat
+      messages="vm.messages"
+      username="c.remote_alias"
+      input-placeholder-text="Your message..."
+      submit-button-text="Send"
+      title="With {{ c.remote_alias }}"
+      theme="irontec"
+      submit-function="vm.sendMessage">
+    </irontec-simple-chat>
+</div>

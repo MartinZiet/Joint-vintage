@@ -4,11 +4,20 @@
     </select>    
 </div>
 
-<div ng-repeat="(id,tag) in current.tags">
-	{{ tag.name }} {{ tag.type }}
+<div ng-repeat="(id,tag) in current.tags" class="form-group">
+	<label ng-show="tag.name != '_verb'">{{ tag.name }}</label>
+	<label ng-hide="tag.name != '_verb'">What do you want to do?</label>
 	<div ng-repeat="val in tag.points">
 		<div ng-include="dataTypes[tag.type].templateUrl"></div>
+		<div ng-show="tag.multiple">
+        <div ng-show="tag.points.length > 0">
+            <button class="btn btn-transparent btn-block" ng-click="deletePoint(tag,val)">
+                <i class="fa fa-times text-danger"></i> Remove
+            </button>
+        </div> 
+    </div>
 	</div>
+	<button ng-show="tag.multiple" class="btn btn-transparent btn-block" ng-click="addPoint(tag)"><i class="fa fa-plus"></i> Add another</button>
 </div>
 
 <!--

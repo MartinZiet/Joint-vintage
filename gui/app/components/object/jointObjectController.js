@@ -5,9 +5,12 @@ angular.module('joint.ctrl')
 	'$element',
 	'DirectivePublicApi',
 	'$stateParams',
+	'$state',
 	'Restangular',
-	function($rootScope,$scope,$element,api,$stateParams,Restangular){
+	function($rootScope,$scope,$element,api,$stateParams,$state,Restangular){
 		
+	var _extensibleTypes = [0,5,6];
+				
 	$scope.types = $rootScope.types;
 		
 	api.isServer('jointObj',$scope);
@@ -59,6 +62,19 @@ angular.module('joint.ctrl')
 	   	} else {
 	   		$scope.flipped = false;
 	   	}
+	   	if($stateParams.friendId) {
+	   		$scope.readonly = true;
+	   	}
+	   	if(!parseInt($scope.obj.parent_id)) {
+	   		$scope.isRoot = true;
+	   	}
+	   	
+	   	var notExtensible = (_extensibleTypes.indexOf(parseInt($scope.obj.type)) < 0);
+	   	//console.log('type: ' + parseInt($scope.obj.type) + 'notExtensible:' + notExtensible);
+	   	
+	   	if(!$scope.isRoot && notExtensible) {
+	   		$scope.notExtensible = true;
+	   	}
 	}
 	
 	$scope.remove = function() {
@@ -66,9 +82,15 @@ angular.module('joint.ctrl')
 		//$scope.obj.remove();
 	}
 	
-	$scope.save = function(dontflip) {		
-		$scope.obj.save();
-		if(!dontflip) { $scope.flip(); }
+	$scope.save = function(frontSave) {	
+		$scope.$broadcast('serialize');	
+		$scope.obj.save().then(function(obj){
+			//console.log('saved');
+			//console.log(obj);
+			//$state.go('me.objects',{objectId:obj.id},{reload:true});
+			$rootScope.$broadcast('sidepanel.refresh');
+		});
+		if(!frontSave) { $scope.flip(); }
 	}
 			
 	$scope.focus = function() {

@@ -13,7 +13,8 @@ angular.module('joint', [
   'joint.services',
   'joint.directives',
   'ContentEditable',
-  'LocalStorageModule'
+  'LocalStorageModule',
+  'irontec.simpleChat'
 ])
 
 .config(['$httpProvider',
@@ -34,8 +35,18 @@ function($httpProvider) {
 		if(data.status) {
 			return data.data;
 		} else {
-			console.log('API error: '+data.error.msg);
-			toastr.error(data.error.msg,'API error');
+			var errorMsg = false;
+			if(data.error.msg) {
+				errorMsg = data.error.msg;
+			}
+			if(!errorMsg && data.error) {
+				errorMsg = data.error;
+			}
+			if(!errorMsg) {
+				errorMsg = 'Unknown error';
+			}
+			console.log('API error: '+errorMsg);
+			toastr.error(errorMsg,'API error');
 		}
 	});
 	RestangularProvider.addRequestInterceptor(function(data) {
@@ -75,5 +86,9 @@ function($httpProvider) {
     .state('friends', {
       url: "/friends/:friendId/objects/:objectId",
       templateUrl: "app/views/map.html"
+    })
+    .state('me.settings', {
+    	url: "/settings",
+    	templateUrl: "app/views/settings.html"
     });
 });

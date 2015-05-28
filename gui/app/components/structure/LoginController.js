@@ -33,7 +33,10 @@ function($rootScope, $scope, $state, Restangular, $timeout, $global){
 	
 	$scope.signup = function() {
 		Restangular.all('signup').doPOST($scope.data.signup).then(function(obj){
-			
+			if(obj) {
+				$global.login(obj);
+				$state.go('me.objects',{objectId:obj.object_id});
+			}
 		});
 	}
 	

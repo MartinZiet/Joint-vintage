@@ -45,6 +45,8 @@ module.exports = function(grunt) {
 				'./bower_components/ng-contenteditable/dist/ng-contenteditable.min.js',
 				'./bower_components/toastr/toastr.min.js',
 				'./bower_components/angular-local-storage/dist/angular-local-storage.min.js',
+				'./bower_components/angularjs-scroll-glue/src/scrollglue.js',
+				'./bower_components/angular-bootstrap-simple-chat/src/scripts/index.js',
                 './assets/js/socket.io/socket.io.min.js',
                 './assets/js/easyrtc/api/easyrtc.js'
 			],
@@ -64,7 +66,9 @@ module.exports = function(grunt) {
 				'./assets/styles/bootstrap.min.css',
 				'./bower_components/fontawesome/css/font-awesome.min.css',
 				'./bower_components/angular-ui-select/dist/select.min.css',
-				'./bower_components/toastr/toastr.min.css'
+				'./bower_components/toastr/toastr.min.css',
+				'./bower_components/angular-bootstrap-simple-chat/src/css/style.css',
+				'./bower_components/angular-bootstrap-simple-chat/src/css/themes.css'
 			],
 			dest: './public/css/3rdparty.css'
 		}

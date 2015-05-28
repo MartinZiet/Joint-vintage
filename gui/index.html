@@ -4,6 +4,8 @@
 		
 		<meta http-equiv="content-type" content="text/html; charset=UTF-8" />
 		
+		<script type="text/javascript" src='http://maps.google.com/maps/api/js?sensor=false&libraries=places'></script>
+		
 		<script type="text/javascript" src="public/js/3rdparty.js"></script>
 		<script type="text/javascript" src="public/js/app.js"></script>
 		<link rel="stylesheet" href="public/css/3rdparty.css" />
@@ -13,7 +15,10 @@
 	
 	<body>
 	    
-	    <div data-loading class="joint-loading"><i class="fa fa-spinner fa-spin fa-2x"></i></div>
+	    <div data-loading class="joint-loading">
+	        <i class="fa fa-circle-o-notch fa-spin fa-2x"></i>
+	        <div>Just a second..</div>
+        </div>
 		
 		<div ui-view>    		
         </div>
