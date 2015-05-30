@@ -70,7 +70,7 @@
 		
 		public function updateRecords ($table, $set, $where='', $debug=false) {
 			$query = 'UPDATE `'.$table.'` SET ';
-			foreach ($set as $col=>$val) $query .= '`'.$col.'`=\''.$val.'\',';
+			foreach ($set as $col=>$val) $query .= '`'.$col.'`='.$val.',';
 			$query = substr ($query, 0, -1);//usuwamy ostatni przecinek
 			if ($where!='') $query .= ' WHERE '.$where;
 			

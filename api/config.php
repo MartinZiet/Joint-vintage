@@ -32,7 +32,7 @@ $config = Array(
 	Array('GET', '/friends/call/:easyRTCID', 'callInfo', Array ('easyRTCID')), 
 	
 	
-	Array('DELETE', '/friends/:frID/objects/:oID/friendship', 'removeFriendship', Array('frID', 'oID')), 
+	Array('DELETE', '/friends/:frID/objects/:oID/friendship', 'removeFriendship', Array('oID', 'frID')), 
 	Array('DELETE', '/objects/:ID', 'removeObject', Array('ID')), //usuwa obiekt
 	Array('DELETE', '/aliases/:ID/:altID', 'removeAlias', Array('ID', 'altID') ), //usuwa alias
 	Array('DELETE', '/objects/:oID/contents/:cID', 'removeObject', Array('cID')), //usuwa content
