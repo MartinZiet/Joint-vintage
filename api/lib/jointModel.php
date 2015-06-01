@@ -7,7 +7,11 @@
 			
 			$this->_searchTypeId = 8;
             $this->_contentTypeId = 7;
-			$this->_actionCodes=Array('offerFriendship'=>0, 'confirmFriendship'=>1, 'removeFriendship'=>2, 'chatMessage'=>3);
+			
+			$this->_actionTypes=Array('offerFriendship', 'confirmFriendship', 'removeFriendship', 'chatMessage');
+			$this->_actionCodes=Array();
+			foreach ($this->_actionTypes as $k=>$v) $this->_actionCodes[$v]=$k;
+			
             
 			$this->_match = new objectMatch;
 		}
@@ -29,17 +33,32 @@
 			
 			$actionCode = $this->_actionCodes[$actionType];
 			//end of data processing
-			$record = Array('RECIPIENT_ID'=>$recipientId, 'SENDER_ID'=>$senderId, 'ACTION_TYPE'=>$actionCode);
+			$record = Array('RECIPIENT_ID'=>$this->getRootObjectID($recipientId), 'SENDER_ID'=>$senderId, 'ACTION_TYPE'=>$actionCode, 'DETAILS'=>$recipientId);
 			
-			//try{
+			try {
 				parent::addRecord('ACTION_INFO', $record);
-			/*}
+			}
 			catch (Exception $e) {
 				return false;
-			}*/
+			}
 			
 			return true; 
 
+		}
+		
+		function getInfo () {
+			if ( ! isset($_SESSION['ID'])) return $this -> authError();
+			
+			$tmp = parent::getRecords('ACTION_INFO', 'SENDER_ID, ACTION_TYPE, DETAILS, TIME_STAMP', 'RECIPIENT_ID='.$_SESSION['ID']);
+			$res = Array();
+			foreach ($this->_actionTypes as $a) $res[$a]=Array();
+			foreach($tmp as $row) {
+				array_push ($res[$this->_actionTypes[$row['ACTION_TYPE']]], Array('SENDER'=>$row['SENDER_ID'], 'RECIPIENT'=>$row['DETAILS']));
+			}
+			parent::removeRecords('ACTION_INFO', 'RECIPIENT_ID='.$_SESSION['ID']);
+			
+			return $res;
+			
 		}
 		
 		function authError () {
