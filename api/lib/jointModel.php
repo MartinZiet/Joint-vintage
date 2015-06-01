@@ -57,7 +57,7 @@
 			}
 			parent::removeRecords('ACTION_INFO', 'RECIPIENT_ID='.$_SESSION['ID']);
 			
-			return $res;
+			return $this->success($res);
 			
 		}
 		
