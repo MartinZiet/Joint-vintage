@@ -7,8 +7,58 @@
 			
 			$this->_searchTypeId = 8;
             $this->_contentTypeId = 7;
+			
+			$this->_actionTypes=Array('offerFriendship', 'confirmFriendship', 'removeFriendship', 'chatMessage');
+			$this->_actionCodes=Array();
+			foreach ($this->_actionTypes as $k=>$v) $this->_actionCodes[$v]=$k;
+			
             
 			$this->_match = new objectMatch;
+		}
+		
+		function setInfo ($recipientId, $actionType, $senderId) {
+			
+			//data processing
+			switch ($actionType) {
+				case 'removeFriendship':
+				
+				break;
+				case 'offerFriendship':
+				
+				break;
+				case 'chatMessage':
+				
+				break;
+			}
+			
+			$actionCode = $this->_actionCodes[$actionType];
+			//end of data processing
+			$record = Array('RECIPIENT_ID'=>$this->getRootObjectID($recipientId), 'SENDER_ID'=>$senderId, 'ACTION_TYPE'=>$actionCode, 'DETAILS'=>$recipientId);
+			
+			try {
+				parent::addRecord('ACTION_INFO', $record);
+			}
+			catch (Exception $e) {
+				return false;
+			}
+			
+			return true; 
+
+		}
+		
+		function getInfo () {
+			if ( ! isset($_SESSION['ID'])) return $this -> authError();
+			
+			$tmp = parent::getRecords('ACTION_INFO', 'SENDER_ID, ACTION_TYPE, DETAILS, TIME_STAMP', 'RECIPIENT_ID='.$_SESSION['ID']);
+			$res = Array();
+			foreach ($this->_actionTypes as $a) $res[$a]=Array();
+			foreach($tmp as $row) {
+				array_push ($res[$this->_actionTypes[$row['ACTION_TYPE']]], Array('SENDER'=>$row['SENDER_ID'], 'RECIPIENT'=>$row['DETAILS']));
+			}
+			parent::removeRecords('ACTION_INFO', 'RECIPIENT_ID='.$_SESSION['ID']);
+			
+			return $this->success($res);
+			
 		}
 		
 		function authError () {
@@ -264,6 +314,7 @@
 	
 		public function removeFriendship ($objectId1, $objectId2) {
 			parent::removeRecords ('FRIENDS', 'ABS(ID1)='.min($objectId1, $objectId2).' AND ABS(ID2)='.max($objectId1, $objectId2));
+			$this -> setInfo ($objectId2, 'removeFriendship', $objectId1);
 			return $this->success();
 		}
 		
@@ -283,7 +334,9 @@
 					parent::updateRecords('FRIENDS', $update, 'ID1='.$record['ID1'].' AND ID2='.$record['ID2']);
 					
 					$record['ID1'] = abs($record['ID1']);
-					$record['ID2'] = abs($record['ID2']);	
+					$record['ID2'] = abs($record['ID2']);
+
+					$this->setInfo($objectId2, 'confirmFriendship', $objectId1); 
 					return $this->success($record);
 					
 				}
@@ -292,11 +345,13 @@
 			else {
 				$record = ($objectId1 < $objectId2) ? Array ('ID1' => $objectId1, 'ID2' => -$objectId2) : Array ('ID1' => -$objectId2, 'ID2' => $objectId1);
 				parent::addRecord ('FRIENDS', $record);
+				
+				$this->setInfo($objectId2, 'offerFriendship', $objectId1); 
 				return $this->success($record);				
 			}
 		}
 	
-		public function friendList ($objectId) {
+		public function friendList ($objectId, $children = false) {
 			
 			$object=parent::getRecords('OBJECTS', '*', 'ID='.$objectId);
 			$object = $object[0];
@@ -377,18 +432,19 @@
 				if ($count == 0) {
 					$record = Array('ID1' => $id1, 'ID2' => $id2, 'NEWS1' => ($id1==$objectId1 ? 0 : 1), 'NEWS2' => ($id1==$objectId1 ? 1 : 0), 'CONTENT'=>'#'.$objectId1.'#'.$message);
 					$tmp = parent::addRecord ('CHAT', $record);
-					return $this->success();
 				}
 				else {
 					$update = Array (($objectId1==$id1 ? 'NEWS2' : 'NEWS1')=>1, 'CONTENT'=>'CONCAT(CONTENT, \'#'.$objectId1.'#'.$message.'\')');
 					$tmp = parent::updateRecords ('CHAT', $update, 'ID1='.$id1.' AND ID2='.$id2);
-					return $this->success();
 				}
+				
+				$this->setInfo ($objectId2, 'chatMessage', $objectId1);
+				return $this->success($message);
 			}
-			
-			$res = parent::getRecords ('CHAT', 'CONTENT', 'ID1='.$id1.' AND ID2='.$id2);
-			
-			return $this->success( $res[0]['CONTENT'] );
+			else {
+				$res = parent::getRecords ('CHAT', 'CONTENT', 'ID1='.$id1.' AND ID2='.$id2);
+				return $this->success( $res[0]['CONTENT'] );
+			}
 		}
 	
 		public function call ($objectId1, $objectId2) {

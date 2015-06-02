@@ -16,6 +16,7 @@ $config = Array(
 	Array('POST', '/call/checkin', 'callCheckIn', Array('easyRTCID')),
 	
 	Array('GET', '/session', 'checkSession'),
+	Array('GET', '/info', 'getInfo'),
     Array('GET', '/types', 'getObjectsByField', Array('!PARENT_ID','!5')),
     Array('GET', '/templates', 'getObjectsByField', Array('!TYPE','!9')),     
 	
@@ -32,7 +33,7 @@ $config = Array(
 	Array('GET', '/friends/call/:easyRTCID', 'callInfo', Array ('easyRTCID')), 
 	
 	
-	Array('DELETE', '/friends/:frID/objects/:oID/friendship', 'removeFriendship', Array('frID', 'oID')), 
+	Array('DELETE', '/friends/:frID/objects/:oID/friendship', 'removeFriendship', Array('oID', 'frID')), 
 	Array('DELETE', '/objects/:ID', 'removeObject', Array('ID')), //usuwa obiekt
 	Array('DELETE', '/aliases/:ID/:altID', 'removeAlias', Array('ID', 'altID') ), //usuwa alias
 	Array('DELETE', '/objects/:oID/contents/:cID', 'removeObject', Array('cID')), //usuwa content
