@@ -87,7 +87,6 @@ angular.module('joint.ctrl')
 		
 		function watchTemplate(n,o) {
 			if(!n) { return false; }
-			console.log('newTemplate');
 			Restangular.one('objects',n).get().then(function(obj){
 				var merged = JointTags.fromTemplate(obj.tags,$scope.current);
 				$scope.current = merged;

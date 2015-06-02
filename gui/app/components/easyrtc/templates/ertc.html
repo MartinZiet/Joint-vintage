@@ -1,14 +1,9 @@
+
 <div ng-show="ertc_id">
       Features:{{ertc_id}}
-      <video  style="float:left;border: solid 1px;" id="self_ertc_vid" width="300" height="200" muted="muted"></video>
-
+      <video  style="float:left;border: solid 1px;" class="self_ertc_vid" width="300" height="200" muted="muted"></video>
       <input type="text" ng-model="call_id">
       <button ng-click="call(call_id)">call</button>
       <button ng-click="cancel(call_id)" >cancel</button>
-      <br>
-      <div ng-show=button_show >
-          {{name_calling}} is calling
-          <button  ng-click="ansver(true)">Ansver</button>
-          <button  ng-click="ansver(false)">Cancel</button>    
-      </div>
+      <button ng-click="activate_box()">Activate</button>
 </div>

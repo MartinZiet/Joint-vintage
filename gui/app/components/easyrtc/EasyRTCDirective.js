@@ -1,14 +1,14 @@
 angular.module('joint.directives')
-
-	.directive('easyrtc',function(){
+    .directive('easyrtc',function(){
 		return {
-			templateUrl: 'app/components/easyrtc/templates/ertc.html',
+            restrict: 'E',
+            templateUrl: 'app/components/easyrtc/templates/ertc.html',
             scope: {
-                userId: '@'
+                userId: '=',
+                objectId: '='
             },
 			controller:'EasyRTCController',
-            
 			link: function(scope, element, attrs) {
-			}
+            }
 		}
 	});

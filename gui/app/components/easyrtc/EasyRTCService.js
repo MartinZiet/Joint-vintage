@@ -3,6 +3,7 @@ angular.module('joint.services')
 	.service('easyRTC', function($q) {
     var error, self, success;
     self = this;
+    self.video_boxes_list = {};
     self.deferred = $q.defer();
     easyrtc.setSocketUrl(":8080");
     // connect to socket server
@@ -10,41 +11,98 @@ angular.module('joint.services')
       self.id = id;
       self.deferred.resolve();
       self.room = room;
+      
+      easyrtc.setAcceptChecker(function(easyrtcid, acceptor) {
+        
+        self.init("noname").then(function() {
+            return acceptor(true);
+          });
+        });    
+        
+        
     }, error = function() {
       toastr.warning('Could not connect','EasyRTC');
     });
+    
+    
+    
+    this.addVideoBox = function( object_id, box){
+          self.video_boxes_list[object_id] = {'video_obj':box,
+                                          'active':false
+                                         };
+          console.log(self.video_boxes_list);
+      };
+    this.getActiveBox = function(cb){
+          var active_box_not_found = true;
+          angular.forEach(self.video_boxes_list, function(obj) {
+              if(obj.active == true){
+                  cb(obj.video_obj);
+                  active_box_not_found = false;
+              }
+          });
+          if(active_box_not_found){
+              throw "box not foud for video"
+              cb(undefined);
+          }
+      };
+    this.setActiveBox = function(objectId){
+          angular.forEach(self.video_boxes_list, function(obj) {
+              obj.active = false; 
+              obj.video_obj.css("background","white");
+          });
+          self.video_boxes_list[objectId].active=true;
+          self.video_boxes_list[objectId].video_obj.css("background","red");
+      };
+    
+    this.init = function(name) {
+        self.init_deffered = $q.defer();
+        
+        self.getActiveBox(function(video_obj){
+            if(video_obj!==undefined){
+            var vid_in = video_obj;
+            var vid_out = video_obj;  
+            
+            self.vid_in_obj = vid_in[0];
+            self.vid_out_obj = vid_out[0];
+            
+
+            easyrtc.setUsername(name);
+            easyrtc.setStreamAcceptor(function(easyrtcid, stream) {
+              easyrtc.setVideoObjectSrc(self.vid_out_obj, stream);
+            });
+            easyrtc.setOnStreamClosed(function(easyrtcid) {
+              easyrtc.clearMediaStream(self.vid_out_obj);
+              easyrtc.clearMediaStream(self.vid_in_obj);
+              easyrtc.getLocalStream().stop();
+            });
+            easyrtc.setOnError(function(err) {
+              easyrtc.setVideoObjectSrc(self.vid_in_obj, easyrtc.getLocalStream());
+              console.log(err);
+            });
+            easyrtc.initMediaSource(function() {
+              easyrtc.setVideoObjectSrc(self.vid_in_obj, easyrtc.getLocalStream());
+              self.init_deffered.resolve();
+            });
+            } else {
+                self.init_deffered.reject();
+            }
+        });
+        return self.init_deffered.promise;  
+      };
+    
     return {
+      addVideoBox: self.addVideoBox,
+      getActiveBox: self.getActiveBox,
+      setActiveBox: self.setActiveBox,
+      init: self.init,
       getId: function(cb) {
         self.deferred.promise.then(function() {
           return cb(self.id);
         });
       },
-      init: function(vid_in, vid_out, name, cb) {
-        console.log('init');
-        self.vid_in_obj = vid_in[0];
-        self.vid_out_obj = vid_out[0];
-        easyrtc.setUsername(name);
-        easyrtc.setStreamAcceptor(function(easyrtcid, stream) {
-          easyrtc.setVideoObjectSrc(self.vid_out_obj, stream);
-        });
-        easyrtc.setOnStreamClosed(function(easyrtcid) {
-          easyrtc.clearMediaStream(self.vid_out_obj);
-          easyrtc.clearMediaStream(self.vid_in_obj);
-          easyrtc.getLocalStream().stop();
-        });
-        easyrtc.setOnError(function(err) {
-          easyrtc.setVideoObjectSrc(self.vid_in_obj, easyrtc.getLocalStream());
-          console.log(err);
-        });
-        easyrtc.initMediaSource(function() {
-          easyrtc.setVideoObjectSrc(self.vid_in_obj, easyrtc.getLocalStream());
-          cb();
-        });
-      },
       acceptConnection: function(scope, cb) {
         return easyrtc.setAcceptChecker(function(easyrtcid, acceptor) {
           self.othereasyrtcid = easyrtcid;
-          console.log('********* ' + easyrtc.idToName(easyrtcid));
           cb(easyrtc.idToName(easyrtcid), acceptor, scope);
         });
       },
@@ -53,7 +111,6 @@ angular.module('joint.services')
           easyrtc.hangup(self.othereasyrtcid);
           self.othereasyrtcid = void 0;
         } else {
-          console.log('you are not connected');
           easyrtc.clearMediaStream(self.vid_out_obj);
           easyrtc.clearMediaStream(self.vid_in_obj);
           easyrtc.getLocalStream().stop();
