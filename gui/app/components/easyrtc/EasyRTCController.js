@@ -1,21 +1,24 @@
-angular.module('joint.ctrl').controller('EasyRTCController', function($scope, easyRTC, $q, $attrs, $element) {
+angular.module('joint.ctrl').controller('EasyRTCController', function($scope, easyRTC, $q, $attrs, $element, Restangular) {
     
     $scope.button_show = false;
-    $scope.userId = $attrs.userId;
+    $scope.friendId = $attrs.friendId;
     var video_element = $element.find('video.self_ertc_vid');
     
     easyRTC.getId(function(id) {
       $scope.ertc_id = id;
     });
     
-    easyRTC.addVideoBox($attrs.objectId,video_element);
+//    Restangular
     
-    $scope.call = function(id) {
-      easyRTC.setActiveBox($attrs.objectId);
-      easyRTC.init( $scope.userId ).then(function() {
+    easyRTC.addVideoBox($attrs.objectId,video_element);
+//    TODO: niedokończone
+    $scope.call = function( fId , oId ) {
+        
+      /*easyRTC.setActiveBox($attrs.objectId);
+      easyRTC.init( $scope.friendId ).then(function() {
         console.log('calling to ' + id);
         return easyRTC.performCall(id);
-      });
+      });*/
     };
     
     $scope.activate_box = function(){

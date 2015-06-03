@@ -19,7 +19,6 @@ angular.module('joint.services')
           });
         });    
         
-        
     }, error = function() {
       toastr.warning('Could not connect','EasyRTC');
     });
@@ -30,7 +29,7 @@ angular.module('joint.services')
           self.video_boxes_list[object_id] = {'video_obj':box,
                                           'active':false
                                          };
-          console.log(self.video_boxes_list);
+//          console.log(self.video_boxes_list);
       };
     this.getActiveBox = function(cb){
           var active_box_not_found = true;
@@ -129,6 +128,16 @@ angular.module('joint.services')
             console.log((accepted ? "accepted" : "rejected") + " by " + bywho);
           });
         }
-      }
+      },
+      sendMessage: function(ertc_id,topic,message){
+          easyrtc.sendDataWS(ertc_id, topic, message,
+              function(ackmessage){
+                  console.log("saw the following acknowledgment " + JSON.stringify(ackmessage));
+              });
+      },
+//        cb(easyrtcid, msgType, msgData, targeting)
+      onMessage: function( topic, cb ){
+          easyrtc.setPeerListener( cb, topic );
+      }    
     };
   });

@@ -4,7 +4,7 @@ angular.module('joint.directives')
             restrict: 'E',
             templateUrl: 'app/components/easyrtc/templates/ertc.html',
             scope: {
-                userId: '=',
+                friendId: '=',
                 objectId: '='
             },
 			controller:'EasyRTCController',

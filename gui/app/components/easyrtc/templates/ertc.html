@@ -1,6 +1,10 @@
 
 <div ng-show="ertc_id">
-      Features:{{ertc_id}}
+      Features:{{ertc_id}}<br>
+        {{friendId}}<br>
+        {{objectId}}
+     
+      
       <video  style="float:left;border: solid 1px;" class="self_ertc_vid" width="300" height="200" muted="muted"></video>
       <input type="text" ng-model="call_id">
       <button ng-click="call(call_id)">call</button>

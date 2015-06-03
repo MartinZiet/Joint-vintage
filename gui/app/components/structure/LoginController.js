@@ -15,8 +15,8 @@ function($rootScope, $scope, $state, Restangular, $timeout, $global){
 	});
 	
 	$scope.apis = [
-//		{ name:'local mysql php',url:'../api/api.php' },
-		{ name:'mockup php',url:'../stuff/api-mockup.php' },
+		{ name:'local mysql php'  ,url:'../api/api.php' },
+		{ name:'mockup php'       ,url:'../stuff/api-mockup.php' },
 		{name:'s18367520.onlinehome-server.info/Joint/api/api.php',url:'http://s18367520.onlinehome-server.info/Joint/api/api.php'}	
 	];
 	
