@@ -15,8 +15,8 @@ function($rootScope, $scope, $state, Restangular, $timeout, $global){
 	});
 	
 	$scope.apis = [
-		{name:'local mysql php',url:'../api/api.php'},
-		{name:'mockup php',url:'../stuff/api-mockup.php'},
+		{ name:'local mysql php'  ,url:'../api/api.php' },
+		{ name:'mockup php'       ,url:'../stuff/api-mockup.php' },
 		{name:'s18367520.onlinehome-server.info/Joint/api/api.php',url:'http://s18367520.onlinehome-server.info/Joint/api/api.php'}	
 	];
 	
@@ -27,7 +27,7 @@ function($rootScope, $scope, $state, Restangular, $timeout, $global){
 			if(obj && obj.object_id) {
 				$global.login(obj);
 				toastr.success('Successful login','Welcome!');
-				$state.go('me.objects',{objectId:obj.object_id});
+                $state.go('me.objects',{objectId:obj.object_id});
 			}
 		});
 	}

@@ -1,7 +1,6 @@
 <div class="text-center" style="padding:10px;">
 	Logged in as <strong>{{ sessionData.login }}</strong> <a ui-sref="me.settings"><i class="fa fa-cog"></i> Settings</a> <a href="#login">Logout</a>
 </div>
-
 <tabset>
 	<tab ng-repeat="tab in tabs" heading="{{tab.heading}}" active="tab.active" disabled="tab.disabled"
 		 select="select(tab.id);">

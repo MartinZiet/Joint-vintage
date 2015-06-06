@@ -525,7 +525,7 @@
 			$res = parent::updateRecords('USERS', $update, 'OBJECT_ID='.$_SESSION['ID']);
 			
 			
-			$o2 = $this -> getRootObjectID(Array('ID'=>-1, 'PARENT_ID'=>$objectId2));
+			$o2 = $this -> getRootObjectID($objectId2);
 			
 			$tmp = parent::getRecords('USERS', 'EASYRTC_ID', 'OBJECT_ID='.$o2);
 			return $this->success($tmp[0]['EASYRTC_ID']);

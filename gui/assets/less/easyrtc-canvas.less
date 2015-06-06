@@ -1,0 +1,90 @@
+.ertc_box {
+    position: fixed;
+    width: 322px;
+    height: 282px;
+    bottom: 0px;
+    left:0px;
+    border: solid 2px #dddddd;
+    background: white;
+    z-index: 1100;
+    
+    & div{
+        display: block;
+        width: 100%;
+    }
+    
+    & .heading{
+        text-align: center;
+        height: 20px;
+    }
+    & .heading i{
+        float:right;
+    }
+    
+    & .video_canvas{
+        width: 300px; 
+        height: 200px;
+        margin:10px;
+        position: relative;
+        
+        & .center{
+            position: absolute;
+            left: 50%;
+            top:50%;
+            margin-top: -28px;
+            margin-left: -28px;
+        }
+        
+        & .stop{
+            position: absolute;
+            right: 50%;
+            margin-right: -8px;
+            bottom: 1%;
+            z-index: 1101;
+        }
+    }
+}
+
+.ertc_box_closed  {
+    position: fixed;
+    width: 22px;
+    height: 22px;
+    bottom: 0px;
+    left:0px;
+    border: solid 2px #dddddd;
+    background: white;
+    z-index: 1100;
+    
+    & .heading i{
+        float:right;
+        margin: 2px;
+    }
+}
+
+
+
+.self_ertc_vid{
+    float:left;
+    border: solid 1px #dddddd;
+}
+
+.cam_ani {
+        color:black;
+        animation:myfirst 5s;
+        -moz-animation:myfirst 5s infinite; /* Firefox */
+        -webkit-animation:myfirst 5s infinite; /* Safari and Chrome */
+}
+
+@-moz-keyframes myfirst /* Firefox */
+    {
+    0%   {color:black;}
+    50%  {color:red;}
+    100%   {color:black;}
+}
+
+@-webkit-keyframes myfirst /* Safari and Chrome */
+    {
+    0%   {color:black;}
+    50%  {color:red;}
+    100%   {color:black;}
+}
