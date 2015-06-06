@@ -6,8 +6,19 @@ angular.module('joint.directives')
             restrict: 'A',
             link: function (scope, elm, attrs)
             {
+            	
+            	var hidePreloader = ['info'];
+            	
                 scope.isLoading = function () {
-                    return $http.pendingRequests.length > 0;
+                	var show = false;
+                	for(var i=0; i < $http.pendingRequests.length; i++) {
+                		for(var j=0; j < hidePreloader.length; j++) {
+                			if($http.pendingRequests[i].url.indexOf(hidePreloader[j]) < 0) {
+                				var show = true;
+                			}
+                		}
+                	}
+                    return show;
                 };
 
                 scope.$watch(scope.isLoading, function (v)

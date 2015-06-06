@@ -15,7 +15,7 @@ angular.module('joint.ctrl')
 	
 	var _this = this;	
 	
-	$scope.resourcesCount = 2;
+	$scope.resourcesCount = 3;
 	$scope.resourcesLoaded = 0;
 	
 	Restangular.all('templates').getList().then(function(templates) {
@@ -25,6 +25,11 @@ angular.module('joint.ctrl')
 	
 	Restangular.all('types').getList().then(function(types){
 		$rootScope.types = types;
+		$scope.resourcesLoaded++;
+	});
+	
+	Restangular.all('aliases').getList().then(function(aliases){
+		$rootScope.aaliases = aliases;
 		$scope.resourcesLoaded++;
 	});
 	

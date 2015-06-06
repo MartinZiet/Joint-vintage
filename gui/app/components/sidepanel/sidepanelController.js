@@ -34,8 +34,89 @@ angular.module('joint.ctrl')
 				id:'searches',
 				heading:'Searches',
 				templateUrl: 'app/components/sidepanel/templates/tab-searches.html'
+			},
+			{
+				id:'notifications',
+				heading:'Notifications',
+				templateUrl: 'app/components/sidepanel/templates/tab-notifications.html'
 			}
 		];
+		
+		activate();
+		
+		function activate() {
+			
+			Restangular.extendModel('friends',function(model){
+				
+				model.friendship = function() {
+					return model.customPOST({},'friendship').then(function(){
+						$rootScope.$broadcast('sidepanel.refresh');
+					});					
+				}
+				
+				model.unfriend = function() {
+					return model.customDELETE('friendship').then(function(){
+						$rootScope.$broadcast('sidepanel.refresh');
+					});					
+				}
+				
+				model.chat = function(message) {
+					if(!message) {
+						return model.getList('chat');
+					} else {
+						return model.customPOST({message:message},'chat');
+					}
+				}
+				
+				return model;
+				
+			});
+			
+			$rootScope.$on('notifications.new',function(){
+				console.log('new notifications!');
+				notifications($scope.notifications);
+				//console.log($scope.notifications);
+			});
+			
+			$rootScope.$on('notifications.initial',function(){
+				console.log('initial notifications!');
+				//notifications(n);
+			});
+			
+		}
+		
+		function notifications(notif) {
+			if(!notif || !notif.length) { return; }
+			for(var i=0;i<notif.length;i++) {
+				if(notif[i].is_new) {
+					toastr.info(notif[i].k);
+					$scope.notification(notif[i]);
+				}
+			}
+		}
+		
+		$scope.notification = function(n,action) {
+			
+			console.log(n);
+			
+			var k = n.type;
+			if(action) { k += '-' + action; } 
+			
+			var obj = Restangular.one('objects',n.recipient).one('friends',n.sender);
+			
+			switch(k) {
+				case 'offerfriendship-confirm':
+					obj.friendship();
+				break;
+				case 'offerfriendship-deny':
+					obj.unfriend();
+				break;
+				case 'chatmessage':	$rootScope.$broadcast('chat.update',n,obj);	break;
+				case 'confirmfriendship':	$rootScope.$broadcast('sidepanel.refresh');	break;
+				case 'removefriendship':	$rootScope.$broadcast('sidepanel.refresh');	break;
+				//case 'confirmfriendship': break;
+			}
+		}
 		
 		$scope.select = function(id) {
 			$scope.load(id);
@@ -52,7 +133,7 @@ angular.module('joint.ctrl')
 				if(!grouped[alias_id]) {
 					grouped[alias_id] = {
 						id: alias_id,
-						name: friends[i].alias_name,
+						name: friends[i].alias,
 						objects: []
 					}
 				}

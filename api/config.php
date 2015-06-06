@@ -28,18 +28,25 @@ $config = Array(
 	Array('GET', '/objects/:ID/contents', 'getObjectsByField', Array('!PARENT_ID','ID')),
 	
 	Array('GET', '/friends/:frID/objects/:ID', 'structure', Array('ID')), /*pobiera obiekt przyjaciela*/
-	Array('GET', '/friends/:frID/objects/:oID/chat',  'chat', Array('oID', 'frID')), //pobiera tresc chatu dla obiektu przyjaciela
+	
+	//friend objects interaction
+	Array('GET', '/objects/:ID/friends/:frID/chat',  'chat', Array('ID', 'frID')), //pobiera tresc chatu dla obiektu przyjaciela
+	Array('POST', '/objects/:ID/friends/:frID/chat', 'chat', Array('ID', 'frID', 'message')),
+	
+	Array('POST', '/objects/:ID/friends/:frID/friendship',  'addFriendship', Array('ID', 'frID')), //pobiera tresc chatu dla obiektu przyjaciela
+	Array('DELETE', '/objects/:ID/friends/:frID/friendship',  'removeFriendship', Array('ID', 'frID')), //pobiera tresc chatu dla obiektu przyjaciela
+	
 	Array('GET', '/friends/:frID/objects/:oID/call', 'call', Array ('oID', 'frID')), //makes EasyRTC connection
 	Array('GET', '/friends/call/:easyRTCID', 'callInfo', Array ('easyRTCID')), 
 	
 	
 	Array('DELETE', '/friends/:frID/objects/:oID/friendship', 'removeFriendship', Array('oID', 'frID')), 
 	Array('DELETE', '/objects/:ID', 'removeObject', Array('ID')), //usuwa obiekt
-	Array('DELETE', '/aliases/:ID/:altID', 'removeAlias', Array('ID', 'altID') ), //usuwa alias
+	Array('DELETE', '/aliases/:ID', 'removeAlias', Array('ID', 'replaceId') ), //usuwa alias
 	Array('DELETE', '/objects/:oID/contents/:cID', 'removeObject', Array('cID')), //usuwa content
 	
 	
-	Array('POST',  '/aliases', 'addAlias', Array('name')), //dodaje alias
+	Array('POST',  '/aliases', 'addAlias', Array('alias')), //dodaje alias
 	Array('POST', '/objects/:ID', 'addObject', Array('ID', '$POST')), //dodaje nowy obiekt jako childa
 	Array('POST', '/objects/:ID/contents', 'addContent', Array('ID', 'name', 'HTML')), //dodaje content dla obiektu
 	Array('POST', '/friends/:frID/objects/:oID/chat', 'chat', Array('oID', 'frID', 'message')), //dodaje wiadomosc do tresci chatu dla obiektu przyjaciela

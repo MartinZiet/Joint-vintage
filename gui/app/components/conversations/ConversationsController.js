@@ -2,7 +2,11 @@ angular.module('joint.ctrl')
 .controller('ConversationsController',['$rootScope','$scope',function($rootScope,$scope) {
 	
 	$rootScope.$on('conversations.add',function(evt,obj){		
-		add({name:obj.name,alias:obj.alias_name});
+		add(obj);
+	});
+	
+	$rootScope.$on('chat.update',function(evt,notif,obj){
+		add(obj);
 	});
 	
 	var vm = this;
@@ -14,7 +18,10 @@ angular.module('joint.ctrl')
 	vm.conversations = [];
 	
 	function add(obj) {
-		vm.conversations.push(obj);
+		var exists = _.find(vm.conversations,{id:obj.id});
+		if(!exists) {
+			vm.conversations.push(obj);
+		}
 	}
 	
 	function close(c) {

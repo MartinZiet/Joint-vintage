@@ -14,10 +14,11 @@
     <div class="clearfix">    
         <i class="fa fa-circle"></i> 
         <a ui-sref="friends({friendId:friend.id,objectId:obj.id})">{{obj.name}}</a>
-        <span class="pull-right">
-            <i class="fa fa-trash"></i>
-            <i class="fa fa-comment" ng-click="chat(obj)"></i>
-            <i class="fa fa-phone"></i>
+        <span class="pull-right">            
+            <i class="fa fa-user-plus" ng-click="obj.friendship()" ng-show="obj.type==8"></i>
+            <i class="fa fa-trash" ng-click="obj.unfriend()" ng-show="obj.type==6"></i>            
+            <i class="fa fa-comment" ng-click="chat(obj)" ng-show="obj.type==6"></i>
+            <i class="fa fa-phone" ng-show="obj.type==6"></i>
         </span>
     </div>
 </div>

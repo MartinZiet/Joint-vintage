@@ -1,0 +1,10 @@
+<div class="sidepanel-notif" ng-repeat="n in notifications">
+    <div ng-show="n.type=='offerfriendship'">{{ n.name }} ({{ n.alias}}) wants to be friends</div>
+    <div ng-show="n.type=='removefriendship'">{{ n.name }} ({{ n.alias}}) cancelled friendship</div>
+    <div ng-show="n.type=='confirmfriendship'">{{ n.name }} ({{ n.alias}}) confirmed friendship</div>
+    
+    <div ng-show="n.type=='offerfriendship'">
+        <a class="btn btn-danger" ng-click="notification(n,'deny')">Deny</a>
+        <a class="btn btn-success" ng-click="notification(n,'confirm')">Confirm</a>
+    </div>
+</div>
