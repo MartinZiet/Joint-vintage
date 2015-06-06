@@ -4,8 +4,10 @@
 </div>
 
 <div id="layout-conversations" ng-controller="ConversationsController as vm">
-    <div ng-repeat="c in vm.conversations" ng-include="vm.template" class="conversation"></div>
+    <div ng-repeat="c in vm.conversations" ng-include="c.template" class="conversation"></div>
+
 </div>
+<easyrtc></easyrtc>
 
 <div id="layout-sidepanel" sidepanel>
 </div>

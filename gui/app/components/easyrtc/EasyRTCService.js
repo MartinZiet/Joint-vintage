@@ -1,33 +1,35 @@
 angular.module('joint.services')
-
-	.service('easyRTC', function($q) {
+	.service('easyRTC', function($q,Restangular,$rootScope) {
     var error, self, success;
     self = this;
+    self.status = true;
     self.video_boxes_list = {};
     self.deferred = $q.defer();
+    
     easyrtc.setSocketUrl(":8080");
     // connect to socket server
     easyrtc.connect("joint", success = function(id, room) {
       self.id = id;
+      Restangular.one("call").customPOST({easyRTCID: id}, "checkin", {}, {});
       self.deferred.resolve();
       self.room = room;
-      
       easyrtc.setAcceptChecker(function(easyrtcid, acceptor) {
-        
-        self.init("noname").then(function() {
+        self.init(id).then(function() {
+            self.status = false;
+            $rootScope.$broadcast("video.chat",{status:"connected"});
             return acceptor(true);
           });
-        });    
-        
+        });
     }, error = function() {
       toastr.warning('Could not connect','EasyRTC');
     });
     
     
-    
     this.addVideoBox = function( object_id, box){
           self.video_boxes_list[object_id] = {'video_obj':box,
-                                          'active':false
+                                          'active':false,
+                                          'status':'offline' 
+                                          // online, offline
                                          };
 //          console.log(self.video_boxes_list);
       };
@@ -50,7 +52,7 @@ angular.module('joint.services')
               obj.video_obj.css("background","white");
           });
           self.video_boxes_list[objectId].active=true;
-          self.video_boxes_list[objectId].video_obj.css("background","red");
+//          self.video_boxes_list[objectId].video_obj.css("background","red");
       };
     
     this.init = function(name) {
@@ -70,6 +72,8 @@ angular.module('joint.services')
               easyrtc.setVideoObjectSrc(self.vid_out_obj, stream);
             });
             easyrtc.setOnStreamClosed(function(easyrtcid) {
+              self.status = true;
+              $rootScope.$broadcast("video.chat",{status:"disconnected"});
               easyrtc.clearMediaStream(self.vid_out_obj);
               easyrtc.clearMediaStream(self.vid_in_obj);
               easyrtc.getLocalStream().stop();
@@ -87,13 +91,16 @@ angular.module('joint.services')
             }
         });
         return self.init_deffered.promise;  
-      };
+      };   
     
     return {
       addVideoBox: self.addVideoBox,
       getActiveBox: self.getActiveBox,
       setActiveBox: self.setActiveBox,
       init: self.init,
+      connection_is_enable: function(){
+        return self.status;
+      },
       getId: function(cb) {
         self.deferred.promise.then(function() {
           return cb(self.id);
@@ -104,6 +111,18 @@ angular.module('joint.services')
           self.othereasyrtcid = easyrtcid;
           cb(easyrtc.idToName(easyrtcid), acceptor, scope);
         });
+      },
+      endConversation: function(id){
+        if(id !== void 0 && easyrtc.getConnectStatus(id) === easyrtc.IS_CONNECTED) {
+          easyrtc.hangup(id);
+          easyrtc.clearMediaStream(self.vid_out_obj);
+          easyrtc.clearMediaStream(self.vid_in_obj);
+          easyrtc.getLocalStream().stop();
+        } else if(id !== void 0 && easyrtc.getConnectStatus(id) === easyrtc.NOT_CONNECTED){
+          easyrtc.clearMediaStream(self.vid_out_obj);
+          easyrtc.clearMediaStream(self.vid_in_obj);
+          easyrtc.getLocalStream().stop();
+        } 
       },
       cancel: function() {
         if (self.othereasyrtcid !== void 0 && easyrtc.getConnectStatus(self.othereasyrtcid) === easyrtc.IS_CONNECTED) {
@@ -119,6 +138,7 @@ angular.module('joint.services')
         self.othereasyrtcid = easyrtcid;
         if (easyrtc.getConnectStatus(self.othereasyrtcid) === easyrtc.NOT_CONNECTED) {
           easyrtc.call(easyrtcid, function(easyrtcid) {
+              self.status = false;
             console.log("completed call to " + easyrtc.idToName(easyrtcid));
           });
           (function(errorMessage) {

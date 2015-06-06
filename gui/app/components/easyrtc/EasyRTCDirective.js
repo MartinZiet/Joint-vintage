@@ -3,12 +3,24 @@ angular.module('joint.directives')
 		return {
             restrict: 'E',
             templateUrl: 'app/components/easyrtc/templates/ertc.html',
-            scope: {
-                friendId: '=',
-                objectId: '='
-            },
+            scope: {},
 			controller:'EasyRTCController',
 			link: function(scope, element, attrs) {
             }
 		}
 	});
+
+angular.module('joint.directives')
+    .directive('ertctools',function(){
+		return {
+            restrict: 'E',
+            templateUrl: 'app/components/easyrtc/templates/ertc_tools.html',
+            scope: {
+                friendId: '=',
+                object: '='
+            },
+			controller:'EasyRTCToolController',
+			link: function(scope, element, attrs) {
+            }
+		}
+    });

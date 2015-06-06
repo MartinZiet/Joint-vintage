@@ -1,13 +1,25 @@
-
-<div ng-show="ertc_id">
-      Features:{{ertc_id}}<br>
-        {{friendId}}<br>
-        {{objectId}}
-     
-      
-      <video  style="float:left;border: solid 1px;" class="self_ertc_vid" width="300" height="200" muted="muted"></video>
-      <input type="text" ng-model="call_id">
-      <button ng-click="call(call_id)">call</button>
-      <button ng-click="cancel(call_id)" >cancel</button>
-      <button ng-click="activate_box()">Activate</button>
-</div>
+<div ng-show="open_box" ng-class="{ ertc_box:true }">
+    <div class="heading">
+        <i class="fa fa-times" ng-click="close()"></i>
+    </div>
+    <div class="video_canvas">
+        <i ng-show="waiting_anim" class="fa fa-cog fa-spin fa-5x center"></i>
+        <i ng-show="(status=='call_established')" class="fa fa-stop fa-1x stop" ng-click="endcall(calling_to)"></i>
+        <i ng-show="waiting_anim"  class="fa fa-stop fa-1x stop" ng-click="stopcalling(calling_to)"></i>
+        <video ng-show="open" class="self_ertc_vid" width="300" height="200" muted="muted"></video>
+    </div>
+    <div>
+        
+    </div>
+    <ul>
+        <li ng-repeat="item in call_list">
+            <p> {{item.name}} is calling : <i class="fa fa-phone-square fa-1x" ng-click="answer(item)"></i>
+            <i class="fa fa-trash fa-1x" ng-click="bussy(item)"></i></p>
+        </li>
+    </ul>
+</div>    
+<div ng-hide="open_box" ng-class="{ertc_box_closed: true, cam_ani:animation}"  >
+    <div class="heading">
+        <i class="fa fa-video-camera" ng-click="open()"></i>
+    </div>
+</div>     
