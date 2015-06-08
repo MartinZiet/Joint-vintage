@@ -4,7 +4,8 @@ angular.module('joint.ctrl')
 	'$stateParams',
 	'Restangular',
 	'$sce',
-	function($scope,$stateParams,Restangular,$sce){
+	'JointTags',
+	function($scope,$stateParams,Restangular,$sce,JointTags){
 		
 		var _this = this;
 		
@@ -14,6 +15,8 @@ angular.module('joint.ctrl')
 				$scope.contents = contents;
 			});
 		});		
+		
+		$scope.contentTypes = JointTags.contentTypes();
 		
 		this.find = function(id) {
 			return _.find($scope.contents,function(obj){
@@ -25,9 +28,14 @@ angular.module('joint.ctrl')
 			return $sce.trustAsHtml(str);
 		}
 		
-		$scope.add = function() {
-			$scope.contents.push({});
-			$scope.toggleFullscreen(true);
+		$scope.add = function(type) {
+			var newCnt = {
+				tags: {
+					content_type: type
+				}
+			};
+			
+			$scope.contents.unshift(newCnt);
 		}
 		
 		$scope.remove = function(obj) {

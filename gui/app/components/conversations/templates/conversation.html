@@ -1,7 +1,7 @@
 <div class="heading">
-    {{ c.alias }} ({{ c.name}}) <i class="fa fa-times" ng-click="vm.close(c)"></i>
+    {{ c.alias_name }} ({{ c.name}}) <i class="fa fa-times" ng-click="vm.close(c)"></i>
 </div>
-<div ng-controller="Shell as vm">
+<div ng-controller="Shell as vm" ng-init="vm.init(c)">    
     <irontec-simple-chat
       messages="vm.messages"
       username="c.remote_alias"

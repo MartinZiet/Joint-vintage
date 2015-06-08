@@ -14,7 +14,9 @@ angular.module('joint', [
   'joint.directives',
   'ContentEditable',
   'LocalStorageModule',
-  'irontec.simpleChat'
+  'irontec.simpleChat',
+  'blueimp.fileupload',
+  'youtube-embed'
 ])
 
 .config(['$httpProvider',

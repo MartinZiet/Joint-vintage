@@ -1,10 +1,10 @@
 <div id="layout-view" ng-controller="StructureController as structureCtrl">
+	 <div id="layout-sub-view" ui-view></div>  
     <div map-view></div>
-    <div ui-view></div>    
 </div>
 
 <div id="layout-conversations" ng-controller="ConversationsController as vm">
-    <div ng-repeat="c in vm.conversations" ng-include="c.template" class="conversation"></div>
+    <div ng-repeat="c in vm.conversations" ng-include="vm.template" class="conversation"></div>
 
 </div>
 <easyrtc></easyrtc>

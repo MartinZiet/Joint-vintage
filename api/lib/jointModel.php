@@ -49,13 +49,17 @@
 		function getInfo () {
 			if ( ! isset($_SESSION['ID'])) return $this -> authError();
 			
-			$tmp = parent::getRecords('ACTION_INFO', 'SENDER_ID, ACTION_TYPE, DETAILS, TIME_STAMP', 'RECIPIENT_ID='.$_SESSION['ID']);
+			$from = 'ACTION_INFO A LEFT JOIN OBJECTS O ON O.ID = A.SENDER_ID LEFT JOIN ALIASES AL ON AL.ID = O.ALIAS_ID';
+			$fields = 'A.ID, A.SENDER_ID, A.ACTION_TYPE, A.DETAILS, A.TIME_STAMP, O.NAME, AL.ALIAS';
+			$where = 'A.RECIPIENT_ID='.$_SESSION['ID'];
+			
+			$tmp = parent::getRecords($from, $fields, $where);
 			$res = Array();
 			foreach ($this->_actionTypes as $a) $res[$a]=Array();
 			foreach($tmp as $row) {
-				array_push ($res[$this->_actionTypes[$row['ACTION_TYPE']]], Array('SENDER'=>$row['SENDER_ID'], 'RECIPIENT'=>$row['DETAILS']));
+				array_push ($res[$this->_actionTypes[$row['ACTION_TYPE']]], Array('ID'=>$row['ID'],'SENDER'=>$row['SENDER_ID'], 'RECIPIENT'=>$row['DETAILS'], 'NAME'=>$row['NAME'],'ALIAS'=>$row['ALIAS']));
 			}
-			parent::removeRecords('ACTION_INFO', 'RECIPIENT_ID='.$_SESSION['ID']);
+			//parent::removeRecords('ACTION_INFO', 'RECIPIENT_ID='.$_SESSION['ID']);
 			
 			return $this->success($res);
 			
@@ -90,18 +94,32 @@
 		function getObject ($row) {
 			$row['REPUTATION'] = json_decode($row['REPUTATION']);
 			$row['TAGS'] = json_decode($row['TAGS']);
+			
+			if($row['TAGS']->content_html) {
+				$row['TAGS']->content_html = html_entity_decode($row['TAGS']->content_html);
+			}
+			
 			return $row;
 		}
         
         function serializeObject(&$row) {
+        	
+			$row['NAME'] = strip_tags($row['NAME']);
             
             $jsonableFields = Array('TAGS','REPUTATION');
+			$quoteFields = Array('content_html');
             
             foreach($jsonableFields as $f) {
                 if(isset($row[$f])) {
+                	foreach($quoteFields as $q) {
+                		if($row[$f][$q]) {
+                			$row[$f][$q] = htmlentities($row[$f][$q],ENT_QUOTES);
+                		}
+                	}
                     $row[$f] = json_encode($row[$f]);
                 }
             }
+			//var_dump($row);
             return;
             
         }
@@ -176,7 +194,7 @@
 			
 			$record = Array ('OBJECT_ID'=>$objectId, 'ALIAS'=>$aliasName);
 			$res = parent::addRecord ('ALIASES', $record);
-			return $this->success(Array('id' => parent::insertId(), 'name'=>$aliasName));
+			return $this->success(Array('id' => parent::insertId(), 'alias'=>$aliasName));
 		}
 		
 		public function removeAlias ($aliasId, $altAliasId) {
@@ -215,6 +233,8 @@
 		}
 				
 		public function addObject ($parentId, $record) {
+			
+			$this->serializeObject($record);
 		    
             $filter = Array('NAME','PUBLIC','TYPE','TAGS','ALIAS_ID');
             
@@ -222,11 +242,24 @@
                 if(!in_array($k,$filter)) { unset($record[$k]); }
             }
 			
+			$parentObject = $this->getRecords('OBJECTS','*','ID='.$parentId);
+			$parentObject = $parentObject[0];
+			
+			if(!$record['ALIAS_ID']) { $record['ALIAS_ID'] = $parrentObject['ALIAS_ID']; }
+			$record['TIME_ADD'] = time();
+			
 			$record['PARENT_ID'] = $parentId;
 			parent::addRecord ('OBJECTS', $record);
 			$res = parent::getRecords('OBJECTS', '*', 'PARENT_ID='.$parentId, 'ORDER BY ID DESC LIMIT 1');
 			return $this->success($this->getObject($res[0]));
             
+		}
+		
+		private function quote($array) {
+			foreach($array as $key => $value) {
+				$array[$key] = '\''.$value.'\'';
+			}
+			return $array;
 		}
         
         public function updateObject($objectId, $record) {
@@ -237,7 +270,9 @@
             
             foreach($record as $k=>$v) {
                 if(!in_array($k,$filter)) { unset($record[$k]); }
-            }            
+            }       
+			
+			$record = $this->quote($record);     
             
             parent::updateRecords ('OBJECTS', $record, 'ID='.$objectId);
             $res = parent::getRecords('OBJECTS', '*', 'ID='.$objectId, 'ORDER BY ID DESC LIMIT 1');
@@ -313,16 +348,46 @@
         }
 	
 		public function removeFriendship ($objectId1, $objectId2) {
+		    
+            $objectId1 = $this->getFriendshipRoot($objectId1);
+            $objectId2 = $this->getFriendshipRoot($objectId2);
+            
+            $this->removeFriendshipEvents($objectId1,$objectId2);
+            
 			parent::removeRecords ('FRIENDS', 'ABS(ID1)='.min($objectId1, $objectId2).' AND ABS(ID2)='.max($objectId1, $objectId2));
 			$this -> setInfo ($objectId2, 'removeFriendship', $objectId1);
 			return $this->success();
 		}
+        
+        private function getFriendshipRoot($objectId) {            
+            
+            $rec = $this->getRecords('OBJECTS','if(TYPE='.$this->_searchTypeId.',PARENT_ID,ID) as "ID"','ID='.$objectId);
+            $rec = $rec[0]['ID'];
+            
+            return $rec;
+            
+        }
+        
+        private function removeFriendshipEvents($objectId1,$objectId2) {
+            $clearWhere = implode(' AND ',Array(
+                '(DETAILS='.$objectId1.' OR DETAILS='.$objectId2.')',
+                '(SENDER_ID='.$objectId1.' OR SENDER_ID='.$objectId2.')'
+            ));            
+            parent::removeRecords('ACTION_INFO', $clearWhere); 
+        }
 		
 		public function addFriendship ($objectId1, $objectId2) {
+		                
 			/* wywo�anie tej funkcji oznacza, �e obiekt1 jest zainteresowany przyja�ni� z obiektem2. 
 			Je�li obiekt 2 wcze�niej by� zsainteresowany przyja�ni�, to nast�puje wy��cznie modyfikacja rekordu w bazie danych
 			w przeciwnym razie - treba doda rekord.
 			Parametry przekazane do funkcji powinny by� dodatnie, cho� w bazie danych liczby mog� by ujemne			*/
+			
+			$objectId1 = $this->getFriendshipRoot($objectId1);
+            $objectId2 = $this->getFriendshipRoot($objectId2);
+            
+            //czyści historię powiadomień dla przyjaźni
+            $this->removeFriendshipEvents($objectId1,$objectId2);
 			
 			$record = parent::getRecords('FRIENDS', 'ID1, ID2', 'ABS (ID1)='.min($objectId1, $objectId2).' AND ABS(ID2)='.max($objectId1, $objectId2));
 			$record = $record[0];
@@ -337,18 +402,22 @@
 					$record['ID2'] = abs($record['ID2']);
 
 					$this->setInfo($objectId2, 'confirmFriendship', $objectId1); 
-					return $this->success($record);
+					$response = $this->success($record);
 					
 				}
-				else return $this->success($record);
+				else {
+				    $response = $this->success($record);
+                }
 			}
 			else {
 				$record = ($objectId1 < $objectId2) ? Array ('ID1' => $objectId1, 'ID2' => -$objectId2) : Array ('ID1' => -$objectId2, 'ID2' => $objectId1);
 				parent::addRecord ('FRIENDS', $record);
 				
 				$this->setInfo($objectId2, 'offerFriendship', $objectId1); 
-				return $this->success($record);				
+				$response = $this->success($record);				
 			}
+            
+            return $response;
 		}
 	
 		public function friendList ($objectId, $children = false) {
@@ -371,7 +440,7 @@
 				$parentFriendString = substr ($parentFriendString, 0, -1).')';
 				
 				$temp = parent::getRecords ('`OBJECTS` LEFT JOIN `ALIASES` ON OBJECTS.ALIAS_ID=ALIASES.ID',
-				'OBJECTS.ID AS ID, OBJECTS.PARENT_ID AS PARENT_ID, OBJECTS.NAME AS NAME, OBJECTS.TAGS AS TAGS, OBJECTS.ALIAS_ID AS ALIAS_ID, ALIASES.ALIAS AS ALIAS_NAME',
+				'OBJECTS.ID AS ID, OBJECTS.PARENT_ID AS PARENT_ID, OBJECTS.NAME AS NAME, OBJECTS.TAGS AS TAGS, OBJECTS.ALIAS_ID AS ALIAS_ID, ALIASES.ALIAS AS ALIAS, OBJECTS.TYPE AS TYPE',
 				'OBJECTS.ID !='.$id.' AND OBJECTS.TYPE='.$this->_searchTypeId.' AND NOT (OBJECTS.PARENT_ID IN '.$parentFriendString.')', 
 				'ORDER BY OBJECTS.ID');
 				
@@ -391,7 +460,7 @@
 				$n = 0;
 				
 				foreach ($friends as $row) {
-					$res[$n] = parent::getRecords ('OBJECTS AS O LEFT JOIN ALIASES AS A ON O.ALIAS_ID=A.ID', 'O.ID AS ID, O.NAME AS NAME, A.ID AS ALIAS_ID, A.ALIAS AS ALIAS', "O.ID=".($row['ID1']+$row['ID2']-$id));
+					$res[$n] = parent::getRecords ('OBJECTS AS O LEFT JOIN ALIASES AS A ON O.ALIAS_ID=A.ID', 'O.ID AS ID, O.NAME AS NAME, A.ID AS ALIAS_ID, A.ALIAS AS ALIAS, O.TYPE AS TYPE', "O.ID=".($row['ID1']+$row['ID2']-$id));
 					
 					$res[$n] = $res[$n][0];
 					++$n;
@@ -408,6 +477,18 @@
 			$tmp = parent::getRecords('OBJECTS', '*', 'ID='.$objectId);
 			return $this->success($tmp[0]);
 		}
+		
+		public function getContents($objectId) {
+			
+			$where = 'PARENT_ID = '.$objectId.' AND TYPE = '.$this->_contentTypeId;
+			$where .= ' ORDER BY TIME_ADD DESC';
+			$records = $this->getRecords('OBJECTS','*',$where);
+			foreach($records as &$val) {
+				$val = $this->getObject($val);
+			}
+			return $this->success($records);
+			
+		}
 	
 		public function addContent ($objectId, $name, $HTML) {
 			return $this->addObject ($objectId, $name, 1, 2, '{"time":'.time().', "HTML": "'.$HTML.'"}');
@@ -419,6 +500,36 @@
 			$tmp = parent::getRecords ('OBJECTS', '*', 'ID='.$objectId);
 			return $this->success($this->getObject($tmp[0]));
 		}
+
+        private function chatToArray($chat) {
+            
+            $messages = Array();            
+            $explode = explode('#',$chat);
+			$usernames = Array();
+            
+            foreach($explode as $e) {
+                if(!$key) {
+                    $key = $e;
+                } else {
+                    $message = $e;
+                }
+                if($key&&$message) {
+                	if(!$usernames[$key]) {
+                		$obj = $this->getRecords('OBJECTS','*','ID='.$key);
+						$alias = $this->getRecords('ALIASES','*','ID='.$obj[0]['ALIAS_ID']);
+                		$usernames[$key] = $alias[0]['ALIAS'];
+                	}
+					$username = $usernames[$key];
+                    $messages[] = Array('username'=>$username,'content'=>$message);
+                    $key=false;
+                    $message=false;
+                }
+                
+            }
+            
+            return $messages;
+               
+        }
 				
 		public function chat ($objectId1, $objectId2, $message = '') {
 			$id1 = min($objectId1, $objectId2);
@@ -443,7 +554,7 @@
 			}
 			else {
 				$res = parent::getRecords ('CHAT', 'CONTENT', 'ID1='.$id1.' AND ID2='.$id2);
-				return $this->success( $res[0]['CONTENT'] );
+				return $this->success( $this->chatToArray($res[0]['CONTENT']) );
 			}
 		}
 	
