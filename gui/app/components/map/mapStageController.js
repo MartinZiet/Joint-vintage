@@ -35,7 +35,8 @@ angular.module('joint.ctrl')
 		}
 	}	
 			
-	$scope.$on('ngRepeatFinished',function(){		
+	$scope.$on('ngRepeatFinished',function(){	
+		console.log('ngRepeatFinished');	
 		$scope.objectsMap = $scope.serializeStructure();
 		geometry.apply($scope.objectsMap);
 		$scope.applyPositions($scope.objectsMap);

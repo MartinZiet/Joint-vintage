@@ -12,6 +12,7 @@ angular.module('joint.ctrl')
 	var _extensibleTypes = [0,5,6];
 				
 	$scope.types = $rootScope.types;
+	$scope.aliases = $rootScope.aliases;
 		
 	api.isServer('jointObj',$scope);
 		

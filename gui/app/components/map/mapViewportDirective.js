@@ -1,7 +1,7 @@
 angular.module('joint.directives')
 .directive('mapViewport',function(){
 	return {		
-		template: '<canvas map-canvas objects-map="objectsMap" object-id="objectId" width="2000" height="2000"></canvas><div map-stage></div>',
+		template: '<canvas map-canvas objects-map="objectsMap" object-id="objectId"></canvas><div map-stage></div>',
 		controller: 'MapViewportController',
 		link: function(scope, element, attrs) {
 			

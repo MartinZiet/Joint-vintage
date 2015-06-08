@@ -9,11 +9,25 @@
 
 [map-viewport] {  
   position:absolute;
+  
+   -webkit-transform: translate3d(0,0,0);
+  -moz-transform: translate3d(0,0,0);
+  -ms-transform: translate3d(0,0,0);
+  -o-transform: translate3d(0,0,0);
+  transform: translate3d(0,0,0);
 }
 
 [map-canvas] {
   position:absolute;
   opacity:1;    
+  top:-2500px;
+  left:-2500px;
+  
+   -webkit-transform: translate3d(0,0,0);
+  -moz-transform: translate3d(0,0,0);
+  -ms-transform: translate3d(0,0,0);
+  -o-transform: translate3d(0,0,0);
+  transform: translate3d(0,0,0);
 }
 
 [map-viewport].transition {

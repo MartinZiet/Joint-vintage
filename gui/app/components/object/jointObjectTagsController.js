@@ -89,7 +89,7 @@ angular.module('joint.ctrl')
 			if(!n) { return false; }
 			Restangular.one('objects',n).get().then(function(obj){
 				var merged = JointTags.fromTemplate(obj.tags,$scope.current);
-				$scope.current = merged;
+				$scope.current = merged;				
 				watchVerb($scope.current._meta._verb.points[0].value);
 				console.log(merged);
 			});

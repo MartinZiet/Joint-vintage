@@ -150,6 +150,15 @@ angular.module('joint.services')
 				}
 			}
 			
+			tags._verb._values = angular.copy(tplTags.tags._verb._values);
+			
+			if(!objTags._meta) { objTags._meta = {_verb:{points:[{}]}} };
+			if(!objTags._meta._verb) { objTags._meta._verb = {points:[{}]} };
+			if(!objTags._meta._verb.points) { objTags._meta._verb.points = [{}]; }
+			if(!objTags._meta._verb.points[0]) { objTags._meta._verb.points = [{}]; }
+			
+			objTags._meta._verb.points[0] = angular.copy(tags._verb._values[0]); 
+			
 			return {_meta: objTags._meta, tags: tags};
 			
 		},

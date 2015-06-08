@@ -29,7 +29,7 @@ angular.module('joint.ctrl')
 	});
 	
 	Restangular.all('aliases').getList().then(function(aliases){
-		$rootScope.aaliases = aliases;
+		$rootScope.aliases = aliases;
 		$scope.resourcesLoaded++;
 	});
 	
@@ -94,6 +94,7 @@ angular.module('joint.ctrl')
 				_this.remove(children[i].id,true);
 			}
 			if(!is_recursive) {
+				$scope.$broadcast('ngRepeatFinished');
 				$state.go('me.objects',{objectId:obj.parent_id});
 				
 			}

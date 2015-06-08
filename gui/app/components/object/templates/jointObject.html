@@ -79,10 +79,9 @@
                     <div class="panel-heading"></div>
                     <div class="panel-body" style="padding:15px;">                        
                         <input class="form-control input-lg" ng-model="obj.name" class="m-b" />                        
-                        
-                        <span ng-repeat="alias in aaliases">{{ alias.id }} {{ alias.alias }}</span>
+                                                
                         <select class="form-control" ng-model="obj.alias_id" class="m-b">
-                        	<option ng-repeat="alias in aaliases" value="{{ alias.id }}">{{ alias.alias }}</option>
+                        	<option ng-repeat="alias in aliases" value="{{ alias.id }}">{{ alias.alias }}</option>
                         </select>
                         
                         <div class="btn-group m-b" ng-hide="isRoot">
