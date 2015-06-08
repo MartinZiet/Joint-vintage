@@ -1,8 +1,10 @@
 angular.module('joint.ctrl')
 
-.controller('LoginController',['$rootScope','$scope', '$state', 'Restangular','$timeout','JointGlobalService', 
-function($rootScope, $scope, $state, Restangular, $timeout, $global){
+.controller('LoginController',['$rootScope','$scope', '$state', 'Restangular','$timeout','JointGlobalService', 'easyRTC',
+function($rootScope, $scope, $state, Restangular, $timeout, $global, easyRTC){
 	
+    easyRTC.stopEasyRTC();
+    
 	$scope.data = {
 		login: {},
 		signup: {}

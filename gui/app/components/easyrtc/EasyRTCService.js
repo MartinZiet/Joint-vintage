@@ -5,14 +5,20 @@ angular.module('joint.services')
     self.status = true;
     self.video_boxes_list = {};
     self.deferred = $q.defer();
+    self.id = "";
+    easyrtc.setSocketUrl(":8080");
     
     this.startEasyRTC = function(){
         
-        easyrtc.setSocketUrl(":8080");
+        if(self.id!=""){
+            easyrtc.disconnect();
+            self.id="";
+        }
+        
         // connect to socket server
         easyrtc.connect("joint", success = function(id, room) {
           self.id = id;
-
+          
           Restangular.one("call").customPOST({easyRTCID: id}, "checkin", {}, {});
           
           self.deferred.resolve();
@@ -27,6 +33,13 @@ angular.module('joint.services')
         }, error = function() {
           toastr.warning('Could not connect','EasyRTC');
         });
+    }
+    
+    this.stopEasyRTC = function(){
+        if(self.id!=""){
+            easyrtc.disconnect();
+            self.id="";
+        }
     }
     
     this.addVideoBox = function( object_id, box){
@@ -97,6 +110,7 @@ angular.module('joint.services')
     
     return {
       startEasyRTC: self.startEasyRTC,
+      stopEasyRTC: self.stopEasyRTC,
       addVideoBox: self.addVideoBox,
       getActiveBox: self.getActiveBox,
       setActiveBox: self.setActiveBox,
