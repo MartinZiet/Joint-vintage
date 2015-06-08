@@ -471,6 +471,58 @@
 			
 		}
 	
+		public function getFriendList ($objectId, $children = false) {
+			
+			$objectList = Array(0=>$objectId);
+			if ($children == true) {
+				for ($i=0; isset($objectList[$i]); ++$i) {
+					$tmp = parent::getRecords('OBJECTS', 'ID', 'PARENT_ID='.$objectList[$i].' AND TYPE != '.$this->_searchTypeId);
+					foreach ($tmp as $k=>$v) {
+						array_push ($objectList, $v['ID']);
+					}
+				}
+			}
+			
+			$res = [];
+			foreach ($objectList as $o) {
+				$tmp = $this->friendList($o);
+				foreach ($tmp['data'] as $k=>$v) {
+					array_push($res, $v);
+				}
+			}
+			
+			return $this->success($res);
+		}
+		
+		public function getSearchList ($objectId, $children = false) {
+			$objectList = Array(0=>$objectId);
+			if ($children == true) {
+				$searchList = Array ();
+				for ($i=0; isset($objectList[$i]); ++$i) {
+					$tmp = parent::getRecords('OBJECTS', 'ID, TYPE', 'PARENT_ID='.$objectList[$i]);
+					foreach ($tmp as $k=>$v) {
+						if ($v['TYPE'] == $this->_searchTypeId) array_push($searchList, $v['ID']); 
+						else array_push ($objectList, $v['ID']);
+					}
+				}
+			}
+			else {
+				$searchList = Array(0=>$objectId);
+			}
+			
+			$res = [];
+			foreach ($searchList as $o) {
+				$tmp = $this->friendList($o);
+				foreach ($tmp['data'] as $k=>$v) {
+					array_push($res, $v);
+				}
+			}
+			
+			return $this->success($res);
+		}
+	
+	
+	
 		public function changePublic ($objectId, $publicOption = '1-PUBLIC') {
 			$update = Array ('PUBLIC'=>$publicOption);
 			parent::updateRecords ('OBJECTS', $update, 'ID='.$objectId);
