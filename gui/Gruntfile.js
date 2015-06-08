@@ -16,6 +16,18 @@ module.exports = function(grunt) {
 					dest: './public/fonts/'
 				}
 			]
+		},
+		images: {
+			files: [
+				{
+					expand: true,
+					flatten: true,
+					src: [
+						'./bower_components/jquery-prettyPhoto/images/prettyPhoto/default/*.*'
+					],
+					dest: './public/images/prettyPhoto/default/'
+				}
+			]
 		}
 	},
 	
@@ -47,10 +59,27 @@ module.exports = function(grunt) {
 				'./bower_components/angular-local-storage/dist/angular-local-storage.min.js',
 				'./bower_components/angularjs-scroll-glue/src/scrollglue.js',
 				'./bower_components/angular-bootstrap-simple-chat/src/scripts/index.js',
+				'./bower_components/angular-youtube-mb/dist/angular-youtube-embed.min.js',
+				'./bower_components/jquery-prettyPhoto/js/jquery.prettyPhoto.js',
                 './assets/js/socket.io/socket.io.min.js',
                 './assets/js/easyrtc/api/easyrtc.js'
 			],
 			dest: './public/js/3rdparty.js'
+		},
+		js_uploader: {
+			src: [
+				'./bower_components/jquery-file-upload/js/vendor/jquery.ui.widget.js',
+				'./bower_components/buleimp-load-image/js/load-image.all.min.js',
+				'./bower_components/blueimp-canvas-to-blob/js/canvas-to-blob.min.js',
+				'./bower_components/jquery-file-upload/js/jquery.fileupload.js',
+				'./bower_components/jquery-file-upload/js/jquery.fileupload-process.js',
+				'./bower_components/jquery-file-upload/js/jquery.fileupload-image.js',
+				'./bower_components/jquery-file-upload/js/jquery.fileupload-audio.js',
+				'./bower_components/jquery-file-upload/js/jquery.fileupload-video.js',
+				'./bower_components/jquery-file-upload/js/jquery.fileupload-validate.js',
+				'./bower_components/jquery-file-upload/js/jquery.fileupload-angular.js'
+			],
+			dest: './public/js/upload.js'
 		},
 		js_app: {
 			src: [
@@ -68,7 +97,10 @@ module.exports = function(grunt) {
 				'./bower_components/angular-ui-select/dist/select.min.css',
 				'./bower_components/toastr/toastr.min.css',
 				'./bower_components/angular-bootstrap-simple-chat/src/css/style.css',
-				'./bower_components/angular-bootstrap-simple-chat/src/css/themes.css'
+				'./bower_components/angular-bootstrap-simple-chat/src/css/themes.css',
+				'./bower_components/jquery-file-upload/css/jquery.fileupload.css',
+				'./bower_components/jquery-file-upload/css/jquery.fileupload-ui.css',
+				'./bower_components/jquery-prettyPhoto/css/prettyPhoto.css'
 			],
 			dest: './public/css/3rdparty.css'
 		}

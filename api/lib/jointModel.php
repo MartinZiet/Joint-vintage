@@ -94,18 +94,32 @@
 		function getObject ($row) {
 			$row['REPUTATION'] = json_decode($row['REPUTATION']);
 			$row['TAGS'] = json_decode($row['TAGS']);
+			
+			if($row['TAGS']->content_html) {
+				$row['TAGS']->content_html = html_entity_decode($row['TAGS']->content_html);
+			}
+			
 			return $row;
 		}
         
         function serializeObject(&$row) {
+        	
+			$row['NAME'] = strip_tags($row['NAME']);
             
             $jsonableFields = Array('TAGS','REPUTATION');
+			$quoteFields = Array('content_html');
             
             foreach($jsonableFields as $f) {
                 if(isset($row[$f])) {
+                	foreach($quoteFields as $q) {
+                		if($row[$f][$q]) {
+                			$row[$f][$q] = htmlentities($row[$f][$q],ENT_QUOTES);
+                		}
+                	}
                     $row[$f] = json_encode($row[$f]);
                 }
             }
+			//var_dump($row);
             return;
             
         }
@@ -219,6 +233,8 @@
 		}
 				
 		public function addObject ($parentId, $record) {
+			
+			$this->serializeObject($record);
 		    
             $filter = Array('NAME','PUBLIC','TYPE','TAGS','ALIAS_ID');
             
@@ -230,12 +246,20 @@
 			$parentObject = $parentObject[0];
 			
 			if(!$record['ALIAS_ID']) { $record['ALIAS_ID'] = $parrentObject['ALIAS_ID']; }
+			$record['TIME_ADD'] = time();
 			
 			$record['PARENT_ID'] = $parentId;
 			parent::addRecord ('OBJECTS', $record);
 			$res = parent::getRecords('OBJECTS', '*', 'PARENT_ID='.$parentId, 'ORDER BY ID DESC LIMIT 1');
 			return $this->success($this->getObject($res[0]));
             
+		}
+		
+		private function quote($array) {
+			foreach($array as $key => $value) {
+				$array[$key] = '\''.$value.'\'';
+			}
+			return $array;
 		}
         
         public function updateObject($objectId, $record) {
@@ -246,7 +270,9 @@
             
             foreach($record as $k=>$v) {
                 if(!in_array($k,$filter)) { unset($record[$k]); }
-            }            
+            }       
+			
+			$record = $this->quote($record);     
             
             parent::updateRecords ('OBJECTS', $record, 'ID='.$objectId);
             $res = parent::getRecords('OBJECTS', '*', 'ID='.$objectId, 'ORDER BY ID DESC LIMIT 1');
@@ -450,6 +476,18 @@
 			parent::updateRecords ('OBJECTS', $update, 'ID='.$objectId);
 			$tmp = parent::getRecords('OBJECTS', '*', 'ID='.$objectId);
 			return $this->success($tmp[0]);
+		}
+		
+		public function getContents($objectId) {
+			
+			$where = 'PARENT_ID = '.$objectId.' AND TYPE = '.$this->_contentTypeId;
+			$where .= ' ORDER BY TIME_ADD DESC';
+			$records = $this->getRecords('OBJECTS','*',$where);
+			foreach($records as &$val) {
+				$val = $this->getObject($val);
+			}
+			return $this->success($records);
+			
 		}
 	
 		public function addContent ($objectId, $name, $HTML) {

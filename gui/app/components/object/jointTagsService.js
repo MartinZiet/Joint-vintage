@@ -3,6 +3,32 @@ angular.module('joint.services')
 .factory('JointTags',[function(){
 	return {
 		
+		contentTypes: function() {
+			return {
+				html: {
+					name: 'HTML',
+					templateUrl: 'app/components/content/templates/html.html',
+					templateUrlEdit: 'app/components/content/templates/html-edit.html'
+				},
+				photos: {
+					name: 'Photos',
+					templateUrl: 'app/components/content/templates/photos.html',
+					templateUrlEdit: 'app/components/content/templates/photos-edit.html',
+					enableUpload: true
+				},
+				video: {
+					name: 'Video',
+					templateUrl: 'app/components/content/templates/video.html',
+					templateUrlEdit: 'app/components/content/templates/video-edit.html'
+				},
+				link: {
+					name: 'Link',
+					templateUrl: 'app/components/content/templates/link.html',
+					templateUrlEdit: 'app/components/content/templates/link-edit.html'
+				}
+			}
+		},
+		
 		dataTypes: function() {
 			
 			return {
@@ -59,7 +85,8 @@ angular.module('joint.services')
 		verbModes: function() {
 			return {
 				1: { name: 'A>B' },
-				2: { name: 'B>A' }
+				2: { name: 'B>A' },
+				3: { name: '<>' }
 			}
 		},
 		

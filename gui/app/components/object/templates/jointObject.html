@@ -29,33 +29,33 @@
                             <button class="btn btn-transparent" data-toggle="tooltip" title="Pokazuj treści ze świata"><i class="fa fa-globe"></i></button>
                             <button class="btn btn-transparent" data-toggle="tooltip" title="Filtruj treść"><i class="fa fa-filter"></i></button>
                         </div>
-                       <button class="btn btn-transparent pull-right" ng-click="add()">
+                        
+                        <div class="dropdown pull-right">
+					  <button class="btn btn-transparent dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-expanded="true">
+					    Add content
+					    <span class="caret"></span>
+					  </button>
+					  <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
+					    <li ng-repeat="(cntTypeId,cntType) in contentTypes" role="presentation" ng-click="add(cntTypeId)"><a role="menuitem">{{ cntType.name }}</a></li>
+					  </ul>
+					</div>
+                        
+                        
+                       <!-- <button class="btn btn-transparent pull-right" ng-click="add()">
                             <i class="fa fa-plus"></i> Add content
-                       </button>
+                       </button> -->
                     </div>
                     <div class="object-contents">
                         
-                        <div class="object-content" ng-repeat="cnt in contents">
-                        	
-                        	<div class="card-header object-content-heading clearfix">
-                                <span style="font-size:1.2em;">{{ cnt.name }}</span>
-                                <div class="btn-group pull-right" ng-hide="readonly">
-                                    <button class="btn btn-transparent" ng-click="remove(cnt)"><i class="fa fa-trash"></i></button>
-                                    <button class="btn btn-transparent"><i class="fa fa-edit"></i></button>
-                                </div>
-                            </div>
-                            <div class="object-content-body">
-                            	<div>
-                            		<div ng-include="cnt.tpl"></div>
-                            		<div contenteditable="true" ng-model="cnt.html" ng-bind-html="safe(cnt.content)"></div>
-                            	</div>
-                            	<!--<form>
-                            	<textarea class="js-st-instance">
-                            	</textarea>
-                            	</form>-->
-                            </div>
-                        	
-                        </div>                        
+                        
+                        	<jointcontent 
+                        		class="object-content" 
+                        		ng-repeat="cnt in contents" 
+                        		obj="obj" 
+                        		cnt="cnt"
+                        		remove="remove">
+                        	</jointcontent>
+                        	                    
 
                     </div>
                 </div>

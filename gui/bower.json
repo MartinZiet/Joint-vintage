@@ -29,9 +29,16 @@
     "ng-contenteditable": "*",
     "angular-ui-select": "~0.11.2",
     "angular-local-storage": "~0.2.1",
-    "angular-bootstrap-simple-chat": "~0.0.2"
+    "angular-bootstrap-simple-chat": "~0.0.2",
+    "ng-droplet": "~0.5.4",
+    "jquery-file-upload": "~9.10.0",
+    "angular-youtube-mb": "~1.0.2",
+    "jquery-prettyPhoto": "~3.1.6"
   },
   "devDependencies": {
     "toastr": "~2.1.1"
+  },
+  "resolutions": {
+    "angular": "1.4.0"
   }
 }

@@ -1,0 +1,15 @@
+<div class="object-content">
+	<div class="card-header object-content-heading clearfix">
+	    <span style="font-size:1.2em;" contenteditable="{{ editMode }}" ng-model="cnt.name" placeholder="Enter the title..."></span>
+	    <div class="btn-group pull-right" ng-hide="readonly">
+	        <button class="btn btn-transparent" ng-click="remove(cnt)"><i class="fa fa-trash"></i></button>
+	        <button class="btn btn-transparent" ng-click="edit()" ng-class="{active: editMode, 'btn-success': editMode}">
+	        	<i class="fa fa-edit" ng-hide="editMode"></i>
+	        	<i class="fa fa-save" ng-show="editMode"></i>
+	        </button>
+	    </div>
+	</div>
+	<div class="object-content-body">
+		<div ng-include="currentTemplateUrl"></div>
+	</div>
+</div>
