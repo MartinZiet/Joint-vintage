@@ -13,11 +13,8 @@ angular.module('joint.services')
         easyrtc.connect("joint", success = function(id, room) {
           self.id = id;
 
-          console.log("EASY_RTC_ID: " + id);
-
           Restangular.one("call").customPOST({easyRTCID: id}, "checkin", {}, {});
-          console.log("Post checkin");
-
+          
           self.deferred.resolve();
           self.room = room;
           easyrtc.setAcceptChecker(function(easyrtcid, acceptor) {
