@@ -1,7 +1,7 @@
 angular.module('joint.ctrl')
 
 	.controller('SidepanelController',['$rootScope','$scope','Restangular','$stateParams','JointGlobalService','easyRTC',
-	function($rootScope, $scope, Restangular, $stateParams, global, easyRTC){
+	function($rootScope, $scope, Restangular, $stateParams, global){
 		
 		$scope.sessionData = global.getLoginState();
 		

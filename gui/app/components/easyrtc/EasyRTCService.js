@@ -5,25 +5,42 @@ angular.module('joint.services')
     self.status = true;
     self.video_boxes_list = {};
     self.deferred = $q.defer();
-    
+    self.id = "";
     easyrtc.setSocketUrl(":8080");
-    // connect to socket server
-    easyrtc.connect("joint", success = function(id, room) {
-      self.id = id;
-      Restangular.one("call").customPOST({easyRTCID: id}, "checkin", {}, {});
-      self.deferred.resolve();
-      self.room = room;
-      easyrtc.setAcceptChecker(function(easyrtcid, acceptor) {
-        self.init(id).then(function() {
-            self.status = false;
-            $rootScope.$broadcast("video.chat",{status:"connected"});
-            return acceptor(true);
-          });
-        });
-    }, error = function() {
-      toastr.warning('Could not connect','EasyRTC');
-    });
     
+    this.startEasyRTC = function(){
+        
+        if(self.id!=""){
+            easyrtc.disconnect();
+            self.id="";
+        }
+        
+        // connect to socket server
+        easyrtc.connect("joint", success = function(id, room) {
+          self.id = id;
+          
+          Restangular.one("call").customPOST({easyRTCID: id}, "checkin", {}, {});
+          
+          self.deferred.resolve();
+          self.room = room;
+          easyrtc.setAcceptChecker(function(easyrtcid, acceptor) {
+            self.init(id).then(function() {
+                self.status = false;
+                $rootScope.$broadcast("video.chat",{status:"connected"});
+                return acceptor(true);
+              });
+            });
+        }, error = function() {
+          toastr.warning('Could not connect','EasyRTC');
+        });
+    }
+    
+    this.stopEasyRTC = function(){
+        if(self.id!=""){
+            easyrtc.disconnect();
+            self.id="";
+        }
+    }
     
     this.addVideoBox = function( object_id, box){
           self.video_boxes_list[object_id] = {'video_obj':box,
@@ -31,7 +48,6 @@ angular.module('joint.services')
                                           'status':'offline' 
                                           // online, offline
                                          };
-//          console.log(self.video_boxes_list);
       };
     this.getActiveBox = function(cb){
           var active_box_not_found = true;
@@ -52,7 +68,6 @@ angular.module('joint.services')
               obj.video_obj.css("background","white");
           });
           self.video_boxes_list[objectId].active=true;
-//          self.video_boxes_list[objectId].video_obj.css("background","red");
       };
     
     this.init = function(name) {
@@ -94,6 +109,8 @@ angular.module('joint.services')
       };   
     
     return {
+      startEasyRTC: self.startEasyRTC,
+      stopEasyRTC: self.stopEasyRTC,
       addVideoBox: self.addVideoBox,
       getActiveBox: self.getActiveBox,
       setActiveBox: self.setActiveBox,

@@ -1,6 +1,7 @@
 angular.module('joint.ctrl').controller('EasyRTCController', 
     function($scope, easyRTC, $q, $element, $rootScope) {
     
+    easyRTC.startEasyRTC();
     $scope.open_box = false;
     $scope.animation = false;
     $scope.call_list = [];

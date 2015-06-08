@@ -9,6 +9,7 @@
 
 
 $config = Array(
+	//Array('POST', '/test', 'getSearchList', Array('objectId', 'children')),
 
 	Array('POST','/login','login', Array('username', 'password')),
 	Array('POST', '/signup', 'signup', Array('username','name','password') ),
