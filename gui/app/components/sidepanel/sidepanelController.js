@@ -4,6 +4,7 @@ angular.module('joint.ctrl')
 	function($rootScope, $scope, Restangular, $stateParams, global){
 		
 		$scope.sessionData = global.getLoginState();
+		$scope._selectedTab = 'friends';
 		
 		if($stateParams.objectId) {
 			$scope.objectId = $stateParams.objectId;
@@ -15,12 +16,12 @@ angular.module('joint.ctrl')
 		
 		$scope.$watch('objectId',function(n,o){
 			if(!$stateParams.friendId) {
-				$scope.load('friends');
+				$scope.load($scope._selectedTab);
 			}
 		});
 		
 		$rootScope.$on('sidepanel.refresh',function(){
-			$scope.load('friends');
+			$scope.load($scope._selectedTab);
 		});
 		
 		$scope.tabs = [
@@ -46,7 +47,24 @@ angular.module('joint.ctrl')
 		
 		function activate() {
 			
-			Restangular.extendModel('friends',function(model){
+			extendModel('friends');
+			extendModel('search');
+			
+			$rootScope.$on('notifications.new',function(){
+				console.log('new notifications!');
+				notifications($scope.notifications);
+				//console.log($scope.notifications);
+			});
+			
+			$rootScope.$on('notifications.initial',function(){
+				console.log('initial notifications!');
+				//notifications(n);
+			});
+			
+		}
+		
+		function extendModel(model) {
+			Restangular.extendModel(model,function(model){
 				
 				model.friendship = function() {
 					return model.customPOST({},'friendship').then(function(){
@@ -71,18 +89,6 @@ angular.module('joint.ctrl')
 				return model;
 				
 			});
-			
-			$rootScope.$on('notifications.new',function(){
-				console.log('new notifications!');
-				notifications($scope.notifications);
-				//console.log($scope.notifications);
-			});
-			
-			$rootScope.$on('notifications.initial',function(){
-				console.log('initial notifications!');
-				//notifications(n);
-			});
-			
 		}
 		
 		function notifications(notif) {
@@ -119,6 +125,7 @@ angular.module('joint.ctrl')
 		}
 		
 		$scope.select = function(id) {
+			$scope._selectedTab = id;
 			$scope.load(id);
 		}
 		
@@ -157,7 +164,13 @@ angular.module('joint.ctrl')
 					});
 				break;
 				case 'searches': 
-					$scope.searches = Restangular.all('friends').getList().$object;
+					Restangular.one('objects',$scope.objectId).all('search').getList().then(function(searches){
+						searches = $scope.byAlias(searches);	
+                        $scope.list = {
+							template: 'app/components/sidepanel/templates/list-friend.html',
+							searches: searches
+						}
+					});
 				break;
 			}
 		}

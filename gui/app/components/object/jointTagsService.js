@@ -157,7 +157,9 @@ angular.module('joint.services')
 			if(!objTags._meta._verb.points) { objTags._meta._verb.points = [{}]; }
 			if(!objTags._meta._verb.points[0]) { objTags._meta._verb.points = [{}]; }
 			
-			objTags._meta._verb.points[0] = angular.copy(tags._verb._values[0]); 
+			if(!objTags._meta._verb.points[0].verb_mode) {
+				objTags._meta._verb.points[0] = angular.copy(tags._verb._values[0]);
+			} 
 			
 			return {_meta: objTags._meta, tags: tags};
 			

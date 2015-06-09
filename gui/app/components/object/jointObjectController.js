@@ -9,7 +9,7 @@ angular.module('joint.ctrl')
 	'Restangular',
 	function($rootScope,$scope,$element,api,$stateParams,$state,Restangular){
          
-	var _extensibleTypes = [0,5,6];
+	var _extensibleTypes = [0,5,6,82];
 				
 	$scope.types = $rootScope.types;
 	$scope.aliases = $rootScope.aliases;

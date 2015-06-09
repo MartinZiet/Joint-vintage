@@ -3,7 +3,7 @@ angular.module('joint.ctrl')
 .controller('StructureController',['$rootScope','$scope', '$state', 'Restangular','$timeout','JointGlobalService', 
 			function($rootScope, $scope, $state, Restangular, $timeout, $global){
 	
-	var _defaultTypeId = 6;
+	var _defaultTypeId = 82;
 	
 	var loggedIn = $global.checkLogin();	
 	

@@ -446,7 +446,7 @@
 				
 				$res = Array (); $n = 0;
 				foreach ($temp as $row) {
-					if ($this->_match->match($row, $object)) { 
+					if ($this->_match->match($row, $object)) {
 						$res[$n] = $this->getObject($row);
 						++$n;
 					}
@@ -483,7 +483,7 @@
 				}
 			}
 			
-			$res = [];
+			$res = Array();
 			foreach ($objectList as $o) {
 				$tmp = $this->friendList($o);
 				foreach ($tmp['data'] as $k=>$v) {
@@ -497,7 +497,7 @@
 		public function getSearchList ($objectId, $children = false) {
 			$objectList = Array(0=>$objectId);
 			if ($children == true) {
-				$searchList = Array ();
+				$searchList = Array(0=>$objectId);
 				for ($i=0; isset($objectList[$i]); ++$i) {
 					$tmp = parent::getRecords('OBJECTS', 'ID, TYPE', 'PARENT_ID='.$objectList[$i]);
 					foreach ($tmp as $k=>$v) {
@@ -510,7 +510,9 @@
 				$searchList = Array(0=>$objectId);
 			}
 			
-			$res = [];
+			$searchList = array_unique($searchList);
+			
+			$res = Array();
 			foreach ($searchList as $o) {
 				$tmp = $this->friendList($o);
 				foreach ($tmp['data'] as $k=>$v) {

@@ -8,6 +8,7 @@ angular.module('joint.directives')
 		link: function(scope,element,attrs) {
 			scope.$watch('obj.type',function(n,o){
 				switch(parseInt(n)) {
+					case 82: scope.icon = 'folder-o'; break;
 					case 6: scope.icon = 'folder-o'; break;
 					case 9: scope.icon = 'tags'; break;
 					case 8: scope.icon = 'search'; break;

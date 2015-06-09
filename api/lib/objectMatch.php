@@ -69,7 +69,10 @@
 					}
 				}
 			}
-			else {			    			    
+			else {
+				if((count($chce->points) + count($oferuje->points)) < 1) {
+					return true;
+				}			    			    
 				foreach ($chce -> points as $pkt) {
 					foreach ($oferuje -> points as $pkt2) {					    					    
 						if ($this->point_match ($pkt, $pkt2) === true) return true;
@@ -80,13 +83,15 @@
 		}
 		
 		private function chce_oferuje ($chce, $oferuje) {
-			if ($chce == NULL || $oferuje == NULL) return false;
+			if ($chce == NULL || $oferuje == NULL) { return false; }
 			foreach ($chce as $nazwa=>$wartosc) {
 				//brak odpowiedniego pola w oferowanym
 				if (!isset ($oferuje->$nazwa)) {
 					return false;
 				}
-				if (objectMatch::main_match ($wartosc, $oferuje->$nazwa) == false) return false;
+				if (objectMatch::main_match ($wartosc, $oferuje->$nazwa) == false) {
+					return false;
+				}
 			}
 			return true;
 		}
@@ -107,7 +112,7 @@
 			if ($p1['ID']==$p2['ID']) return false;
 			
 			$o1 = json_decode ($o1['TAGS']);
-			$o2 = json_decode ($o2['TAGS']);            
+			$o2 = json_decode ($o2['TAGS']);      
 			
 			if (($o1 === false) || ($o2 === false)) {
 				return false;
