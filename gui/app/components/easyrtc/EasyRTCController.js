@@ -120,14 +120,14 @@ angular.module('joint.ctrl').controller('EasyRTCController',
             $scope.waiting_anim = false;
         }
         if(msgData.status=="stop_calling"){
-            toastr.info('Your friend '+ easyrtcid +' stopped calling:',
-                           " ",{
-                            closeButton: true
-                });
             var index_to_delete = -1;
             for(var a in $scope.call_list){
                 if($scope.call_list[a].ertc_id == easyrtcid){
                     index_to_delete = a;
+                    toastr.info('Object '+ $scope.call_list[a].name +' stopped calling:',
+                           " ",{
+                            closeButton: true
+                });
                 }
             }
             if( index_to_delete >= 0 ){
