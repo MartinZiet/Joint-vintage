@@ -28,6 +28,7 @@ angular.module('joint.services')
             self.init(id).then(function() {
                 self.status = false;
                 $rootScope.$broadcast("video.chat",{status:"connected"});
+                easyrtc.muteVideoObject(self.vid_in_obj, false);
                 return acceptor(true);
               });
             });
@@ -86,6 +87,7 @@ angular.module('joint.services')
             easyrtc.setUsername(name);
             easyrtc.setStreamAcceptor(function(easyrtcid, stream) {
               easyrtc.setVideoObjectSrc(self.vid_out_obj, stream);
+              easyrtc.muteVideoObject(self.vid_in_obj, false);
             });
             easyrtc.setOnStreamClosed(function(easyrtcid) {
               self.status = true;
@@ -100,6 +102,7 @@ angular.module('joint.services')
             });
             easyrtc.initMediaSource(function() {
               easyrtc.setVideoObjectSrc(self.vid_in_obj, easyrtc.getLocalStream());
+              easyrtc.muteVideoObject(self.vid_in_obj, true);
               self.init_deffered.resolve();
             });
             } else {
@@ -157,6 +160,7 @@ angular.module('joint.services')
         if (easyrtc.getConnectStatus(self.othereasyrtcid) === easyrtc.NOT_CONNECTED) {
           easyrtc.call(easyrtcid, function(easyrtcid) {
               self.status = false;
+            easyrtc.muteVideoObject(self.vid_in_obj, false);
             console.log("completed call to " + easyrtc.idToName(easyrtcid));
           });
           (function(errorMessage) {
