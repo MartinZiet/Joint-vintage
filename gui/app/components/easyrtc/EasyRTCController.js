@@ -95,8 +95,8 @@ angular.module('joint.ctrl').controller('EasyRTCController',
         
         if(msgData.status=="calling"){
             
-            toastr.success(msgData.obj.alias +' is calling:',
-                           "object: "+msgData.obj.name,{
+            toastr.success("object "+msgData.obj.name,
+                           msgData.obj.alias +' is calling' ,{
                             closeButton: true
                 });
             $scope.animation = true;
