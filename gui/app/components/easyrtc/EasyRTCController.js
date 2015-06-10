@@ -1,5 +1,5 @@
 angular.module('joint.ctrl').controller('EasyRTCController', 
-    function($scope, easyRTC, $q, $element, $rootScope) {
+    function($scope, easyRTC, $q, $element, $rootScope, Restangular) {
     
     easyRTC.startEasyRTC();
     $scope.open_box = false;
@@ -94,8 +94,9 @@ angular.module('joint.ctrl').controller('EasyRTCController',
     easyRTC.onMessage("call",function(easyrtcid, msgType, msgData, targeting){
         
         if(msgData.status=="calling"){
-            toastr.success('Your friend '+ easyrtcid +' is calling:',
-                           "object: "+msgData.obj.name,{
+            
+            toastr.success("object "+msgData.obj.name,
+                           msgData.obj.alias +' is calling' ,{
                             closeButton: true
                 });
             $scope.animation = true;
@@ -112,21 +113,21 @@ angular.module('joint.ctrl').controller('EasyRTCController',
             
         } 
         if(msgData.status=="bussy"){
-            toastr.info('Your friend '+ easyrtcid +' is bussy:',
+            toastr.info('Your friend is bussy:',
                            "try again later: ",{
                             closeButton: true
                 });
             $scope.waiting_anim = false;
         }
         if(msgData.status=="stop_calling"){
-            toastr.info('Your friend '+ easyrtcid +' stopped calling:',
-                           " ",{
-                            closeButton: true
-                });
             var index_to_delete = -1;
             for(var a in $scope.call_list){
                 if($scope.call_list[a].ertc_id == easyrtcid){
                     index_to_delete = a;
+                    toastr.info('Object '+ $scope.call_list[a].name +' stopped calling:',
+                           " ",{
+                            closeButton: true
+                });
                 }
             }
             if( index_to_delete >= 0 ){

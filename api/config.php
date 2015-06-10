@@ -44,7 +44,7 @@ $config = Array(
 	Array('DELETE', '/objects/:ID/friends/:frID/friendship',  'removeFriendship', Array('ID', 'frID')), //usuwa przyjazn
 	
 	Array('GET', '/friends/:frID/objects/:oID/call', 'call', Array ('oID', 'frID')), //makes EasyRTC connection
-	Array('GET', '/friends/call/:easyRTCID', 'callInfo', Array ('easyRTCID')), 
+	Array('GET', '/friends/call', 'callInfo', Array ('easyRTCID')), 
 	
 	
 	Array('DELETE', '/friends/:frID/objects/:oID/friendship', 'removeFriendship', Array('oID', 'frID')), 
