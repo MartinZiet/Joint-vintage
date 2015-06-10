@@ -113,7 +113,7 @@ angular.module('joint.ctrl').controller('EasyRTCController',
             
         } 
         if(msgData.status=="bussy"){
-            toastr.info('Your friend '+ easyrtcid +' is bussy:',
+            toastr.info('Your friend is bussy:',
                            "try again later: ",{
                             closeButton: true
                 });
