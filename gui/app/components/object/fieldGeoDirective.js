@@ -1,5 +1,5 @@
 angular.module('joint.directives')
-.directive('fieldGeo',function($compile){
+.directive('fieldGeo',function(JointPopup){
 	return {
 		scope: {
 			ngModel: '='
@@ -8,33 +8,39 @@ angular.module('joint.directives')
 		link: function(scope,element,attrs) {
 			
 			scope.locationPopup = function() {
-				bootbox.dialog({
-					title: 'Wybierz lokalizację',
-					message: '<input type="text" class="form-control" id="location-picker-address" /><div id="location-picker-map"></div>',
-					callback: function() {
-						scope.ngModel.address = jQuery('#location-picker-address').val();
+				JointPopup.show({
+					scope: scope,
+					templateUrl:'app/components/object/templates/fields/geo.directive.modal.html',
+					link: function() {
+						var cfg = {
+							zoom: 10,
+							inputBinding: {
+								latitudeInput: element.find('[ng-model="ngModel.lat"]'),
+								longitudeInput: element.find('[ng-model="ngModel.lng"]'),
+								radiusInput: jQuery('#location-picker-radius'),
+								locationNameInput: jQuery('#location-picker-address')
+								//locationNameInput: element.find('[ng-model="ngModel.address"]')
+							},
+							enableAutocomplete: true,
+							onchanged: function(location,radius,markerDropped) {
+								element.find('[ng-model="ngModel.radius"]').val(radius).trigger('input');
+								var address = jQuery('#location-picker-address').val();
+								element.find('[ng-model="ngModel.address"]').val(address).trigger('input');
+							}
+						};
+						if(scope.ngModel.lat && scope.ngModel.lng) {
+							cfg.location = {
+								latitude: scope.ngModel.lat,
+								longitude: scope.ngModel.lng
+							};
+						}
+						if(scope.ngModel.radius) {
+							cfg.radius = scope.ngModel.radius;
+						}
+						jQuery('#location-picker-map').locationpicker(cfg);
 					}
 				});
-				setTimeout(function() { 
-					jQuery('#location-picker-map').locationpicker({
-						location: {
-							latitude: scope.ngModel.lat,
-							longitude: scope.ngModel.lng
-						},
-						radius: scope.ngModel.radius,
-						zoom: 10,
-						inputBinding: {
-							latitudeInput: element.find('[ng-model="ngModel.lat"]'),
-							longitudeInput: element.find('[ng-model="ngModel.lng"]'),
-							radiusInput: element.find('[ng-model="ngModel.radius"]'),
-							locationNameInput: jQuery('#location-picker-address')
-							//locationNameInput: element.find('[ng-model="ngModel.address"]')
-						},
-						enableAutocomplete: true,
-						onchanged: function(location,radius,markerDropped) {
-						}
-					});
-				},200);
+		
 			}
 			
 		}

@@ -28,7 +28,7 @@ $config = Array(
 	Array('GET', '/objects/:ID/friends', 'getFriendList', Array('ID','!true')), //pobiera przyjaciol dla danego obiektu
 	Array('GET', '/objects/:ID/friends-legacy', 'friendList', Array('ID')), //pobiera przyjaciol dla danego obiektu
 	Array('GET', '/objects/:ID/search', 'getSearchList', Array('ID','!true')), //pobiera znalezione obiekty
-	Array('GET', '/objects/:ID/contents', 'getContents', Array('ID')),
+	Array('GET', '/objects/:ID/contents', 'getContents', Array('ID', '!true')),
 	
 	Array('GET', '/friends/:frID/objects/:ID', 'structure', Array('ID')), /*pobiera obiekt przyjaciela*/
 	
@@ -40,6 +40,7 @@ $config = Array(
 	Array('POST', '/objects/:ID/search/:frID/chat', 'chat', Array('ID', 'frID', 'message')), //dodaje wiadomość
 	
 	Array('POST', '/objects/:ID/search/:frID/friendship',  'addFriendship', Array('ID', 'frID')), //dodaje / potwierdza przyjazn
+	Array('POST', '/objects/:ID/friends/:frID/friendship',  'addFriendship', Array('ID', 'frID')), //dodaje / potwierdza przyjazn
 	Array('DELETE', '/objects/:ID/friends/:frID/friendship',  'removeFriendship', Array('ID', 'frID')), //usuwa przyjazn
 	
 	Array('GET', '/friends/:frID/objects/:oID/call', 'call', Array ('oID', 'frID')), //makes EasyRTC connection

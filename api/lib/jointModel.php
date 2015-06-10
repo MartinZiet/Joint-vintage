@@ -532,9 +532,22 @@
 			return $this->success($tmp[0]);
 		}
 		
-		public function getContents($objectId) {
+		public function getContents($objectId, $children = false) {
 			
-			$where = 'PARENT_ID = '.$objectId.' AND TYPE = '.$this->_contentTypeId;
+			$objectList = Array(0=>$objectId);
+			if ($children == true) {
+				for ($i=0; isset($objectList[$i]); ++$i) {
+					$tmp = parent::getRecords('OBJECTS', 'ID', 'PARENT_ID='.$objectList[$i].' AND TYPE != '.$this->_searchTypeId);
+					foreach ($tmp as $k=>$v) {
+						array_push ($objectList, $v['ID']);
+					}
+				}
+			}
+			
+			$allObjectsIds = implode(',',array_values($objectList));
+			
+			//$where = 'PARENT_ID = '.$objectId.' AND TYPE = '.$this->_contentTypeId;
+			$where = 'PARENT_ID IN ('.$allObjectsIds.') AND TYPE = '.$this->_contentTypeId;
 			$where .= ' ORDER BY TIME_ADD DESC';
 			$records = $this->getRecords('OBJECTS','*',$where);
 			foreach($records as &$val) {
