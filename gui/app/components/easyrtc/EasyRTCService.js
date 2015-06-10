@@ -9,7 +9,7 @@ angular.module('joint.services')
     easyrtc.setSocketUrl(":8080");
     
     this.startEasyRTC = function(){
-        
+        console.log("startEasyRTC : " + self.id);
         if(self.id!=""){
             easyrtc.disconnect();
             self.id="";
@@ -18,7 +18,7 @@ angular.module('joint.services')
         // connect to socket server
         easyrtc.connect("joint", success = function(id, room) {
           self.id = id;
-          
+          console.log("Check IN: " + self.id );
           Restangular.one("call").customPOST({easyRTCID: id}, "checkin", {}, {});
           
           self.deferred.resolve();
@@ -32,14 +32,14 @@ angular.module('joint.services')
             });
         }, error = function() {
           toastr.warning('Could not connect','EasyRTC');
+          self.id="";
         });
     }
     
     this.stopEasyRTC = function(){
-        if(self.id!=""){
-            easyrtc.disconnect();
-            self.id="";
-        }
+        console.log("STOP EasyRTC");
+        easyrtc.disconnect();
+        self.id="";
     }
     
     this.addVideoBox = function( object_id, box){
@@ -169,8 +169,20 @@ angular.module('joint.services')
       sendMessage: function(ertc_id,topic,message){
           easyrtc.sendDataWS(ertc_id, topic, message,
               function(ackmessage){
-                  console.log("saw the following acknowledgment " + JSON.stringify(ackmessage));
-              });
+                if(ackmessage.msgType == "error"){
+                    if(ackmessage.msgData && ackmessage.msgData.errorCode=="MSG_REJECT_GEN_FAIL"){
+                        toastr.warning('Object you are trying to call is unavailable');
+                    } else {
+                        toastr.warning('Error socket connection: easyrtc.sendDataWS');
+                    }
+                    console.log(ackmessage);
+                    $rootScope.$broadcast("video.chat",{status:"disconnected"});
+                } else {
+                    console.log("saw the following acknowledgment " + JSON.stringify(ackmessage));
+                }
+              }
+              );
+          
       },
 //        cb(easyrtcid, msgType, msgData, targeting)
       onMessage: function( topic, cb ){

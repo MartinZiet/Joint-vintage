@@ -13,7 +13,6 @@ angular.module('joint.ctrl').controller('EasyRTCToolController',
           var objectId = $stateParams.objectId;
 		  var what_is_youre_ertc_id = Restangular.one("friends", obj.id )
             .one("objects",  objectId).customGET("call");
-
           what_is_youre_ertc_id.then(function(my_id){
               var temp = { obj_id: obj.id,
                         name: obj.name,
