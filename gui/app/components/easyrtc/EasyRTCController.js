@@ -94,18 +94,8 @@ angular.module('joint.ctrl').controller('EasyRTCController',
     easyRTC.onMessage("call",function(easyrtcid, msgType, msgData, targeting){
         
         if(msgData.status=="calling"){
-            Restangular.all("friends").customGET("call", {easyRTCID: easyrtcid})
-            .then(function(obj){
-                console.log("********************");
-                console.log(obj)
-            });
             
-            
-//            Restangular.one('objects/call',objectId).get().then(function(obj){
-//              console.log("obj");
-//              console.log(obj);
-//            });
-            toastr.success('Your friend '+ easyrtcid +' is calling:',
+            toastr.success(msgData.obj.alias +' is calling:',
                            "object: "+msgData.obj.name,{
                             closeButton: true
                 });

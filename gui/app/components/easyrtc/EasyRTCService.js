@@ -10,6 +10,7 @@ angular.module('joint.services')
     
     this.startEasyRTC = function(){
         console.log("startEasyRTC : " + self.id);
+        console.log("startEasyRTC : " + self.id);
         if(self.id!=""){
             easyrtc.disconnect();
             self.id="";
