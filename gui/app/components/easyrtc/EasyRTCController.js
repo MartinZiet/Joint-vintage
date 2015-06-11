@@ -32,6 +32,7 @@ angular.module('joint.ctrl').controller('EasyRTCController',
         $scope.waiting_anim = false;
         easyRTC.init( item.ertc_id ).then(function() {
             item.call = true;
+            $scope.caller_name = item.alias;
             $scope.status = 'call_established';
             $scope.calling_to = item.ertc_id;
             easyRTC.performCall( item.ertc_id );
@@ -43,6 +44,7 @@ angular.module('joint.ctrl').controller('EasyRTCController',
     $scope.stopcalling = function(ertc_id){
         $scope.waiting_anim = false;
         $scope.status = 'no_call';
+        $scope.caller_name = "";
         easyRTC.sendMessage(ertc_id,"call",{status:"stop_calling"
                                            });
     }
@@ -57,6 +59,7 @@ angular.module('joint.ctrl').controller('EasyRTCController',
     $scope.endcall = function(calling_to){
         easyRTC.endConversation(calling_to);
         $scope.status = 'no_call';
+        $scope.caller_name = "";
     }
     
     $scope.bussy = function(item){
@@ -75,6 +78,7 @@ angular.module('joint.ctrl').controller('EasyRTCController',
             $scope.waiting_anim = true;
             $scope.calling_to = args.calling_to;
             $scope.status = 'calling';
+            $scope.caller_name = args.call_detales.alias;
         }
     });
     
@@ -86,6 +90,7 @@ angular.module('joint.ctrl').controller('EasyRTCController',
         if(args.status == 'disconnected'){
             $scope.waiting_anim = false;
             $scope.status = 'no_call';
+            $scope.caller_name = "";
             $scope.$apply();
         }
     });
@@ -133,6 +138,7 @@ angular.module('joint.ctrl').controller('EasyRTCController',
             if( index_to_delete >= 0 ){
                 $scope.call_list.splice( index_to_delete, 1 );
             }
+            $scope.caller_name = "";
         }
         $scope.$apply();
     });

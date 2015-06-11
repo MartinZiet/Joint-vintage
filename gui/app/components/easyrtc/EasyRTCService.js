@@ -9,33 +9,35 @@ angular.module('joint.services')
     easyrtc.setSocketUrl(":8080");
     
     this.startEasyRTC = function(){
-        console.log("startEasyRTC : " + self.id);
-        console.log("startEasyRTC : " + self.id);
-        if(self.id!=""){
-            easyrtc.disconnect();
-            self.id="";
-        }
+        console.log("########## startEasyRTC ########: " + self.id);
+//        if(self.id!=""){
+//            easyrtc.disconnect();
+//            self.id="";
+//        }
         
         // connect to socket server
-        easyrtc.connect("joint", success = function(id, room) {
-          self.id = id;
-          console.log("Check IN: " + self.id );
-          Restangular.one("call").customPOST({easyRTCID: id}, "checkin", {}, {});
-          
-          self.deferred.resolve();
-          self.room = room;
-          easyrtc.setAcceptChecker(function(easyrtcid, acceptor) {
-            self.init(id).then(function() {
-                self.status = false;
-                $rootScope.$broadcast("video.chat",{status:"connected"});
-                easyrtc.muteVideoObject(self.vid_in_obj, false);
-                return acceptor(true);
-              });
+        if(self.id==""){
+//            
+            easyrtc.connect("joint", success = function(id, room) {
+              self.id = id;
+              console.log("Check IN: " + self.id );
+              Restangular.one("call").customPOST({easyRTCID: id}, "checkin", {}, {});
+
+              self.deferred.resolve();
+              self.room = room;
+              easyrtc.setAcceptChecker(function(easyrtcid, acceptor) {
+                self.init(id).then(function() {
+                    self.status = false;
+                    $rootScope.$broadcast("video.chat",{status:"connected"});
+                    easyrtc.muteVideoObject(self.vid_in_obj, false);
+                    return acceptor(true);
+                  });
+                });
+            }, error = function() {
+              toastr.warning('Could not connect','EasyRTC');
+              self.id="";
             });
-        }, error = function() {
-          toastr.warning('Could not connect','EasyRTC');
-          self.id="";
-        });
+        }
     }
     
     this.stopEasyRTC = function(){
