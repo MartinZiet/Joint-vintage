@@ -151,7 +151,7 @@ angular.module('joint.ctrl')
 		
 		$scope.load = function(id) {
 			
-			if(!$scope.objectId) { return false; }			
+			if(!$scope.objectId || $stateParams.friendId) { return false; }			
 			
 			switch(id) {
 				case 'friends':

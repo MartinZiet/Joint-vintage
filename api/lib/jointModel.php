@@ -310,7 +310,7 @@
 			$n = 1;			
 			for ($i=0;$i<$n;++$i) {
 				//pobieramy dzieciaki dla naszego rekordu
-				$res2 = parent::getRecords('OBJECTS', '*', 'PARENT_ID='.$res[$i]['ID'].($owner===true ? '' : ' AND PUBLIC=1 AND TYPE=0').' AND TYPE!='.$this->_contentTypeId, 'ORDER BY ID');
+				$res2 = parent::getRecords('OBJECTS', '*', 'PARENT_ID='.$res[$i]['ID'].($owner===true ? '' : ' AND PUBLIC=1 AND TYPE!='.$this->_contentTypeId.' AND TYPE!='.$this->_searchTypeId).' AND TYPE!='.$this->_contentTypeId, 'ORDER BY ID');
 				
 				foreach ($res2 as $j=>$row) {
 					$res[$n] = $row;
@@ -421,7 +421,7 @@
             return $response;
 		}
 	
-		public function friendList ($objectId, $children = false) {
+		public function friendList ($objectId, $searchOnly = false) {
 			
 			$object=parent::getRecords('OBJECTS', '*', 'ID='.$objectId);
 			$object = $object[0];
@@ -449,12 +449,14 @@
 				foreach ($temp as $row) {
 					if ($this->_match->match($row, $object)) {
 						$res[$n] = $this->getObject($row);
+                        $res[$n]['friends_with'] = $object;
 						++$n;
 					}
-				}
-				return $this->success($res);
+				}                
+				//return $this->success($res);
 			}
 			else {
+			    if(!$searchOnly) {
 				$friends = parent::getRecords ('FRIENDS', '*', 'ID1>0 AND ID2>0 AND (ID1='.$id.' OR ID2='.$id.')', 'ORDER BY (ID1+ID2)');
 				
 				$res = Array ();
@@ -465,10 +467,15 @@
 					
 					$res[$n] = $res[$n][0];
 					++$n;
-				}
+				}				
+				}  
 				
-				return $this->success($res);
 			}
+
+            foreach($res as $id=>$r) {
+                if(!$r) { unset($res[$id]); }
+            }
+            return $this->success($res);
 			
 		}
 	
@@ -488,7 +495,9 @@
 			foreach ($objectList as $o) {
 				$tmp = $this->friendList($o);
 				foreach ($tmp['data'] as $k=>$v) {
-					array_push($res, $v);
+				    if($v) {
+					   array_push($res, $v);
+                    }
 				}
 			}
 			
@@ -515,7 +524,7 @@
 			
 			$res = Array();
 			foreach ($searchList as $o) {
-				$tmp = $this->friendList($o);
+				$tmp = $this->friendList($o,true);
 				foreach ($tmp['data'] as $k=>$v) {
 					array_push($res, $v);
 				}

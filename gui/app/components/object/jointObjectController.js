@@ -78,6 +78,14 @@ angular.module('joint.ctrl')
 	   	}
 	}
 	
+	$scope.navigate = function() {
+		if($scope.readonly) {
+			$state.go('friends',{friendId:$stateParams.friendId,objectId:$scope.obj.id});	
+		} else {
+			$state.go('me.objects',{objectId:$scope.obj.id});
+		}
+	}
+	
 	$scope.remove = function() {
 		$scope.structureCtrl.remove($scope.obj.id);
 		//$scope.obj.remove();

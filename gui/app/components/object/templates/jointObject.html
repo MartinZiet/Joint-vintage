@@ -2,7 +2,7 @@
     <div class="flip-base" ng-class="{flipped: flipped}">
     <figure class="front">
             <div class="panel panel-default panel-object">
-                <div class="sml-heading" ui-sref="me.objects({objectId:obj.id})">
+                <div class="sml-heading" ng-click="navigate()">
                     <span joint-object-type obj="obj"></span> {{obj.name}}
                 </div>
                 <div class="panel-heading">
