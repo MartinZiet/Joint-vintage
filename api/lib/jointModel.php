@@ -96,7 +96,7 @@
 			$row['TAGS'] = json_decode($row['TAGS']);
 			
 			if($row['TAGS']->content_html) {
-				$row['TAGS']->content_html = html_entity_decode($row['TAGS']->content_html);
+				$row['TAGS']->content_html = html_entity_decode(urldecode($row['TAGS']->content_html));
 			}
 			
 			return $row;
@@ -113,7 +113,8 @@
                 if(isset($row[$f])) {
                 	foreach($quoteFields as $q) {
                 		if($row[$f][$q]) {
-                			$row[$f][$q] = htmlentities($row[$f][$q],ENT_QUOTES);
+                			$row[$f][$q] = urlencode(htmlentities($row[$f][$q],ENT_QUOTES)); //;
+                            //var_dump($row[$f][$q]);
                 		}
                 	}
                     $row[$f] = json_encode($row[$f]);
@@ -264,7 +265,7 @@
         
         public function updateObject($objectId, $record) {
             
-            $this->serializeObject($record);         
+            $this->serializeObject($record);                   
                         
             $filter = Array('NAME','PUBLIC','TYPE','TAGS','ALIAS_ID');
             
