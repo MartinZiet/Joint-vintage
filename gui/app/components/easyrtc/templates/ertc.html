@@ -1,11 +1,13 @@
 <div ng-show="open_box" ng-class="{ ertc_box:true }">
     <div class="heading">
-        <i class="fa fa-times" ng-click="close()"></i>
+        {{caller_name}}<i class="fa fa-times" ng-click="close()"></i>
     </div>
     <div class="video_canvas">
         <i ng-show="waiting_anim" class="fa fa-cog fa-spin fa-5x center"></i>
-        <i ng-show="(status=='call_established')" class="fa fa-stop fa-1x stop" ng-click="endcall(calling_to)"></i>
-        <i ng-show="waiting_anim"  class="fa fa-stop fa-1x stop" ng-click="stopcalling(calling_to)"></i>
+        <div class="stop">
+            <i ng-show="(status=='call_established')" class="fa fa-stop fa-1x" ng-click="endcall(calling_to)"></i>
+            <i ng-show="waiting_anim"  class="fa fa-stop fa-1x" ng-click="stopcalling(calling_to)"></i>
+        </div>
         <video ng-show="open" class="self_ertc_vid" width="300" height="200"></video>
     </div>
     <div>

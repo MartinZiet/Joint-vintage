@@ -15,20 +15,23 @@ angular.module('joint.ctrl').controller('EasyRTCToolController',
               .then(function(my_id){
               
               Restangular.all("friends").customGET("call", {easyRTCID: $scope.ertc_id})
-                .then(function(obj){
+                .then(function(obj_ob){
                     
-                    var temp = { obj_id: obj.id,
-                        name: obj.name,
-                        alias: obj.alias,
+                    var temp = { obj_id: obj_ob.id,
+                        name: obj_ob.name,
+                        alias: obj_ob.alias,
                         ertc_id: $scope.ertc_id};
                     easyRTC.sendMessage( my_id , "call" ,{
                                    status : "calling",
                                    obj : temp });
+                  
+                    $rootScope.$broadcast("video.box", {
+                                 status : 'waiting',
+                                 calling_to : my_id,
+                                 call_detales: obj});
                     });
               
-              $rootScope.$broadcast("video.box", {
-                                 status : 'waiting',
-                                 calling_to : my_id });
+              
           });
       } else {
         toastr.error('Calling is not possible',
