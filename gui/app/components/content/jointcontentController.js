@@ -24,6 +24,12 @@ angular.module('joint.ctrl')
 		
 		function activate() {
 			
+			if(!$scope.cnt.tags) {
+				$scope.cnt.tags = {
+					content_type: 'html'
+				}
+			}
+			
 			var contentTypes = JointTags.contentTypes();
             $scope.contentType = contentTypes[$scope.cnt.tags.content_type];
 			
