@@ -1,11 +1,14 @@
 angular.module('joint.ctrl')
-
-	.controller('NavbarController',['$scope','$state','$window','JointGlobalService',
-	function($scope, $state,$window,$global){
+	.controller('NavbarController',['$scope','$state','$window','JointGlobalService','Restangular','$stateParams',
+	function($scope, $state,$window,$global,restangular,$stateParams){
         console.log('NavbarController');
         
         $scope.goToParent = function(){
-            console.log('goToParent');
+            restangular.one("objects", $stateParams.objectId).get()
+                .then(function(obj){
+                    if(obj!==undefined)
+                        $state.go('me.objects',{objectId: obj.parent_id});
+                });
         }
         
         $scope.goBack = function(){
