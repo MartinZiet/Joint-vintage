@@ -1,8 +1,13 @@
+<div class="clearfix">
 <div style="display:none;">
 	<input type="text" class="form-control" ng-model="ngModel.address" />
 	<input type="text" ng-model="ngModel.lat" class="form-control"/>
 	<input type="text" ng-model="ngModel.lng" class="form-control"/>
 	<input type="text" ng-model="ngModel.radius" class="form-control"/>
 </div>
-<button class="btn btn-primary" ng-click="locationPopup()"><i class="fa fa-globe"></i></button>
-<span>{{ ngModel.address }}</span>
+<a ng-click="locationPopup()">
+    <i class="fa fa-globe"></i> 
+    <span ng-show="ngModel.address">{{ ngModel.address }}</span>
+    <span ng-hide="ngModel.address">- click to choose location -</span>
+</a>
+</div>

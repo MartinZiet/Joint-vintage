@@ -9,8 +9,17 @@ angular.module('joint.services')
 				var linkFn = $compile(elm);
 				var content = linkFn(config.scope);
 				var cfg = {
-					message: content
+					message: content,
+					title: config.title,
+					buttons: {}
 				};
+				if(config.success) {
+					cfg.buttons.success = {
+						label: 'Save',
+						className: 'btn-success',
+						callback: config.success
+					}
+				}
 				bootbox.dialog(cfg);
 				setTimeout(function(){
 					config.link();
