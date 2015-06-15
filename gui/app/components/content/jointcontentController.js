@@ -20,6 +20,8 @@ angular.module('joint.ctrl')
 			console.log($scope.uploadInterface);
 		}
 		
+		$scope.dropFile = dropFile;
+		
 		activate();
 		
 		function activate() {
@@ -77,6 +79,8 @@ angular.module('joint.ctrl')
 				$scope.cnt.tags.files.push(files[i]);
 			}
 			
+			$scope.$apply();
+			
 		}
 		
 		function save() {
@@ -100,6 +104,10 @@ angular.module('joint.ctrl')
 			} else {
 				$scope.editMode = true;
 			}
+		}
+		
+		function dropFile(file) {
+			$scope.cnt.tags.files = _.without($scope.cnt.tags.files,file);
 		}
 
 	
