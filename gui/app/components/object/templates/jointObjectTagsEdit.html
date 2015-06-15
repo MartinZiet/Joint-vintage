@@ -4,8 +4,6 @@
     </select>    
 </div>
 
-{{ verb_mode }}
-
 <div ng-repeat="(id,tag) in current.tags" class="form-group">
 	<label ng-show="tag.name != '_verb'">{{ tag.name }}</label>
 	<label ng-hide="tag.name != '_verb'">What do you want to do?</label>
