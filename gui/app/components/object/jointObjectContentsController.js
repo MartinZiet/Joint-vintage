@@ -39,8 +39,12 @@ angular.module('joint.ctrl')
 		}
 		
 		$scope.remove = function(obj) {
-			if(obj.remove) { obj.remove(); }
-			$scope.contents = _.without($scope.contents,obj);			
+			bootbox.confirm('Are you sure?',function(result) {
+				if(result) {
+					if(obj.remove) { obj.remove(); }
+					$scope.contents = _.without($scope.contents,obj);
+				}
+			});
 		}
 	
 }]);
