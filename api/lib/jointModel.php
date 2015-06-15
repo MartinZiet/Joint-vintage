@@ -545,11 +545,14 @@
 		public function getContents($objectId, $children = false) {
 			
 			$objectList = Array(0=>$objectId);
+			$parentNames = Array();
+			
 			if ($children == true) {
 				for ($i=0; isset($objectList[$i]); ++$i) {
-					$tmp = parent::getRecords('OBJECTS', 'ID', 'PARENT_ID='.$objectList[$i].' AND TYPE != '.$this->_searchTypeId);
+					$tmp = parent::getRecords('OBJECTS', 'ID,NAME', 'PARENT_ID='.$objectList[$i].' AND TYPE != '.$this->_searchTypeId);
 					foreach ($tmp as $k=>$v) {
 						array_push ($objectList, $v['ID']);
+						$parentNames[$v['ID']] = $v['NAME'];
 					}
 				}
 			}
@@ -562,6 +565,7 @@
 			$records = $this->getRecords('OBJECTS','*',$where);
 			foreach($records as &$val) {
 				$val = $this->getObject($val);
+				$val['parent_name'] = $parentNames[$val['PARENT_ID']];
 			}
 			return $this->success($records);
 			

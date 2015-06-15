@@ -2,6 +2,7 @@
 	<div class="card-header object-content-heading clearfix">
 		<div class="clearfix">
 			<span class="content-timestamp"><i class="fa fa-clock-o"></i> {{ cnt.time_add * 1000 | date:'yyyy-MM-dd HH:mm:ss' }}</span>
+			<span ng-show="cnt.parent_name"> in <a ui-sref="me.objects({objectId:cnt.parent_id})">{{ cnt.parent_name }}</a></span>
 			<div class="btn-group pull-right" ng-hide="readonly">
 		        <button class="btn btn-transparent" ng-click="remove(cnt)"><i class="fa fa-trash"></i></button>
 		        <button class="btn btn-transparent" ng-click="edit()" ng-class="{active: editMode, 'btn-success': editMode}">
