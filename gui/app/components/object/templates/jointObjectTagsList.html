@@ -1,12 +1,4 @@
-<div class="m-b clearfix">
-    <select ng-model="current._meta._template_id.points[0].value" class="form-control"
-    ng-options="template.id as template.name for template in templates">
-    </select>    
-</div>
-
-{{ verb_mode }}
-
-<div ng-repeat="(id,tag) in current.tags" class="form-group">
+<div ng-repeat="(id,tag) in tagsList" class="form-group">
 	<label ng-show="tag.name != '_verb'">{{ tag.name }}</label>
 	<label ng-hide="tag.name != '_verb'">What do you want to do?</label>
 	<div ng-repeat="val in tag.points">
@@ -21,5 +13,3 @@
 	</div>
 	<button ng-show="tag.multiple" class="btn btn-transparent btn-block" ng-click="addPoint(tag)"><i class="fa fa-plus"></i> Add another</button>
 </div>
-
-<!-- <joint-object-tags-list tagsKey="current.tags"></joint-object-tags-list> -->

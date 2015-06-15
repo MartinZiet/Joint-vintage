@@ -284,6 +284,7 @@ angular.module('joint.services')
 				var k = 'offers';
 				if(verbMode==1 && !tags[i].reverse) { var k = 'wants'; }
 				if(verbMode==2 && tags[i].reverse) { var k = 'wants'; }
+				if(verbMode==3 && tags[i].reverse) { var k = 'wants'; }
 				if(!serialized[k]) { serialized[k] = {}; }
 				delete tags[i]._values;
 				for(p in tags[i].points) {
