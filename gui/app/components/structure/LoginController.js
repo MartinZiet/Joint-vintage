@@ -30,6 +30,7 @@ function($rootScope, $scope, $state, Restangular, $timeout, $global, easyRTC){
 				$global.login(obj);
 				toastr.success('Successful login','Welcome!');
                 $state.go('me.objects',{objectId:obj.object_id});
+                easyRTC.startEasyRTC();
 			}
 		});
 	}

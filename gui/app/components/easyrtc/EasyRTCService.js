@@ -9,6 +9,7 @@ angular.module('joint.services')
     easyrtc.setSocketUrl(":8080");
     
     this.startEasyRTC = function(){
+        $rootScope.$broadcast("video.chat",{status:"started"});
         console.log("########## startEasyRTC ########: " + self.id);
 //        if(self.id!=""){
 //            easyrtc.disconnect();
@@ -41,6 +42,7 @@ angular.module('joint.services')
     }
     
     this.stopEasyRTC = function(){
+        $rootScope.$broadcast("video.chat",{status:"stoped"});
         console.log("STOP EasyRTC");
         easyrtc.disconnect();
         self.id="";
@@ -137,6 +139,10 @@ angular.module('joint.services')
       },
       endConversation: function(id){
         if(id !== void 0 && easyrtc.getConnectStatus(id) === easyrtc.IS_CONNECTED) {
+            
+          console.log("endConversation: function(id)");
+          console.log(id);
+            
           easyrtc.hangup(id);
           easyrtc.clearMediaStream(self.vid_out_obj);
           easyrtc.clearMediaStream(self.vid_in_obj);

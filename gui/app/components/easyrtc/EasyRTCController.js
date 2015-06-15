@@ -1,7 +1,11 @@
-angular.module('joint.ctrl').controller('EasyRTCController', 
-    function($scope, easyRTC, $q, $element, $rootScope, Restangular) {
+angular.module('joint.ctrl').controller('EasyRTCController',
+    ['$scope', 'easyRTC', '$q', '$element', '$rootScope', 'Restangular', 'JointGlobalService', 
+    function($scope, easyRTC, $q, $element, $rootScope, Restangular, $global) {
     
-    easyRTC.startEasyRTC();
+    //var loggedIn = $global.checkLogin();	
+	$scope.showvideobox = true;
+    
+    
     $scope.open_box = false;
     $scope.animation = false;
     $scope.call_list = [];
@@ -91,7 +95,13 @@ angular.module('joint.ctrl').controller('EasyRTCController',
             $scope.waiting_anim = false;
             $scope.status = 'no_call';
             $scope.caller_name = "";
-            $scope.$apply();
+//            $scope.$apply();
+        }
+        if(args.status == 'started'){
+            $scope.showvideobox = true;
+        }
+        if(args.status == 'stoped'){
+            $scope.showvideobox = false;
         }
     });
     
@@ -142,4 +152,4 @@ angular.module('joint.ctrl').controller('EasyRTCController',
         }
         $scope.$apply();
     });
-  });
+  }]);
