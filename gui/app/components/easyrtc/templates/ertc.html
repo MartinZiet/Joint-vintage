@@ -1,27 +1,27 @@
-<div ng-show="open_box" ng-class="{ ertc_box:true }">
-    <div class="heading">
-        {{caller_name}}<i class="fa fa-times" ng-click="close()"></i>
-    </div>
-    <div class="video_canvas">
-        <i ng-show="waiting_anim" class="fa fa-cog fa-spin fa-5x center"></i>
-        <div class="stop">
-            <i ng-show="(status=='call_established')" class="fa fa-stop fa-1x" ng-click="endcall(calling_to)"></i>
-            <i ng-show="waiting_anim"  class="fa fa-stop fa-1x" ng-click="stopcalling(calling_to)"></i>
+    <div ng-show="open_box" ng-class="{ ertc_box:true , s_videobox:!showvideobox}">
+        <div class="heading">
+            {{caller_name}}<i class="fa fa-times" ng-click="close()"></i>
         </div>
-        <video ng-show="open" class="self_ertc_vid" width="300" height="200"></video>
-    </div>
-    <div>
-        
-    </div>
-    <ul>
-        <li ng-repeat="item in call_list">
-            <p> {{item.name}} is calling : <i class="fa fa-phone-square fa-1x" ng-click="answer(item)"></i>
-            <i class="fa fa-trash fa-1x" ng-click="bussy(item)"></i></p>
-        </li>
-    </ul>
-</div>    
-<div ng-hide="open_box" ng-class="{ertc_box_closed: true, cam_ani:animation}"  >
-    <div class="heading">
-        <i class="fa fa-video-camera" ng-click="open()"></i>
-    </div>
-</div>     
+        <div class="video_canvas">
+            <i ng-show="waiting_anim" class="fa fa-cog fa-spin fa-5x center"></i>
+            <div class="stop">
+                <i ng-show="(status=='call_established')" class="fa fa-stop fa-1x" ng-click="endcall(calling_to)"></i>
+                <i ng-show="waiting_anim"  class="fa fa-stop fa-1x" ng-click="stopcalling(calling_to)"></i>
+            </div>
+            <video ng-show="open" class="self_ertc_vid" width="300" height="200"></video>
+        </div>
+        <div>
+
+        </div>
+        <ul>
+            <li ng-repeat="item in call_list">
+                <p> {{item.name}} is calling : <i class="fa fa-phone-square fa-1x" ng-click="answer(item)"></i>
+                <i class="fa fa-trash fa-1x" ng-click="bussy(item)"></i></p>
+            </li>
+        </ul>
+    </div>    
+    <div ng-hide="open_box" ng-class="{s_videobox:!showvideobox, ertc_box_closed:true, cam_ani:animation }"  >
+        <div class="heading">
+            <i class="fa fa-video-camera" ng-click="open()"></i>
+        </div>
+    </div>     
