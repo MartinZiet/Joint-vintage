@@ -73,7 +73,7 @@ angular.module('joint.ctrl')
 				}
 				
 				model.unfriend = function() {
-					return model.customDELETE('friendship').then(function(){
+					return Restangular.one('objects',model.friends_with.id).one('friends',model.id).customDELETE('friendship').then(function(){
 						$rootScope.$broadcast('sidepanel.refresh');
 					});					
 				}

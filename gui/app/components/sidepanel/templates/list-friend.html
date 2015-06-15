@@ -19,7 +19,7 @@
         </span>
         <span class="pull-right">            
             <i class="fa fa-user-plus" ng-click="obj.friendship()" ng-show="obj.type==8"></i>
-            <i class="fa fa-trash" ng-click="obj.unfriend()" ng-show="obj.type==6"></i>            
+            <i class="fa fa-trash" ng-click="obj.unfriend()" ng-show="_selectedTab=='friends'"></i>            
             <i class="fa fa-comment" ng-click="chat(obj)"></i>
             <ertctools object="obj" friend-id="friend.id"></ertctools>
         </span>

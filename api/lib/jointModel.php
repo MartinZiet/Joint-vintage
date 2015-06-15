@@ -463,9 +463,10 @@
 				$n = 0;
 				
 				foreach ($friends as $row) {
-					$res[$n] = parent::getRecords ('OBJECTS AS O LEFT JOIN ALIASES AS A ON O.ALIAS_ID=A.ID', 'O.ID AS ID, O.NAME AS NAME, A.ID AS ALIAS_ID, A.ALIAS AS ALIAS, O.TYPE AS TYPE', "O.ID=".($row['ID1']+$row['ID2']-$id));
-					
+					$res[$n] = parent::getRecords ('OBJECTS AS O LEFT JOIN ALIASES AS A ON O.ALIAS_ID=A.ID', 'O.ID AS ID, O.NAME AS NAME, A.ID AS ALIAS_ID, A.ALIAS AS ALIAS, O.TYPE AS TYPE', "O.ID=".($row['ID1']+$row['ID2']-$id));					
 					$res[$n] = $res[$n][0];
+                    $friendObj = parent::getRecords('OBJECTS','*','ID='.$row['ID2']);
+                    $res[$n]['friends_with'] = $friendObj[0];
 					++$n;
 				}				
 				}  
