@@ -129,6 +129,33 @@ angular.module('joint.ctrl')
 			$scope.load(id);
 		}
 		
+        $scope.byObjects = function(friends) {
+			
+            var grouped = {};
+            var obj = {}
+			for(var i=0; i<friends.length;i++) {
+				var alias_id = friends[i].alias_id;
+                var search_obj_id = friends[i].friends_with.id;
+				
+                if(!obj[search_obj_id]){
+                    obj[search_obj_id] = {
+						id: search_obj_id,
+						name: friends[i].friends_with.name,
+						objects: []
+					}
+                }
+                obj[search_obj_id].objects.push(friends[i]);
+			}
+            for(var item in obj)
+                obj[item].objects.sort(function(a,b){
+                    if(a.alias_id < b.alias_id) return -1;
+                    if(a.alias_id > b.alias_id) return 1;
+                    return 0;
+                    });
+            
+			return obj;
+		}
+        
 		$scope.byAlias = function(friends) {
 			
 //			console.log(friends);
@@ -165,9 +192,11 @@ angular.module('joint.ctrl')
 				break;
 				case 'searches': 
 					Restangular.one('objects',$scope.objectId).all('search').getList().then(function(searches){
-						searches = $scope.byAlias(searches);	
+//						searches = $scope.byAlias(searches);	
+                        searches = $scope.byObjects(searches);	
+                        
                         $scope.list = {
-							template: 'app/components/sidepanel/templates/list-friend.html',
+							template: 'app/components/sidepanel/templates/list-search-friend.html',
 							searches: searches
 						}
 					});
