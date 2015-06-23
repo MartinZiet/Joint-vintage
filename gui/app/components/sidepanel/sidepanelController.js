@@ -192,8 +192,7 @@ angular.module('joint.ctrl')
 				break;
 				case 'searches': 
 					Restangular.one('objects',$scope.objectId).all('search').getList().then(function(searches){
-//						searches = $scope.byAlias(searches);	
-                        searches = $scope.byObjects(searches);	
+						searches = $scope.byObjects(searches);	
                         
                         $scope.list = {
 							template: 'app/components/sidepanel/templates/list-search-friend.html',
