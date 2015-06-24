@@ -2,27 +2,26 @@
     <div class="pull-left">
         <img class="media-object img-circle" src="http://placehold.it/48x48" />
     </div>
-    <div class="media-body">
-        <h4 class="media-heading">
-            {{friend.name}}
-        </h4>
-    </div>
+<div class="media-body">
+    <h4 class="media-heading">
+        {{friend.name}}
+    </h4>
 </div>
-
+</div>
 <div class="collapse in" id="friend-objects-{{friend.id}}">
-<div ng-repeat="obj in friend.objects" class="friend-object">
-    <div class="clearfix">    
-        <i class="fa fa-circle"></i> 
+    <div ng-repeat="obj in friend.objects" class="friend-object">
+        <div class="clearfix">
+        <i class="fa fa-circle"></i>
         <a ui-sref="friends({friendId:objectId,objectId:obj.id})">{{obj.name}}</a>
-        <span ng-show="obj.friends_with" class="found-with">
+            <span ng-show="obj.friends_with" class="found-with">
             (by <a ui-sref="me.objects({objectId:obj.friends_with.id})">{{ obj.friends_with.name }}</a>)
-        </span>
-        <span class="pull-right">            
+            </span>
+            <span class="pull-right">
             <i class="fa fa-user-plus" ng-click="obj.friendship()" ng-show="obj.type==8"></i>
-            <i class="fa fa-trash" ng-click="obj.unfriend()" ng-show="_selectedTab=='friends'"></i>            
+            <i class="fa fa-trash" ng-click="obj.unfriend()" ng-show="_selectedTab=='friends'"></i>
             <i class="fa fa-comment" ng-click="chat(obj)"></i>
             <ertctools object="obj" friend-id="friend.id"></ertctools>
-        </span>
+            </span>
+        </div>
     </div>
-</div>
 </div>
