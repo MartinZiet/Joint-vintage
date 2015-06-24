@@ -1,22 +1,24 @@
-<div class="media" data-toggle="collapse" href="#friend-objects-{{friend.id}}">
+<div class="media search-parent-obj" data-toggle="collapse" href="#friend-objects-{{friend.id}}">
     <div class="media-body sh_object">
-        <h4 class="media-heading">
-            {{object.name}}
+        <h4 class="media-heading" ui-sref="me.objects({objectId:object.id})">
+            <i class="fa fa-search"></i> {{object.name}} <span class="badge pull-right">{{ object.objects.length }}</span>
         </h4>
     </div>
 </div>
 
 <div class="collapse in" id="friend-objects-{{object.id}}">
-<div ng-repeat="obj in object.objects" >
+<div ng-repeat="obj in object.objects" class="search-results">
     <div ng-show="object.objects[$index - 1].alias_id !== obj.alias_id" class="media">
         <div class="pull-left">
-            <img class="media-object img-circle" src="http://placehold.it/48x48" />
+            <img class="media-object img-circle avatar" src="http://placehold.it/48x48" ng-hide="obj.alias_image "/>
+            <img class="media-object img-circle avatar" src="{{ obj.alias_image }}" ng-show="obj.alias_image "/>
         </div>
 
         <div class="media-body">
-            <h5 class="media-heading">
+            <h4 class="media-heading">
                 {{obj.alias}}
-            </h5>
+            </h4>
+            {{obj.alias_info}}
         </div>
     </div>
     
@@ -24,9 +26,9 @@
         <i class="fa fa-circle"></i>
         
         <a ui-sref="friends({friendId:objectId,objectId:obj.id})">{{obj.name}}</a>
-        <span ng-show="obj.friends_with" class="found-with">
+        <!-- <span ng-show="obj.friends_with" class="found-with">
             (by <a ui-sref="me.objects({objectId:obj.friends_with.id})">{{ obj.friends_with.name }}</a>)
-        </span>
+        </span> -->
         <span class="pull-right">            
             <i class="fa fa-user-plus" ng-click="obj.friendship()" ng-show="obj.type==8"></i>
             <i class="fa fa-trash" ng-click="obj.unfriend()" ng-show="_selectedTab=='friends'"></i>            

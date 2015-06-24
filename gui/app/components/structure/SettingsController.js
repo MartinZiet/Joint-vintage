@@ -1,7 +1,7 @@
 angular.module('joint.ctrl')
 
-.controller('SettingsController',['$rootScope','$scope', '$state', 'Restangular','$timeout','JointGlobalService','$http', 
-function($rootScope, $scope, $state, Restangular, $timeout, $global, $http){
+.controller('SettingsController',['$rootScope','$scope', '$state', 'Restangular','$timeout','JointGlobalService','$http','JointPopup', 
+function($rootScope, $scope, $state, Restangular, $timeout, $global, $http, JointPopup){
 	
 	var vm = this;
 	
@@ -10,6 +10,7 @@ function($rootScope, $scope, $state, Restangular, $timeout, $global, $http){
 	vm.cancel = cancel;
 	vm.remove = remove;
 	vm.removeCommit = removeCommit;
+	vm.edit = edit;
 	
 	vm.isDirty = false;
 	vm.pickReplacement = false;
@@ -33,6 +34,24 @@ function($rootScope, $scope, $state, Restangular, $timeout, $global, $http){
 		queue.obj = obj;
 		vm.aliases.push(queue.obj);
 		vm.isDirty = true;
+	}
+	
+	function edit(alias) {
+		$scope.current = angular.copy(alias);
+		JointPopup.show({
+			scope: $scope,
+			title: 'Edit alias',
+			templateUrl: 'app/components/structure/templates/alias.modal.html',
+			link: function() {
+				
+			},
+			success: function() {
+				alias.alias = $scope.current.alias;
+				alias.info = $scope.current.info;
+				alias.image = $scope.current.image;
+				alias.save();				
+			}
+		});
 	}
 	
 	function save() {

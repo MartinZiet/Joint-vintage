@@ -206,6 +206,22 @@
 			
 			return $this->success();
 		}
+        
+        public function updateAlias($aliasId, $record) {
+            
+            $filter = Array('ALIAS','INFO','IMAGE');
+            
+            foreach($record as $k=>$v) {
+                if(!in_array($k,$filter)) { unset($record[$k]); }
+            }       
+            
+            $record = $this->quote($record);     
+            
+            parent::updateRecords ('ALIASES', $record, 'ID='.$aliasId);
+            $res = parent::getRecords('ALIASES', '*', 'ID='.$aliasId, 'ORDER BY ID DESC LIMIT 1');
+            return $this->success($this->getObject($res[0]));
+            
+        }
 		
 		public function changeAlias ($objectId, $newAliasId, $children=false) {
 			$record = Array ('ALIAS_ID'=>$newAliasId);
@@ -228,7 +244,7 @@
 				if (isset($_SESSION['ID'])) $objectId = $_SESSION['ID'];
 				else return $this->authError();
 			}
-			$res =  database::getRecords ('ALIASES', 'ID, ALIAS', 'OBJECT_ID='.$objectId, 'ORDER BY ID ASC');
+			$res =  database::getRecords ('ALIASES', 'ID, ALIAS, INFO, IMAGE', 'OBJECT_ID='.$objectId, 'ORDER BY ID ASC');
 			
 			return $this->success($res);
 		}
@@ -441,7 +457,7 @@
 				$parentFriendString = substr ($parentFriendString, 0, -1).')';
 				
 				$temp = parent::getRecords ('`OBJECTS` LEFT JOIN `ALIASES` ON OBJECTS.ALIAS_ID=ALIASES.ID',
-				'OBJECTS.ID AS ID, OBJECTS.PARENT_ID AS PARENT_ID, OBJECTS.NAME AS NAME, OBJECTS.TAGS AS TAGS, OBJECTS.ALIAS_ID AS ALIAS_ID, ALIASES.ALIAS AS ALIAS, OBJECTS.TYPE AS TYPE',
+				'OBJECTS.ID AS ID, OBJECTS.PARENT_ID AS PARENT_ID, OBJECTS.NAME AS NAME, OBJECTS.TAGS AS TAGS, OBJECTS.ALIAS_ID AS ALIAS_ID, ALIASES.ALIAS AS ALIAS, ALIASES.INFO AS ALIAS_INFO, ALIASES.IMAGE AS ALIAS_IMAGE, OBJECTS.TYPE AS TYPE',
 				'OBJECTS.ID !='.$id.' AND OBJECTS.TYPE='.$this->_searchTypeId.' AND NOT (OBJECTS.PARENT_ID IN '.$parentFriendString.')', 
 				'ORDER BY OBJECTS.ID');
 				
@@ -463,7 +479,7 @@
 				$n = 0;
 				
 				foreach ($friends as $row) {
-					$res[$n] = parent::getRecords ('OBJECTS AS O LEFT JOIN ALIASES AS A ON O.ALIAS_ID=A.ID', 'O.ID AS ID, O.NAME AS NAME, A.ID AS ALIAS_ID, A.ALIAS AS ALIAS, O.TYPE AS TYPE', "O.ID=".($row['ID1']+$row['ID2']-$id));					
+					$res[$n] = parent::getRecords ('OBJECTS AS O LEFT JOIN ALIASES AS A ON O.ALIAS_ID=A.ID', 'O.ID AS ID, O.NAME AS NAME, A.ID AS ALIAS_ID, A.ALIAS AS ALIAS, A.INFO AS ALIAS_INFO, A.IMAGE AS ALIAS_IMAGE, O.TYPE AS TYPE', "O.ID=".($row['ID1']+$row['ID2']-$id));					
 					$res[$n] = $res[$n][0];
                     $friendObj = parent::getRecords('OBJECTS','*','ID='.$row['ID2']);
                     $res[$n]['friends_with'] = $friendObj[0];

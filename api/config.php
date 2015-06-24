@@ -22,6 +22,7 @@ $config = Array(
     Array('GET', '/templates', 'getObjectsByField', Array('!TYPE','!9')),     
 	
 	Array('GET', '/aliases', 'getAliases'),
+	Array('PUT', '/aliases/:ID', 'updateAlias', Array('ID','$POST')),
 	
 	Array('GET', '/objects', 'structure'),
 	Array('GET', '/objects/:objectId', 'getObjectsByField', Array('!ID','objectId')),

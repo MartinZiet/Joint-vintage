@@ -11,10 +11,26 @@
 			</tr>
 		
 			<tr class="alias-row" ng-repeat="alias in vm.aliases">
-				<td>{{ alias.id }}</td>
-				<td ng-hide="!alias.id">{{ alias.alias }}</td>
+				<td>{{ alias.id }}</td>								
+				
+				<td ng-hide="!alias.id">
+				    
+				    <div class="pull-left m-r">
+                        <img class="media-object img-circle" src="http://placehold.it/48x48" ng-hide="alias.image "/>
+                        <img class="media-object img-circle avatar" src="{{ alias.image }}" ng-show="alias.image "/>
+                    </div>
+            
+                    <div class="media-body">
+                        <h4 class="media-heading">
+                            {{alias.alias}}
+                        </h4>
+                        {{alias.info}}
+                    </div>
+				    
+				</td>
 				<td ng-show="!alias.id"><input type="text" ng-model="alias.alias" class="form-control"/></td>
 				<td class="text-center">
+				    <i class="fa fa-edit" ng-click="vm.edit(alias)" ng-hide="vm.pickReplacement || !alias.id"></i>
 					<i class="fa fa-times text-danger" ng-click="vm.remove(alias)" ng-hide="vm.pickReplacement"></i>
 					<button class="btn btn-info" ng-click="vm.removeCommit(alias.id)" ng-show="vm.pickReplacement && vm.queue.obj.id!=alias.id">Select</button>
 				</td>  
