@@ -79,10 +79,12 @@
                     <div class="panel-heading"></div>
                     <div class="panel-body" style="padding:15px;">                        
                         <input class="form-control input-lg" ng-model="obj.name" class="m-b" />                        
-                                                
-                        <select class="form-control" ng-model="obj.alias_id" class="m-b">
-                        	<option ng-repeat="alias in aliases" value="{{ alias.id }}">{{ alias.alias }}</option>
-                        </select>
+						
+						<div class="m-b">                                                
+	                        <select class="form-control" ng-model="obj.alias_id" 
+	                        ng-options="alias.id as alias.alias for alias in aliases">
+	                        </select>
+	                    </div>
                         
                         <div class="btn-group m-b" ng-hide="isRoot">
                             <label ng-repeat="type in types" class="btn btn-primary" ng-model="obj.type" btn-radio="type.id">{{ type.name }}</label>                            
