@@ -68,8 +68,8 @@ module.exports = function(grunt) {
 		},
 		js_uploader: {
 			src: [
-				'./bower_components/jquery-file-upload/js/vendor/jquery.ui.widget.js',
-				'./bower_components/buleimp-load-image/js/load-image.all.min.js',
+                './bower_components/jquery-file-upload/js/vendor/jquery.ui.widget.js',
+                './bower_components/blueimp-load-image/js/load-image.all.min.js',
 				'./bower_components/blueimp-canvas-to-blob/js/canvas-to-blob.min.js',
 				'./bower_components/jquery-file-upload/js/jquery.fileupload.js',
 				'./bower_components/jquery-file-upload/js/jquery.fileupload-process.js',

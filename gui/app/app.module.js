@@ -18,7 +18,6 @@ angular.module('joint', [
   'blueimp.fileupload',
   'youtube-embed'
 ])
-
 .config(['$httpProvider',
 function($httpProvider) {
   // Use x-www-form-urlencoded Content-Type

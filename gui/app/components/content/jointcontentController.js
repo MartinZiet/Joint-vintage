@@ -16,6 +16,7 @@ angular.module('joint.ctrl')
 		};
 		
 		$scope.logInterface = function(intfc) {
+            console.log("$scope.logInterface");
 			console.log(intfc);
 			console.log($scope.uploadInterface);
 		}
@@ -25,7 +26,7 @@ angular.module('joint.ctrl')
 		activate();
 		
 		function activate() {
-			
+			console.log("activate()");
 			if(!$scope.cnt.tags) {
 				$scope.cnt.tags = {
 					content_type: 'html'
@@ -36,8 +37,9 @@ angular.module('joint.ctrl')
             $scope.contentType = contentTypes[$scope.cnt.tags.content_type];
 			
 			$scope.$watch('editMode',function(n,o){
+                console.log("$scope.$watch('editMode'");
 				if(n) {
-					enableUploader();
+//					enableUploader();
 					$scope.currentTemplateUrl = $scope.contentType.templateUrlEdit;
 				} else {
 					$scope.currentTemplateUrl = $scope.contentType.templateUrl;
@@ -60,7 +62,7 @@ angular.module('joint.ctrl')
 		}
 		
 		function enableUploader() {
-			
+			console.log("enableUploader()");
 			if($scope.contentType.enableUpload && !$scope.shared.uploadConfigured) {
 				$scope.$on('fileuploaddone', function(evt,param) {
 					if($scope.editMode) {
@@ -73,7 +75,7 @@ angular.module('joint.ctrl')
 		}
 		
 		function handleUpload(files) {
-			
+			console.log("handleUpload(files)");
 			if(!$scope.cnt.tags.files) { $scope.cnt.tags.files = []; }
 			for(var i=0; i < files.length; i++) {
 				$scope.cnt.tags.files.push(files[i]);
@@ -84,29 +86,35 @@ angular.module('joint.ctrl')
 		}
 		
 		function save() {
-			
+			console.log("save()");
 			console.log($scope.dropletInterface);
 			
 			if(!$scope.cnt.parent_id) { $scope.cnt.parent_id = $scope.obj.id; }
 			if(!$scope.cnt.type) { $scope.cnt.type = 7; }
 			
+            console.log($scope.obj);
+            console.log($scope.cnt);
+            
 			Restangular.restangularizeElement($scope.obj,$scope.cnt,'contents');
 			$scope.cnt.save().then(function(obj){
+                console.log("$scope.cnt.save()");
 				console.log(obj);
 				$scope.cnt.id = obj.id;
 			});
 		}
 		
 		function edit() {
+            console.log("edit()");
 			if($scope.editMode) {
 				$scope.editMode = false;
-				save();
+//				save();
 			} else {
 				$scope.editMode = true;
 			}
 		}
 		
 		function dropFile(file) {
+            console.log("dropFile(file)");
 			$scope.cnt.tags.files = _.without($scope.cnt.tags.files,file);
 		}
 
