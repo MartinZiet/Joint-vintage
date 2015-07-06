@@ -1,6 +1,8 @@
 angular.module('joint.ctrl')
 .controller('FileDestroyController', ['$scope', '$http', function ($scope, $http) {
             var file = $scope.file, state;
+            console.log("FileDestroyController");
+    
             if (file.url) {
                 file.$state = function () {
                     return state;
@@ -22,6 +24,7 @@ angular.module('joint.ctrl')
                         );
                 };
             } else if (!file.$cancel && !file._index) {
+                console.log("else if");
                     file.$cancel = function () {
                         $scope.clear(file);
                     };

@@ -14,15 +14,14 @@ angular.module('joint.directives')
                 obj: "="
             },
             controller: function($scope, $element, fileUpload, $http, $stateParams,Restangular,$timeout) {
-                $scope.aaa = "You tutaj aaa!!!";
-                $scope.options = {
+                    $scope.options = {
                     url: $scope.url,
                     dropZone: $element,
                     maxFileSize: $scope.sizeLimit,
                     autoUpload: $scope.autoUpload
                     };
                 $scope.loadingFiles = true;
-                
+                console.log(fileUpload);
                 var addDestroyMethod = function(list){
                     angular.forEach(list, function(item){
                         item.destroy = function(){
@@ -31,8 +30,8 @@ angular.module('joint.directives')
                     });
                 }
                 
-                Restangular.one("objects",$stateParams.objectId).customGET("contents")
-                        .then(function(items){
+                $scope.rest_obj = Restangular.one("objects",$stateParams.objectId);
+                $scope.rest_obj.customGET("contents").then(function(items){
                             angular.forEach(items,function(item){
                                 if(item.id == $scope.cnt.id){
                                     $scope.loadingFiles = false;
@@ -45,18 +44,7 @@ angular.module('joint.directives')
                 
                 
                 
-                $http.get($scope.url)
-                    .then(
-                        function (response) {
-//                            console.log("get from storage");
-//                            console.log(response.data);
-//                            $scope.loadingFiles = false;
-//                            $scope.queue = response.data.files || [];
-                        },
-                        function () {
-                            $scope.loadingFiles = false;
-                        }
-                    );
+                
                 
 //                Events list fired by blueimp.fileupload:
                 
@@ -89,19 +77,7 @@ angular.module('joint.directives')
 //                    console.log( event);
 //                    console.log( obj);
 //                });
-//                
-//                $scope.$on('fileuploadadd', function(event, obj){
-//                    console.log('--------------------fileuploadadd--------------------');
-//                    console.log( event);
-//                    console.log( obj);
-//                });
-//                
-//                $scope.$on('fileuploadprocessdone', function(event, obj){ 
-//                    console.log('----------------fileuploadprocessdone--------------------');
-//                    console.log( event);
-//                    console.log( obj);
-//                });
-                
+//              
                 if(!$scope.cnt.tags) {
                     $scope.cnt.tags = {
                         content_type: 'html'
@@ -109,12 +85,11 @@ angular.module('joint.directives')
                 }
                 
                 $scope.$on('fileuploaddone', function(evt,param) {
-//                    console.log("fileuploaddone");
-					handleUpload(param.result.files);
+                    handleUpload(param.result.files);
 				});
                 
                 function handleUpload(files) {
-//                    console.log("Directive::handleUpload(files)");
+                  
                     if(!$scope.cnt.tags.files) { $scope.cnt.tags.files = []; }
                     for(var i=0; i < files.length; i++) {
                         $scope.cnt.tags.files.push(files[i]);
@@ -126,13 +101,12 @@ angular.module('joint.directives')
                     if(!$scope.cnt.parent_id) { $scope.cnt.parent_id = $stateParams.objectId; }
                     if(!$scope.cnt.type) { $scope.cnt.type = 7; }
 
-//                    console.log($scope.obj);
-//                    console.log($scope.cnt);
+                    console.log("------------------>>>>>>>>>>>> ");
+                    console.log($scope.obj);
+                    console.log($scope.cnt);
 
                     Restangular.restangularizeElement($scope.obj,$scope.cnt,'contents');
                     $scope.cnt.save().then(function(obj){
-                        console.log("Directive::$scope.cnt.save()");
-                        console.log(obj);
                         $scope.cnt.id = obj.id;
                     });
                 }
