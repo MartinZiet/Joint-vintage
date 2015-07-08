@@ -1,9 +1,8 @@
 angular.module('joint.ctrl')
 .controller('FileDestroyControllerList', ['$scope', '$http', '$q', function ($scope, $http, $q) {
             var file = $scope.file, state;
+            
             $scope.clear = function (files) {
-                console.log('clear check');
-                console.log(files);
                     var queue = $scope.uploaded_files,
                         i = queue.length,
                         file = files,
@@ -15,14 +14,13 @@ angular.module('joint.ctrl')
                     while (i) {
                         i -= 1;
                         if (queue[i] === file) {
+                            file.$destroy();
                             return queue.splice(i, length);
                         }
                     }
                 };
-    
             if (file.url) {
                 file.$state = function () {
-                    console.log("state: "+state);
                     return state;
                     };
                 file.$destroy = function () {
@@ -32,26 +30,16 @@ angular.module('joint.ctrl')
                                 url: file.deleteurl,
                                 method: file.deletetype
                         }));
-                    
-                    promises.push($http({
-                                url: file.deleteUrl,
-                                method: file.deleteType
-                        }));
-                    promises.push($scope.rest_obj.one("contents",$scope.cnt.id).remove({file:escape(file.name)}))
-                    
+
                     return $q.all(promises).then(
                             function () {
                                 state = 'resolved';
-                                $scope.clear(file);
-                            },function () {
+                            },function (err) {
+                                console.log("file destroy error: ");
+                                console.log(err);
                                 state = 'rejected';
-                                $scope.clear(file);
                             }
                         );
                 };
-            } else if (!file.$cancel && !file._index) {
-                    file.$cancel = function () {
-                        $scope.clear(file);
-                    };
             }
-      }]);
+    }]);
