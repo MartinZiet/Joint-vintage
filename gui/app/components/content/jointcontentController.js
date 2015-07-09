@@ -54,11 +54,13 @@ angular.module('joint.ctrl')
 			}
 			
 			$scope.$watch('cnt.tags.content_html',function(n){
-                console.log("-- hello --");
-                console.log(n);
+                var ret = n;
+                if(n){
+                    var pattern = /(\<a\s)(href\="{1}.+"{1})(.+\<\/a\>)/g;
+                    ret = n.replace(pattern,'$1 $2 target="_blanc" $3');
+                } 
                 
-                
-				$scope.trustedContentHtml = $sce.trustAsHtml(n);
+				$scope.trustedContentHtml = $sce.trustAsHtml(ret);
 			});
 			
 		}
