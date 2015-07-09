@@ -54,6 +54,10 @@ angular.module('joint.ctrl')
 			}
 			
 			$scope.$watch('cnt.tags.content_html',function(n){
+                console.log("-- hello --");
+                console.log(n);
+                
+                
 				$scope.trustedContentHtml = $sce.trustAsHtml(n);
 			});
 			
