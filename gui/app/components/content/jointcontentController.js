@@ -56,10 +56,9 @@ angular.module('joint.ctrl')
 			$scope.$watch('cnt.tags.content_html',function(n){
                 var ret = n;
                 if(n){
-                    var pattern = /(\<a\s)(href\="{1}.+"{1})(.+\<\/a\>)/g;
-                    ret = n.replace(pattern,'$1 $2 target="_blanc" $3');
-                } 
-                
+                    var pattern = /(\<a\s)/g; //(.+\<\/a\>)
+                    ret = n.replace(pattern,'$1 target="_blanc"');
+                }
 				$scope.trustedContentHtml = $sce.trustAsHtml(ret);
 			});
 			
@@ -80,7 +79,8 @@ angular.module('joint.ctrl')
 		function handleUpload(files) {
 			if(!$scope.cnt.tags.files) { $scope.cnt.tags.files = []; }
 			for(var i=0; i < files.length; i++) {
-				$scope.cnt.tags.files.push(files[i]);
+                console.log(files[i]);
+                $scope.cnt.tags.files.push(files[i]);
 			}
 			$scope.$apply();
 			
@@ -90,7 +90,7 @@ angular.module('joint.ctrl')
 			
 			if(!$scope.cnt.parent_id) { $scope.cnt.parent_id = $scope.obj.id; }
 			if(!$scope.cnt.type) { $scope.cnt.type = 7; }
-			
+			console.log($scope.cnt.tags);
             Restangular.restangularizeElement($scope.obj,$scope.cnt,'contents');
 			$scope.cnt.save().then(function(obj){
                 $scope.cnt.id = obj.id;
