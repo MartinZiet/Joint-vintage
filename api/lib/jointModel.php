@@ -244,7 +244,7 @@
 				if (isset($_SESSION['ID'])) $objectId = $_SESSION['ID'];
 				else return $this->authError();
 			}
-			$res =  database::getRecords ('ALIASES', 'ID, ALIAS, INFO, IMAGE', 'OBJECT_ID='.$objectId, 'ORDER BY ID ASC');
+			$res =  database::getRecords ('ALIASES', 'ID, ALIAS, INFO, IMAGE', 'OBJECT_ID='.$objectId, 'ORDER BY ALIAS ASC');
 			
 			return $this->success($res);
 		}
@@ -345,7 +345,7 @@
 			$wh[] = $field.'='.$value;
 			if($public) { $wh[] = 'PUBLIC=1'; }
 			
-            $res = parent::getRecords('OBJECTS', '*', $field.'='.$value.' AND PUBLIC='.$public);
+            $res = parent::getRecords('OBJECTS', '*', $field.'='.$value.' AND PUBLIC='.$public.' ORDER BY NAME ASC');
 			
 			foreach($res as $k=>$r) {
 				$res[$k] = $this->getObject($r);
