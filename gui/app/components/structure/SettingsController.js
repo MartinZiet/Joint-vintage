@@ -46,8 +46,7 @@ function($rootScope, $scope, $state, Restangular, $timeout, $global, $http, Join
 				
 			},
 			success: function() {
-                console.log("success");
-				alias.alias = $scope.current.alias;
+                alias.alias = $scope.current.alias;
 				alias.info = $scope.current.info;
 				alias.image = $scope.current.image;
 				alias.save();				
@@ -56,8 +55,7 @@ function($rootScope, $scope, $state, Restangular, $timeout, $global, $http, Join
 	}
 	
 	function save() {
-        console.log("save");
-		vm.isDirty = false;
+        vm.isDirty = false;
 		Restangular.all('aliases').post(queue.obj).then(function(){
 			getAliases();
 			queue = {};
