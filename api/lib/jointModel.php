@@ -1,5 +1,9 @@
 <?php
 	require_once('objectMatch.php');
+    
+    function sortPoints($a,$b) {        
+        return strcasecmp($a->value,$b->value);
+    }
 
 	class jointModel extends database {
 		function __construct () {
@@ -90,14 +94,32 @@
 				else $id = $tmp[0]['PARENT_ID'];
 			}
 		}
+        
+        function sortPoints(&$points) {            
+            usort($points,'sortPoints');            
+            return $points;
+        }
 		
 		function getObject ($row) {
+		    
 			$row['REPUTATION'] = json_decode($row['REPUTATION']);
+            
+            if(!$row['REPUTATION']) {
+                $row['REPUTATION'] = Array('avg'=>0,'votes'=>0);    
+            }
+            
 			$row['TAGS'] = json_decode($row['TAGS']);
 			
 			if($row['TAGS']->content_html) {
 				$row['TAGS']->content_html = html_entity_decode(urldecode($row['TAGS']->content_html));
-			}
+			}            
+            
+            foreach($row['TAGS'] as $scopeId=>&$scope) {
+                foreach($scope as $tagId=>&$tag) {
+                    if($tag->points) { $tag->points = $this->sortPoints($tag->points); }
+                    if($tag->_values) { $tag->_values = $this->sortPoints($tag->_values); }
+                }                    
+            }            
 			
 			return $row;
 		}
