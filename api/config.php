@@ -60,6 +60,8 @@ $config = Array(
 	Array('POST', '/objects/:ID/contents', 'addObject', Array('ID', '$POST')), //dodaje content dla obiektu
 	Array('POST', '/objects/:ID/contents/:cntID', 'updateObject', Array('cntID','$POST')),
 	
+	Array('POST', '/objects/:ID/import', 'importContent', Array('ID','content_html','content_url')),
+	
 	Array('POST', '/friends/:frID/objects/:oID/chat', 'chat', Array('oID', 'frID', 'message')), //dodaje wiadomosc do tresci chatu dla obiektu przyjaciela
 	
 	Array('PUT', '/objects/:ID', 'updateObject', Array('ID','$POST')),

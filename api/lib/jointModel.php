@@ -620,6 +620,28 @@
 			$tmp = parent::getRecords ('OBJECTS', '*', 'ID='.$objectId);
 			return $this->success($this->getObject($tmp[0]));
 		}
+		
+		public function importContent($objectId, $HTML, $url) {
+			
+			require_once(__DIR__.'/../tools/readability/Readability.php');
+			$readability = new Readability($HTML, $url);
+			$result = $readability->init();
+			if ($result) {
+				$data = Array(
+					'NAME'=>$readability->getTitle()->textContent,
+					'TAGS'=>Array(
+						'content_type'=>'html',
+						'content_html'=>$readability->getContent()->innerHTML
+					),
+					'TYPE'=>$this->_contentTypeId
+				);
+				return $this->addObject($objectId,$data);
+			} else {
+			}
+			
+			die();
+			
+		}
 
         private function chatToArray($chat) {
             
