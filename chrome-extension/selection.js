@@ -11,7 +11,8 @@ chrome.runtime.onMessage.addListener(
 		var payload = {
 		  'text': selection.toString(),
 		  'html': container.innerHTML,
-		  'selection': selection
+		  'selection': selection,
+		  'url': document.location.href
 		};
 		
 		sendResponse(payload);
