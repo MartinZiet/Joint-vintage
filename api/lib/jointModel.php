@@ -624,19 +624,30 @@
 		public function importContent($objectId, $HTML, $url) {
 			
 			require_once(__DIR__.'/../tools/readability/Readability.php');
-			$readability = new Readability($HTML, $url);
+			$readability = new Readability($HTML);
 			$result = $readability->init();
 			if ($result) {
 				$data = Array(
 					'NAME'=>$readability->getTitle()->textContent,
 					'TAGS'=>Array(
-						'content_type'=>'html',
-						'content_html'=>$readability->getContent()->innerHTML
+						'content_type'=>'bookmark',
+						'content_html'=>$readability->getContent()->innerHTML,
+						'content_url'=>$url
 					),
 					'TYPE'=>$this->_contentTypeId
 				);
 				return $this->addObject($objectId,$data);
 			} else {
+				$data = Array(
+					'NAME'=>'',
+					'TAGS'=>Array(
+						'content_type'=>'bookmark',
+						'content_html'=>$HTML,
+						'content_url'=>$url
+					),
+					'TYPE'=>$this->_contentTypeId
+				);
+				return $this->addObject($objectId,$data);
 			}
 			
 			die();
