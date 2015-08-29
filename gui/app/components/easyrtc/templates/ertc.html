@@ -14,9 +14,14 @@
 
         </div>
         <ul>
-            <li ng-repeat="item in call_list">
-                <p> {{item.name}} is calling : <i class="fa fa-phone-square fa-1x" ng-click="answer(item)"></i>
-                <i class="fa fa-trash fa-1x" ng-click="bussy(item)"></i></p>
+            <li class="calllist" ng-repeat="item in call_list">
+                <span>{{item.name}} is calling :</span> 
+                <span class="inline">
+                    <i class="fa fa-phone-square fa-2x green" ng-click="answer(item)"></i>
+                </span>
+                <span>
+                    <i class="fa fa-ban fa-2x red" ng-click="bussy(item)"></i>
+                </span>
             </li>
         </ul>
     </div>    

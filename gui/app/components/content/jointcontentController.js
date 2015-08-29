@@ -14,6 +14,7 @@ angular.module('joint.ctrl')
 			uploadInterface: {},
 			uploadConfigured: false
 		};
+        $scope.paste_flag = false;
 		
 		$scope.logInterface = function(intfc) {
             console.log("$scope.logInterface");
@@ -23,9 +24,14 @@ angular.module('joint.ctrl')
 		
 		$scope.dropFile = dropFile;
 		
+        $scope.copy = copy_cnt;
+        
+        $scope.paste = paste_cnt;
+        
 		activate();
 		
 		function activate() {
+            console.log("activate");
 			if(!$scope.cnt.tags) {
 				$scope.cnt.tags = {
 					content_type: 'html'
@@ -43,10 +49,22 @@ angular.module('joint.ctrl')
 					$scope.currentTemplateUrl = $scope.contentType.templateUrl;
 				}
 			});
+            
+            $scope.$watch(function(){
+                return paste_check();
+                }
+                ,function(n,o){
+                    if(n) {
+                        $scope.paste_flag = true;
+                    } else {
+                        $scope.paste_flag = false;
+                    }
+                });
 			
 			$scope.editMode = false;
 			
 			if(!($scope.cnt.tags instanceof Object)) {
+                console.log("tags delete");
 				$scope.cnt.tags = {};
 			}
 			if(!$scope.cnt.id) {
@@ -109,4 +127,33 @@ angular.module('joint.ctrl')
 		function dropFile(file) {
             $scope.cnt.tags.files = _.without($scope.cnt.tags.files,file);
 		}
+        
+        function copy_cnt(cnt){
+            console.log("copy_cnt(cnt)");
+            console.log(cnt);
+            $rootScope.copy_cnt = cnt;
+            $rootScope.copy_cnt.parent_id = undefined;
+        }
+        
+        function paste_cnt() {
+            console.log("paste_cnt");
+            if( $rootScope.copy_cnt !== undefined){
+                console.log($rootScope.copy_cnt);
+                $scope.cnt = $rootScope.copy_cnt;
+                $rootScope.copy_cnt = undefined;
+                var contentTypes = JointTags.contentTypes();
+                $scope.contentType = contentTypes[$scope.cnt.tags.content_type];
+                $scope.currentTemplateUrl = $scope.contentType.templateUrlEdit;
+                $scope.editMode = true;
+            }
+        }
+        
+        function paste_check(){
+            console.log("paste_check");
+            if( $rootScope.copy_cnt !== undefined ){
+                return true;
+            } else {
+                return false;
+            }
+        }
 }]);
