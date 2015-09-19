@@ -48,8 +48,10 @@ angular.module('joint.services')
         self.id="";
     }
     
-    this.addVideoBox = function( object_id, box){
-          self.video_boxes_list[object_id] = {'video_obj':box,
+    this.addVideoBox = function( object_id, box, box_in){
+		box_in = box_in || box;
+	    self.video_boxes_list[object_id] = {'video_obj': box,
+										  'video_obj_in': box_in,
                                           'active':false,
                                           'status':'offline' 
                                           // online, offline
@@ -59,7 +61,7 @@ angular.module('joint.services')
           var active_box_not_found = true;
           angular.forEach(self.video_boxes_list, function(obj) {
               if(obj.active == true){
-                  cb(obj.video_obj);
+                  cb(obj.video_obj, obj.video_obj_in);
                   active_box_not_found = false;
               }
           });
@@ -79,9 +81,9 @@ angular.module('joint.services')
     this.init = function(name) {
         self.init_deffered = $q.defer();
         
-        self.getActiveBox(function(video_obj){
+        self.getActiveBox(function(video_obj, video_obj_in){
             if(video_obj!==undefined){
-            var vid_in = video_obj;
+            var vid_in = video_obj_in;
             var vid_out = video_obj;  
             
             self.vid_in_obj = vid_in[0];

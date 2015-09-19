@@ -1,5 +1,9 @@
 <?php
 	require_once('objectMatch.php');
+    
+    function sortPoints($a,$b) {        
+        return strcasecmp($a->value,$b->value);
+    }
 
 	class jointModel extends database {
 		function __construct () {
@@ -90,14 +94,32 @@
 				else $id = $tmp[0]['PARENT_ID'];
 			}
 		}
+        
+        function sortPoints(&$points) {            
+            usort($points,'sortPoints');            
+            return $points;
+        }
 		
 		function getObject ($row) {
+		    
 			$row['REPUTATION'] = json_decode($row['REPUTATION']);
+            
+            if(!$row['REPUTATION']) {
+                $row['REPUTATION'] = (object)Array('avg'=>0,'votes'=>0);    
+            }
+            
 			$row['TAGS'] = json_decode($row['TAGS']);
 			
 			if($row['TAGS']->content_html) {
 				$row['TAGS']->content_html = html_entity_decode(urldecode($row['TAGS']->content_html));
-			}
+			}            
+            
+            foreach($row['TAGS'] as $scopeId=>&$scope) {
+                foreach($scope as $tagId=>&$tag) {
+                    if($tag->points) { $tag->points = $this->sortPoints($tag->points); }
+                    if($tag->_values) { $tag->_values = $this->sortPoints($tag->_values); }
+                }                    
+            }            
 			
 			return $row;
 		}
@@ -598,6 +620,39 @@
 			$tmp = parent::getRecords ('OBJECTS', '*', 'ID='.$objectId);
 			return $this->success($this->getObject($tmp[0]));
 		}
+		
+		public function importContent($objectId, $HTML, $url) {
+			
+			require_once(__DIR__.'/../tools/readability/Readability.php');
+			$readability = new Readability($HTML);
+			$result = $readability->init();
+			if ($result) {
+				$data = Array(
+					'NAME'=>$readability->getTitle()->textContent,
+					'TAGS'=>Array(
+						'content_type'=>'bookmark',
+						'content_html'=>$readability->getContent()->innerHTML,
+						'content_url'=>$url
+					),
+					'TYPE'=>$this->_contentTypeId
+				);
+				return $this->addObject($objectId,$data);
+			} else {
+				$data = Array(
+					'NAME'=>'',
+					'TAGS'=>Array(
+						'content_type'=>'bookmark',
+						'content_html'=>$HTML,
+						'content_url'=>$url
+					),
+					'TYPE'=>$this->_contentTypeId
+				);
+				return $this->addObject($objectId,$data);
+			}
+			
+			die();
+			
+		}
 
         private function chatToArray($chat) {
             
@@ -702,23 +757,38 @@
 			
 		}
 	
-		public function vote ($toId, $fromId=0, $vote = 1000) {
+		public function vote ($toId, $fromId=0, $vote = 1) {
 			$tmp = parent::getRecords('OBJECTS', 'REPUTATION', 'ID='.$toId);
-			
-			$res['reputation'] = json_decode($tmp[0]['REPUTATION'], true);
+            			
+			$res = $this->getObject($tmp[0]); //json_decode($tmp[0]['REPUTATION'], true);
+            
+            $res['reputation'] = $res['REPUTATION'];            
+            unset($res['REPUTATION']);
+            unset($res['TAGS']);
 			
 			if ($vote < -1 || $vote > 1) return $res;
 			
-			$t = 0.95*atan(pow($res['reputation']['votes'], 0.7))*2/pi();//0.0 - 0.95 - waga starych komentarzy
+			$t = 0.95*atan(pow($res['reputation']->votes, 0.7))*2/pi();//0.0 - 0.95 - waga starych komentarzy
 			$w = 1 - $t; //pocz�tkowa, pe�na waga nowego komentarza
 			
 			$temp = parent::getRecords('OBJECTS', 'REPUTATION', 'ID='.$fromId);
 			
 			$rep = json_decode($temp[0]['REPUTATION'], true);
-			$w *= (atan(log(1+$rep['votes']))*2/pi()) * (($rep['avg']+1)/2);
+			$rep = $this->getObject($rep[0]);
+            
+            $rep['reputation'] = $rep['REPUTATION'];            
+            unset($rep['REPUTATION']);
+            unset($rep['TAGS']);
 			
-			$res['reputation']['avg'] = (1-$w)*$res['reputation']['avg'] + $w*$vote;
-			$res['reputation']['votes']++;
+			$rep = $rep['reputation'];
+            
+			$w *= (atan(log(1+$rep->votes))*2/pi()) * (($rep->avg+1)/2);
+            
+            var_dump((atan(log(1+$rep->votes))*2/pi()));
+            var_dump((($rep->avg+1)/2));
+                        			
+			$res['reputation']->avg = (1-$w)*$res['reputation']->avg + $w*$vote;
+			$res['reputation']->votes++;
 			
 			$update = Array ('REPUTATION'=>'\''.json_encode($res['reputation']).'\'');
 			$res2 = parent::updateRecords('OBJECTS', $update, 'ID='.$toId);

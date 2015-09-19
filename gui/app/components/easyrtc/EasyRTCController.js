@@ -19,8 +19,9 @@ angular.module('joint.ctrl').controller('EasyRTCController',
     });
     
     var video_element = $element.find('video.self_ertc_vid');
+    var video_element_in = $element.find('video.self_ertc_vid_in');
     
-    easyRTC.addVideoBox(1,video_element);
+    easyRTC.addVideoBox(1,video_element,video_element_in);
     easyRTC.setActiveBox(1);
     
     $scope.close = function(){
@@ -33,6 +34,7 @@ angular.module('joint.ctrl').controller('EasyRTCController',
     }
     
     $scope.answer = function(item){
+        console.log("answare");
         $scope.waiting_anim = false;
         easyRTC.init( item.ertc_id ).then(function() {
             item.call = true;

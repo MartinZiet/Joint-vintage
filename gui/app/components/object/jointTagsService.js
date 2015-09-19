@@ -25,6 +25,10 @@ angular.module('joint.services')
 					name: 'Link',
 					templateUrl: 'app/components/content/templates/link.html',
 					templateUrlEdit: 'app/components/content/templates/link-edit.html'
+				},
+				bookmark: {
+					name: 'Bookmark',
+					templateUrl: 'app/components/content/templates/bookmark.html'
 				}
 			}
 		},

@@ -31,7 +31,7 @@ $config = Array(
 	Array('GET', '/objects/:ID/search', 'getSearchList', Array('ID','!true')), //pobiera znalezione obiekty
 	Array('GET', '/objects/:ID/contents', 'getContents', Array('ID', '!true')),
 	
-	Array('GET', '/friends/:frID/objects/:ID', 'structure', Array('ID')), /*pobiera obiekt przyjaciela*/
+	Array('GET', '/friends/:frID/objects/:ID', 'structure', Array('ID')), /*pobiera obiekt przyjaciela*/	
 	
 	//friend objects interaction
 	Array('GET', '/objects/:ID/friends/:frID/chat',  'chat', Array('ID', 'frID')), //pobiera tresc chatu dla obiektu przyjaciela
@@ -47,6 +47,7 @@ $config = Array(
 	Array('GET', '/friends/:frID/objects/:oID/call', 'call', Array ('oID', 'frID')), //makes EasyRTC connection
 	Array('GET', '/friends/call', 'callInfo', Array ('easyRTCID')), 
 	
+    Array('GET', '/objects/:ID/search/:frID/vote', 'vote', Array('frID','ID')), /*oddaje głos obiekt przyjaciela*/	
 	
 	Array('DELETE', '/friends/:frID/objects/:oID/friendship', 'removeFriendship', Array('oID', 'frID')), 
 	Array('DELETE', '/objects/:ID', 'removeObject', Array('ID')), //usuwa obiekt
@@ -58,6 +59,8 @@ $config = Array(
 	Array('POST', '/objects/:ID', 'addObject', Array('ID', '$POST')), //dodaje nowy obiekt jako childa
 	Array('POST', '/objects/:ID/contents', 'addObject', Array('ID', '$POST')), //dodaje content dla obiektu
 	Array('POST', '/objects/:ID/contents/:cntID', 'updateObject', Array('cntID','$POST')),
+	
+	Array('POST', '/objects/:ID/import', 'importContent', Array('ID','content_html','content_url')),
 	
 	Array('POST', '/friends/:frID/objects/:oID/chat', 'chat', Array('oID', 'frID', 'message')), //dodaje wiadomosc do tresci chatu dla obiektu przyjaciela
 	

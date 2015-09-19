@@ -24,9 +24,9 @@ angular.module('joint.ctrl')
 		
 		$scope.dropFile = dropFile;
 		
-        $scope.copy = copy_cnt;
-        
-        $scope.paste = paste_cnt;
+//        $scope.copy = copy_cnt;
+//        
+//        $scope.paste = paste_cnt;
         
 		activate();
 		
@@ -49,17 +49,6 @@ angular.module('joint.ctrl')
 					$scope.currentTemplateUrl = $scope.contentType.templateUrl;
 				}
 			});
-            
-            $scope.$watch(function(){
-                return paste_check();
-                }
-                ,function(n,o){
-                    if(n) {
-                        $scope.paste_flag = true;
-                    } else {
-                        $scope.paste_flag = false;
-                    }
-                });
 			
 			$scope.editMode = false;
 			
@@ -108,7 +97,7 @@ angular.module('joint.ctrl')
 			
 			if(!$scope.cnt.parent_id) { $scope.cnt.parent_id = $scope.obj.id; }
 			if(!$scope.cnt.type) { $scope.cnt.type = 7; }
-			console.log($scope.cnt.tags);
+//			console.log($scope.cnt.tags); 
             Restangular.restangularizeElement($scope.obj,$scope.cnt,'contents');
 			$scope.cnt.save().then(function(obj){
                 $scope.cnt.id = obj.id;
@@ -128,32 +117,56 @@ angular.module('joint.ctrl')
             $scope.cnt.tags.files = _.without($scope.cnt.tags.files,file);
 		}
         
-        function copy_cnt(cnt){
-            console.log("copy_cnt(cnt)");
-            console.log(cnt);
-            $rootScope.copy_cnt = cnt;
-            $rootScope.copy_cnt.parent_id = undefined;
-        }
+//        function copy_cnt(cnt){
+//          
+//         
+//          
+////            console.log("copy_cnt(cnt)");
+////            console.log(cnt);
+////            $rootScope.copy_cnt = cnt;
+////            $rootScope.copy_cnt.parent_id = undefined;
+//        }
+//        
+//        function paste_cnt() {
+//            Restangular.all('session').doGET().then(function(resp) {
+//              console.log("resp");
+//              console.log(resp);
+//              var ListPK = {};
+//              for(var i=0; i<resp.length; i++){
+//                var id = resp[i].id;
+//                var p_id = resp[i].parent_id;
+//                ListPK[p_id].push(resp[i]);
+//                
+//                if(!ListPK[p_id]){
+//                  ListPK[p_id] = [];
+//                }
+//                resp[i].a_p_obj = ListPK[id] 
+//                
+//                if(p_id==0){
+//                  var root = ListPK[p_id];
+//                }
+//              }
+//              console.log(root);
+//            });
+            
+//            console.log("paste_cnt");
+//            if( $rootScope.copy_cnt !== undefined){
+//                console.log($rootScope.copy_cnt);
+//                $scope.cnt = $rootScope.copy_cnt;
+//                $rootScope.copy_cnt = undefined;
+//                var contentTypes = JointTags.contentTypes();
+//                $scope.contentType = contentTypes[$scope.cnt.tags.content_type];
+//                $scope.currentTemplateUrl = $scope.contentType.templateUrlEdit;
+//                $scope.editMode = true;
+//            }
+//        }
         
-        function paste_cnt() {
-            console.log("paste_cnt");
-            if( $rootScope.copy_cnt !== undefined){
-                console.log($rootScope.copy_cnt);
-                $scope.cnt = $rootScope.copy_cnt;
-                $rootScope.copy_cnt = undefined;
-                var contentTypes = JointTags.contentTypes();
-                $scope.contentType = contentTypes[$scope.cnt.tags.content_type];
-                $scope.currentTemplateUrl = $scope.contentType.templateUrlEdit;
-                $scope.editMode = true;
-            }
-        }
-        
-        function paste_check(){
-            console.log("paste_check");
-            if( $rootScope.copy_cnt !== undefined ){
-                return true;
-            } else {
-                return false;
-            }
-        }
+//        function paste_check(){
+//            console.log("paste_check");
+//            if( $rootScope.copy_cnt !== undefined ){
+//                return true;
+//            } else {
+//                return false;
+//            }
+//        }
 }]);
